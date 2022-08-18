@@ -1,3 +1,7 @@
 import './style.css';
 
-alert('hello-world');
+import ViewCards from './modules/textbook/viewWords';
+
+const viewCards = new ViewCards;
+viewCards.cardLayout();
+
