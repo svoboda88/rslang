@@ -44,6 +44,9 @@
 
 .header__login {
   margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }
 
 .signup__btn {

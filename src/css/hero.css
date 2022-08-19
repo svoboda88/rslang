@@ -10,11 +10,12 @@
 }
 
 .hero__img {
-  width: 800px;
+  width: 65%;
 }
 
 .hero__text {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 35%;
 }
