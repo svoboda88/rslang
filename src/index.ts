@@ -1,7 +1,4 @@
 import './style.css';
+import renderCardWords from './modules/textbook/renderCardWords';
 
-import ViewCards from './modules/textbook/viewWords';
-
-const viewCards = new ViewCards;
-viewCards.cardLayout();
-
+renderCardWords();

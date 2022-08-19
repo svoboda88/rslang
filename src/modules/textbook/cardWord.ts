@@ -1,7 +1,6 @@
-import { GetWords } from './requests';
+import { GetWords } from './requestWords';
 
-export default function wordCard(result: GetWords[]) {
-    console.log(result);
+export default function cardWord(result: GetWords[]) {
     let card = '';
     result.forEach((item) => {
         card += `
