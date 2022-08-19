@@ -1,0 +1,136 @@
+.textbook {
+  background-color: #fff;
+  text-align: center;
+  padding: 20px 0;
+  margin: 0 auto;
+}
+
+.textbook__title {
+  margin-bottom: 10px;
+}
+
+.textbook__wrapper {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-items: center;
+}
+
+.textbook__lvls {
+  display: flex;
+  flex-direction: row;
+  /* flex-wrap: wrap; */
+  gap: 30px;
+  justify-content: space-between;
+  margin: 20px auto;
+}
+
+.lvl__card {
+  background-color: rgba(164,18,104,1);
+  font-family: 'Roboto Mono', monospace;
+  border-radius: 15px;
+  width: 170px;
+  height: 50px;
+  color: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  cursor: pointer;
+  opacity: 30%;
+  transition: all 0.2s;
+}
+
+.lvl__card:hover, .picked {
+  opacity: 100%;
+}
+
+.lvl__card--left {
+  text-align: center;
+  padding-left: 20px;
+}
+
+.lvl__card--right {
+  background-color: black;
+  color: #fff;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  text-align: center;
+  line-height: 50px;
+  width: 30%;
+}
+
+.textbook__pagination {
+  margin: 20px auto;
+}
+
+.pagination__list {
+  margin-top: 10px;
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.pagination__btn {
+  color: rgb(0, 0, 0);
+  background-color: #e6e7eb;
+  border-radius: 10px;
+  height: 32px;
+  padding: 0 5px;
+  text-align: center;
+  line-height: 29px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pagination__btn:hover {
+  background-color: rgb(231, 231, 231);
+}
+
+.textbook__words {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px 20px;
+}
+
+.words__card {
+  display: flex;
+  flex-direction: row;
+  width: 48%;
+  gap: 10px;
+  border-radius: 15px;
+  background-color: #f3f4f8;
+}
+
+.listen {
+  cursor: pointer;
+}
+
+.word__card--right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 10px;
+}
+
+.word__title {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.word__translate {
+  color: rgb(92, 92, 92);
+}
+
+.word__img {
+  width: 40%;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
