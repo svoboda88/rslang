@@ -1,0 +1,63 @@
+.header {
+  height: 80px;
+  width: 100%;
+  color: #fff;
+}
+
+.header__wrapper {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 30px;
+}
+
+.header__logo {
+  cursor: pointer;
+}
+
+.nav__list {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  list-style: none;
+  margin-left: 30px;
+}
+
+.nav__btn, .login__btn {
+	background: none;
+	color: #fff;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  transition: color 0.2s;
+}
+
+.nav__btn:hover, .login__btn:hover {
+  color: #000;
+}
+
+.header__login {
+  margin-left: auto;
+}
+
+.signup__btn {
+  border: none;
+  border-radius: 16px;
+  padding: 5px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background-color: #a41268;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.signup__btn:hover {
+  background-color: #31073d;
+}

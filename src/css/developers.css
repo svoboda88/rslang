@@ -1,0 +1,37 @@
+.developers {
+  background-color: #fff;
+  padding: 20px;
+}
+
+.developers__title {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.developers__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.developers__card {
+  height: 120px;
+  width: 50%;
+  background-color: #f3f4f8;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.developers__card img {
+  aspect-ratio: 1 / 1;
+  width: 100px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.card__text {
+  padding-top: 10px;
+}

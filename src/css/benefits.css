@@ -1,0 +1,32 @@
+.benefits {
+  color: #fff;
+  margin: 30px auto;
+  width: 70%;
+  text-align: center;
+}
+
+.benefits_title {
+  margin-bottom: 20px;
+}
+
+.benefits__cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+}
+
+.benefits__card {
+  background-color: #fff;
+  color: #000;
+  border-radius: 15px;
+  width: 20%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.benefits__card img {
+  width: 100%;
+}
