@@ -33,7 +33,7 @@
   width: 100%;
 }
 
-.modal__text {
+.modal__text--login, .modal__text--signup {
   width: 40%;
   display: flex;
   flex-direction: column;
