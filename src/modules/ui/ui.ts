@@ -121,42 +121,16 @@ export class UI {
   }
 
   renderModalText(string: 'login' | 'signup') {
-    const modalText = document.querySelector<HTMLElement>('.modal__text');
-    if (modalText) {
+    const modalTextLogin = document.querySelector<HTMLElement>('.modal__text--login');
+    const modalTextSignup = document.querySelector<HTMLElement>('.modal__text--signup');
+    if (modalTextLogin && modalTextSignup) {
       if (string === 'login') {
-        modalText.innerHTML = `
-        <h2>Уже с нами?</h2>
-        <p>войди в свой аккаунт RSLang</p>
-        <form id="form" class="modal__form">
-          <label for="email"><b>Email</b></label>
-          <input type="text" placeholder="Введите email" name="email" required>
-          <label for="psw"><b>Пароль</b></label>
-          <input type="password" placeholder="Введите пароль" name="psw" required>
-          <button class="modal__login-btn">Войти!</button>
-          <p class="modal__login">Ещё не зарегистрированы?<span class="signup-span"> Регистрация</span></p>
-        `;
-        this.listenSignupSpan()
+        modalTextLogin.classList.remove('hidden');
+        modalTextSignup.classList.add('hidden');
+        this.listenSignupSpan();
       } else if (string === 'signup') {
-        modalText.innerHTML = `
-        <h2>Регестрируйся в RSLang</h2>
-        <p>и начни своё путешествие в мир английского языка вместе с нами!</p>
-        <form id="form" class="modal__form">
-          <label for="email"><b>Email</b></label>
-          <input type="text" placeholder="Введите email" name="email" required>
-          <label for="email"><b>Имя</b></label>
-          <input type="text" name="username" placeholder="Введите имя" required>
-          <label for="psw"><b>Пароль</b></label>
-          <input type="password" placeholder="Введите пароль" name="psw" required>
-          <label for="psw"><b>Подтверждение пароля</b></label>
-          <input type="password" placeholder="Введите пароль ещё раз, для проверки" name="psw2" required>
-        </form>
-        <div class="modal__btns">
-          <input class="file-upload hidden" type="file" accept="image/*" id="avatar" />
-          <label class="modal__avatar-btn" for="avatar">
-            Загрузить аватар</label>
-          <button class="modal__signup-btn">Зарегестрироваться!</button>
-          <p class="modal__login">Уже зарегестрированы? <span class="login-span">Войти</span></p>
-        </div>`;
+        modalTextLogin.classList.add('hidden');
+        modalTextSignup.classList.remove('hidden');
         this.listenLoginSpan();
       }
     }
