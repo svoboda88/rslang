@@ -1,3 +1,6 @@
+import { UI } from './modules/ui/ui';
 import './style.css';
 
-alert('hello-world');
+
+const ui = new UI;
+ui.init();

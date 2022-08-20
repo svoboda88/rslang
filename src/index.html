@@ -1,11 +1,261 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Rs-lang</title>
-    </head>
-    <body>
-        
-    </body>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RS Lang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="style.css">
+  <link rel="shortcut icon" href="./assets/favico.png" type="image/x-icon">
+</head>
+
+<body>
+  <header class="header">
+    <div class="header__wrapper">
+      <div class="header__logo">
+        <h2>RSLang</h2>
+      </div>
+      <div class="header__nav">
+        <ul class="nav__list">
+          <li class="nav__item">
+            <button class="nav__btn" id="main-btn">Главная</button>
+          </li>
+          <li class="nav__item">
+            <button class="nav__btn" id="textbook-btn">Учебник</button>
+          </li>
+          <li class="nav__item">
+            <button class="nav__btn" id="games-btn">Игры</button>
+          </li>
+          <li class="nav__item">
+            <button class="nav__btn" id="stats-btn">Статистика</button>
+          </li>
+        </ul>
+      </div>
+      <div class="header__login">
+        <button class="login__btn" id="login-btn">Войти</button>
+        <button class="signup__btn" id="signup-btn">Регистрация</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="modal hidden" id="modal">
+      <div class="modal__wrapper">
+        <div class="modal__img">
+          <img src="./assets/login.png" alt="login image">
+        </div>
+        <div class="modal__text">
+        </div>
+        <div class="modal__close-btn">
+          <span class="material-symbols-outlined close-btn">
+            close
+          </span>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <section class="main-page" id="main-page">
+      <section class="hero">
+        <div class="hero__text">
+          <h2 class="hero__title">Изучайте английский с RSLang</h2>
+          <p>Приложение для изучения иностранных слов с техникой интервального повторения, отслеживанием
+            индивидуального
+            прогресса и мини-играми.
+          </p>
+        </div>
+        <img class="hero__img" src="./assets/hero.png" alt="hero image">
+      </section>
+      <section class="video">
+        <div class="video__text">
+          <h2 class="video__title title">Добро пожаловать в RSLang!</h2>
+          <p>Вот как всё устроено:</p>
+        </div>
+        <div class="video__wrapper">
+          <iframe class="video__iframe" width="854" height="480" src="">
+        </div>
+        </iframe>
+      </section>
+      <section class="benefits">
+        <h2 class="benefits_title">Наши преимущества:</h2>
+        <div class="benefits__cards">
+          <div class="benefits__card card__textbook">
+            <img src="./assets/textbook.png" alt="girl is learning">
+            <h3>Учебник</h3>
+            <p>Более 3500 тысяч слов для изучения, разбитых на главы по уровню сложности</p>
+          </div>
+          <div class="benefits__card card__dictionary">
+            <img src="./assets/dictionary.png" alt="boy is learning">
+            <h3>Словарь</h3>
+            <p>Тяжело запомнить слово? Добавь его в "Сложное". Уже знаешь слово? Удаляй!</p>
+          </div>
+          <div class="benefits__card card__games">
+            <img src="./assets/games.png" alt="boy is plauing">
+            <h3>Мини-игры</h3>
+            <p>Помогают учить без скуки и с результатом</p>
+          </div>
+          <div class="benefits__card card__statistic">
+            <img src="./assets/statistic.png" alt="girl is looking at statistic">
+            <h3>Статистика</h3>
+            <p>Отслеживай свой невероятный прогресс</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="developers">
+        <h2 class="developers__title">О команде разработчиков</h2>
+        <div class="developers__wrapper">
+          <div class="developers__card">
+            <img src="./assets/developer.jpg" alt="just developer's photo">
+            <div class="card__text">
+              <h3>Женя</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur elementum dolor eu</p>
+              <p>тут ссылочка на гитхаб с иконкой</p>
+            </div>
+          </div>
+          <div class="developers__card">
+            <img src="./assets/developer.jpg" alt="just developer's photo">
+            <div class="card__text">
+              <h3>Улугбек</h3>
+              <p>vestibulum. Nam aliquam tempor justo quis accumsan. Pellentesque sodales consequat
+                libero, sed
+                venenatis
+                metus lobortis non. Integer pharetra nec purus quis</p>
+              <p>тут ссылочка на гитхаб с иконкой</p>
+
+            </div>
+          </div>
+          <div class="developers__card">
+            <img src="./assets/developer.jpg" alt="just developer's photo">
+            <div class="card__text">
+              <h3>Аня</h3>
+              <p>lectus, viverra nec erat non, posuere consectetur est. Vivamus interdum nulla mauris, sit
+                amet ornare
+                sapien molestie ut. Vestibulum</p>
+              <p>тут ссылочка на гитхаб с иконкой</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+    <section class="textbook hidden" id="textbook-page">
+      <div class="textbook__wrapper">
+        <h2 class="textbook__title">Учебник</h2>
+        <div class="textbook__lvls">
+          <div class="lvl__card picked">
+            <div class="lvl__card--left">
+              <h3>Раздел 1</h3>
+              <p>1-600</p>
+            </div>
+            <div class="lvl__card--right">
+              <h1>A1</h1>
+            </div>
+          </div>
+          <div class="lvl__card">
+            <div class="lvl__card--left">
+              <h3>Раздел 2</h3>
+              <p>601-1200</p>
+            </div>
+            <div class="lvl__card--right">
+              <h1>A2</h1>
+            </div>
+          </div>
+          <div class="lvl__card">
+            <div class="lvl__card--left">
+              <h3>Раздел 3</h3>
+              <p>1201-1800</p>
+            </div>
+            <div class="lvl__card--right">
+              <h1>B1</h1>
+            </div>
+          </div>
+          <div class="lvl__card">
+            <div class="lvl__card--left">
+              <h3>Раздел 4</h3>
+              <p>1801-2400</p>
+            </div>
+            <div class="lvl__card--right">
+              <h1>B2</h1>
+            </div>
+          </div>
+          <div class="lvl__card">
+            <div class="lvl__card--left">
+              <h3>Раздел 5</h3>
+              <p>2401-3200</p>
+            </div>
+            <div class="lvl__card--right">
+              <h1>C1</h1>
+            </div>
+          </div>
+          <div class="lvl__card">
+            <div class="lvl__card--left">
+              <h3>Раздел 6</h3>
+              <p>3201-3800</p>
+            </div>
+            <div class="lvl__card--right">
+              <h1>C2</h1>
+            </div>
+          </div>
+        </div>
+        <div class="textbook__words">
+          <!-- <div class="words__card">
+            <img class="word__img" src="./word.jpg" alt="word image">
+
+            <div class="word__card--right">
+              <h2 class="word__title">Alcohol [ǽlkəhɔ̀ːl]
+                <span class="material-symbols-outlined listen">
+                  volume_up
+                </span>
+              </h2>
+              <p class="word__translate">алкоголь</p>
+              <br>
+              <p><i>Alcohol</i> is a type of drink that can make people drunk.</p>
+              <p class="word__translate">Алкоголь - это тип напитка, который может сделать людей пьяными</p>
+              <br>
+              <p> A person should not drive a car after he or she has been drinking <b>alcohol</b>.</p>
+              <p class="word__translate">Человек не должен водить машину после того, как он выпил алкоголь</p>
+            </div>
+          </div> -->
+
+        </div>
+        <div class="textbook__pagination">
+          <ul class="pagination__list">
+            <li class="pagination__btn non-active-btn">
+              <span class="material-symbols-outlined">
+                keyboard_double_arrow_left
+              </span>
+            </li>
+            <li class="pagination__btn non-active-btn">
+              <span class="material-symbols-outlined">
+                chevron_left
+              </span>
+            </li>
+            <li class="pagination__btn non-active-btn"> 1 / 30 </li>
+            <li class="pagination__btn active-btn"> <span class="material-symbols-outlined">
+                chevron_right
+              </span>
+            </li>
+            <li class="pagination__btn active-btn">
+              <span class="material-symbols-outlined">
+                keyboard_double_arrow_right
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <h2>тут будет футер</h2>
+  </footer>
+</body>
 </html>
