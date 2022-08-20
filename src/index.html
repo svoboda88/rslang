@@ -38,13 +38,30 @@
         </ul>
       </div>
       <div class="header__login">
-        <button class="login__btn">Войти</button>
-        <button class="signup__btn">Регистрация</button>
+        <button class="login__btn" id="login-btn">Войти</button>
+        <button class="signup__btn" id="signup-btn">Регистрация</button>
       </div>
     </div>
   </header>
 
   <main>
+
+    <div class="modal hidden" id="modal">
+      <div class="modal__wrapper">
+        <div class="modal__img">
+          <img src="./assets/login.png" alt="login image">
+        </div>
+        <div class="modal__text">
+        </div>
+        <div class="modal__close-btn">
+          <span class="material-symbols-outlined close-btn">
+            close
+          </span>
+        </div>
+      </div>
+    </div>
+    </div>
+
     <section class="main-page" id="main-page">
       <section class="hero">
         <div class="hero__text">
@@ -240,7 +257,6 @@
   <footer class="footer">
     <h2>тут будет футер</h2>
   </footer>
-
 </body>
 
 </html>

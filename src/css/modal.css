@@ -1,0 +1,119 @@
+.modal {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(41, 41, 41, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal__wrapper {
+  background-color: #fff;
+  width: 60%;
+  height: auto;
+  padding: 20px;
+  border-radius: 15px;
+  position: absolute;
+  cursor: default;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.modal__img {
+  width: 50%;
+  margin: auto;
+}
+
+.modal__img img {
+  width: 100%;
+}
+
+.modal__text {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 10px 0;
+  display: inline-block;
+  border: none;
+  background: #f7f7f7;
+  border-radius: 10px;
+
+}
+
+.modal__signup-btn, .modal__login-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 10px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background-color: #a41268;
+  outline: none;
+  transition: all 0.3s;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.modal__btns {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal__avatar-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 10px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: rgb(0, 0, 0);
+  background-color: #f7f7f7;
+  outline: none;
+  transition: all 0.3s;
+  width: 100%;
+  height: 41px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.modal__avatar-btn:hover {
+  background-color: #bdbdbd;
+}
+
+.modal__signup-btn:hover, .modal__login-btn:hover {
+  background-color: #31073d;
+}
+
+.modal__login {
+  text-align: center;
+  font-size: 13px;
+}
+
+.login-span, .signup-span {
+  color: #a41268;
+  cursor: pointer;
+}
+
+.modal__close-btn {
+  height: 30px;
+  cursor: pointer;
+}
+

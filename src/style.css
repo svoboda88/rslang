@@ -4,6 +4,7 @@
 @import './css/benefits.css';
 @import './css/developers.css';
 @import './css/textbook.css';
+@import './css/modal.css';
 
 * {
   margin: 0;
