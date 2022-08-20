@@ -86,8 +86,12 @@
   transition: all 0.2s;
 }
 
-.pagination__btn:hover {
-  background-color: rgb(231, 231, 231);
+.active-btn:hover {
+  background-color: rgb(182, 182, 182);
+}
+
+.non-active-btn {
+  cursor: default;
 }
 
 .textbook__words {
