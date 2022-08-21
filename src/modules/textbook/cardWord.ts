@@ -1,6 +1,6 @@
 import { GetWords } from './request';
 
-export default function cardWord(result: GetWords[]) {
+export default function renderWordCard(result: GetWords[]) {
     let card = '';
     result.forEach((item, i) => {
         card += `
