@@ -1,4 +1,4 @@
-import { getWords } from './requestWords';
+import { getWords } from './request';
 import { storage } from '../storage/storage';
 import cardWord from './cardWord';
 
