@@ -101,8 +101,18 @@ export class UI {
 
   listenModalClosure() {
     const crossBtn = document.querySelector<HTMLElement>('.modal__close-btn');
+    const modal = document.getElementById('modal');
+
     if (crossBtn) {
       crossBtn.addEventListener('click', this.closeModal);
+    }
+
+    if (modal) {
+      modal.addEventListener('click', (event) => {
+        if (event.target instanceof HTMLElement && event.target.classList.contains('modal')) {
+          this.closeModal();
+        }
+      });
     }
   }
 
