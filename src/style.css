@@ -1,0 +1,41 @@
+@import './css/header.css';
+@import './css/hero.css';
+@import './css/video.css';
+@import './css/benefits.css';
+@import './css/developers.css';
+@import './css/textbook.css';
+@import './css/modal.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  background: rgb(2,0,36);
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
+  font-family: 'Roboto Mono', monospace;
+}
+
+body {
+  margin: 0 auto;
+}
+
+.hidden {
+  display: none;
+}
+
+footer {
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
+  font-family: 'Roboto Mono', monospace;
+  height: 80px;
+  color: #fff;
+  text-align: center;
+}
+
+.material-symbols-outlined {
+  font-size: 30px;
+}

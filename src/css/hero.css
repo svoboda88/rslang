@@ -1,0 +1,21 @@
+.hero {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 30px;
+  height: 70vh;
+  color: #fff;
+  width: 70%;
+  margin: 0 auto;
+}
+
+.hero__img {
+  width: 65%;
+}
+
+.hero__text {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 35%;
+}
