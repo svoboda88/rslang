@@ -1,4 +1,5 @@
 import './style.css';
-import renderCardWords from './modules/textbook/renderCardWords';
+import { Textbook } from './modules/textbook/textbook';
 
-renderCardWords();
+const textbook = new Textbook();
+textbook.init();
