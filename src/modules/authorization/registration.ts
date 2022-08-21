@@ -5,8 +5,10 @@ export class Register {
     usernameInput: HTMLInputElement | null;
     passwordInput: HTMLInputElement | null;
     confirmPasswordInput: HTMLInputElement | null;
+    modalWrapper: HTMLElement | null;
 
     constructor() {
+        this.modalWrapper = document.querySelector('.modal__wrapper');
         this.closeBtn = document.querySelector('.modal__close-btn');
         this.signUpBtn = document.querySelector('.modal__signup-btn');
         this.emailInput = document.querySelector('.registration-email');
@@ -19,7 +21,7 @@ export class Register {
         const emailWarning = document.querySelector('.email_validation');
         const emptyFieldsWarning = document.querySelector('.name_validation');
         const passwordWarning = document.querySelector('.password_validation');
-        window.addEventListener('click', (e) => {
+        const listener = (e: Event): void => {
             const extendedUserData = {
                 email: (this.emailInput as HTMLInputElement).value,
                 password: JSON.stringify((this.passwordInput as HTMLInputElement).value),
@@ -56,10 +58,12 @@ export class Register {
             if (!this.validatePassword(extendedUserData) && e.target !== this.signUpBtn) {
                 passwordWarning?.classList.remove('password_validation-active');
             }
-        });
+        };
+        window.addEventListener('click', listener);
     }
 
     async sendData(data: { email: string | null; password: string | null } | null) {
+        const userExist = document.querySelector('.user-exist_validation');
         const dataResponse = await fetch('https://react-learnwords-english.herokuapp.com/users', {
             method: 'POST',
             headers: {
@@ -71,9 +75,13 @@ export class Register {
         if (dataResponse.ok) {
             const content = await dataResponse.json();
             window.localStorage.setItem('userInfo', JSON.stringify(content));
-        }
-        if (dataResponse.status === 417) {
-            alert('жи есть');
+        } else {
+            userExist?.classList.add('user-exist_validation-active');
+            window.addEventListener('click', (e) => {
+                if (e.target !== this.signUpBtn) {
+                    userExist?.classList.remove('user-exist_validation-active');
+                }
+            });
         }
     }
 

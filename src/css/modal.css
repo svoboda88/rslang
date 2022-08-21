@@ -121,13 +121,15 @@ input[type=email] {
 
 .email_validation,
 .name_validation,
-.password_validation {
+.password_validation,
+.user-exist_validation {
   display: none;
 }
 
 .email_validation-active,
 .name_validation-active,
-.password_validation-active {
+.password_validation-active,
+.user-exist_validation-active {
   display: block;
   position: absolute;
   background-color: white;
