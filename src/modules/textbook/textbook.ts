@@ -1,6 +1,6 @@
-import { getWords } from './request';
+import { getWordsResult } from './request';
 import { storage } from '../storage/storage';
-import cardWord from './cardWord';
+import renderWordCard from './cardWord';
 
 export class Textbook {
     textbookWords: Element | null;
@@ -14,15 +14,15 @@ export class Textbook {
     }
 
     init() {
-        getWords(storage.groupCount, storage.pageCount).then((result) => {
+        getWordsResult(storage.groupCount, storage.pageCount).then((result) => {
             if (this.textbookWords) {
-                this.textbookWords.innerHTML = cardWord(result);
+                this.textbookWords.innerHTML = renderWordCard(result);
             }
 
             this.playlist();
         });
 
-        this.group();
+        this.toGroup();
         this.pagination();
     }
 
@@ -57,7 +57,7 @@ export class Textbook {
         }
     }
 
-    group() {
+    toGroup() {
         if (this.textbookLvls) {
             this.textbookLvls.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
