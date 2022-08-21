@@ -47,7 +47,9 @@
   margin-top: 10px;
 }
 
-input[type=text], input[type=password] {
+input[type=text], 
+input[type=password],
+input[type=email] {
   width: 100%;
   padding: 15px;
   margin: 5px 0 10px 0;
@@ -117,3 +119,20 @@ input[type=text], input[type=password] {
   cursor: pointer;
 }
 
+.email_validation,
+.name_validation,
+.password_validation {
+  display: none;
+}
+
+.email_validation-active,
+.name_validation-active,
+.password_validation-active {
+  display: block;
+  position: absolute;
+  background-color: white;
+  border: 2px solid red;
+  font-size: 0.6rem;
+  border-radius: 0.6rem;
+  text-align: center;
+}
