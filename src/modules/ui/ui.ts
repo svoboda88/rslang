@@ -58,7 +58,6 @@ export class UI {
         this.listenLogin();
         this.listenSignup();
         this.listenModalClosure();
-        this.listenScrollBtn();
     }
 
     listenLogo() {
@@ -145,6 +144,11 @@ export class UI {
         });
         page.classList.remove('hidden');
         pageBtn.classList.add('nav__btn--active');
+
+        if (page === this.textbookPage) {
+            this.listenScrollBtn();
+            this.listenTextbookScroll();
+        }
     }
 
     listenLoginSpan() {
@@ -251,28 +255,37 @@ export class UI {
         if (scrollBtn) {
             scrollBtn.addEventListener('click', () => {
                 if (scrollBtn.classList.contains('btn-down')) {
-                    console.log('btn-down');
                     window.scrollTo(0, document.body.scrollHeight);
-                    scrollBtn.classList.remove('btn-down');
-                    scrollBtn.classList.add('btn-up');
-                    scrollBtn.style.bottom = '100px';
-                    scrollBtn.innerHTML = `
-                    <span class="material-symbols-outlined">
-                    arrow_upward
-                    </span>
-                  `;
                 } else if (scrollBtn.classList.contains('btn-up')) {
                     window.scrollTo(document.body.scrollHeight, 0);
-                    scrollBtn.classList.add('btn-down');
-                    scrollBtn.classList.remove('btn-up');
-                    scrollBtn.style.bottom = '20px';
-                    scrollBtn.innerHTML = `
-                    <span class="material-symbols-outlined">
-                    arrow_downward
-                    </span>
-                  `;
                 }
             });
         }
+    }
+
+    listenTextbookScroll() {
+        const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
+
+        window.onscroll = function () {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300 && scrollBtn) {
+                scrollBtn.classList.remove('btn-down');
+                scrollBtn.classList.add('btn-up');
+                scrollBtn.style.bottom = '100px';
+                scrollBtn.innerHTML = `
+                <span class="material-symbols-outlined">
+                arrow_upward
+                </span>
+              `;
+            } else if (document.body.scrollTop === 0 && scrollBtn) {
+                scrollBtn.classList.add('btn-down');
+                scrollBtn.classList.remove('btn-up');
+                scrollBtn.style.bottom = '20px';
+                scrollBtn.innerHTML = `
+                <span class="material-symbols-outlined">
+                arrow_downward
+                </span>
+              `;
+            }
+        };
     }
 }
