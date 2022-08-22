@@ -126,13 +126,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: space-between;
   text-align: left;
   padding: 10px;
 }
 
 .word__title {
   display: flex;
-  justify-content: center;
   gap: 10px;
 }
 
@@ -149,4 +149,29 @@
   object-fit: cover;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
+}
+
+.word__btns {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 10px;
+  margin-left: auto;
+}
+
+.word__btns--hard, .word__btns--delete {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background-color: #a41268;
+  outline: none;
+  transition: all 0.3s;
+  width: auto;
+}
+
+.word__btns--hard:hover, .word__btns--delete:hover {
+  background-color: #31073d;
 }

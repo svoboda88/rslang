@@ -152,23 +152,29 @@ export class UI {
                 <div class="words__card">
                     <img class="word__img" src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
                     <div class="word__card--right">
-                        <h2 class="word__title">${item.word} ${item.transcription}
-                            <span class="material-symbols-outlined word__audio" data-volume=${i}>
-                                volume_up
-                            </span>
-                        </h2>
-                        <div class="words__audio" data-audio=${i}>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audioExample}"></audio>
+                        <div class="word-card__text">
+                            <h2 class="word__title">${item.word} ${item.transcription}
+                                <span class="material-symbols-outlined word__audio" data-volume=${i}>
+                                    volume_up
+                                </span>
+                            </h2>
+                            <div class="words__audio" data-audio=${i}>
+                                <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
+                                <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>
+                                <audio src="https://react-learnwords-english.herokuapp.com/${item.audioExample}"></audio>
+                            </div>
+                            <p class="word__translate">${item.wordTranslate}</p>
+                            <br>
+                            <p>${item.textMeaning}</p>
+                            <p class="word__translate">${item.textMeaningTranslate}</p>
+                            <br>
+                            <p>${item.textExample}</p>
+                            <p class="word__translate">${item.textExampleTranslate}</p>
                         </div>
-                        <p class="word__translate">${item.wordTranslate}</p>
-                        <br>
-                        <p>${item.textMeaning}</p>
-                        <p class="word__translate">${item.textMeaningTranslate}</p>
-                        <br>
-                        <p>${item.textExample}</p>
-                        <p class="word__translate">${item.textExampleTranslate}</p>
+                        <div class="word__btns hidden">
+                            <button class="word__btns--hard" data-id="${item.id}">в сложные</button>
+                            <button class="word__btns--delete" data-id="${item.id}">удалить</button>  
+                        </div>
                     </div>
                 </div>
             `;
