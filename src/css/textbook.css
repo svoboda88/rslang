@@ -5,9 +5,28 @@
   margin: 0 auto;
 }
 
-.textbook__title {
-  margin-bottom: 10px;
+.scroll-btn {
+  position: fixed;
+  z-index: 2;
+  bottom: 20px;
+  right: 20px;
+  width: 70px;
+  height: 70px;
+  border-radius: 100px;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background-color: #a41268;
+  outline: none;
+  transition: all 0.3s;
+  line-height: 90px;
 }
+
+.scroll-btn:hover {
+  background-color: #31073d;
+}
+
 
 .textbook__wrapper {
   width: 70%;
@@ -123,17 +142,18 @@
 }
 
 .word__card--right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  width: 60%;
   text-align: left;
-  padding: 10px;
+  padding: 15px;
 }
 
 .word__title {
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 0;
+  border-radius: 10px;
+  transition: all 0.3s;
 }
 
 .word__translate {
@@ -144,9 +164,42 @@
   cursor: pointer;
 }
 
+.audio-active {
+  color: #fff;
+  background-color: #a41268;
+  border-radius: 10px;
+  padding: 5px;
+
+}
+
 .word__img {
   width: 40%;
   object-fit: cover;
   border-top-left-radius: 15px;
   border-bottom-left-radius: 15px;
+}
+
+.word__btns {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-top: 10px;
+  margin-left: auto;
+}
+
+.word__btns--hard, .word__btns--delete {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background-color: #a41268;
+  outline: none;
+  transition: all 0.3s;
+  width: auto;
+}
+
+.word__btns--hard:hover, .word__btns--delete:hover {
+  background-color: #31073d;
 }

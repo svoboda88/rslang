@@ -25,6 +25,11 @@ body {
   margin: 0 auto;
 }
 
+.games, .stats, .dictionary {
+  background-color: #ffffff;
+  height: calc(100vh - 160px);
+}
+
 .hidden {
   display: none;
 }
