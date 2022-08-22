@@ -52,7 +52,8 @@
   gap: 20px;
 }
 
-.signup__btn {
+.signup__btn,
+.username__btn {
   border: none;
   border-radius: 16px;
   padding: 5px 10px;

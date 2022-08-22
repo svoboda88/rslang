@@ -7,6 +7,7 @@ export class Authorize {
     modalWindow: HTMLElement | null;
     loggedButtons: HTMLElement | null;
     headerLogin: HTMLElement | null;
+    usernameBtn: HTMLElement | null;
 
     constructor() {
         this.userInfo = JSON.parse(window.localStorage.getItem('userInfo') as string);
@@ -17,6 +18,7 @@ export class Authorize {
         this.modalWindow = document.querySelector('.modal');
         this.loggedButtons = document.querySelector('.header__logged');
         this.headerLogin = document.querySelector('.header__login');
+        this.usernameBtn = document.querySelector('.username__btn');
     }
     signIn() {
         const listener = (e: Event): void => {
@@ -25,7 +27,13 @@ export class Authorize {
                 password: JSON.stringify((this.loginPassword as HTMLInputElement).value),
             };
             if (e.target === this.signInButton) {
-                this.sendData(userData).then(() => this.getData());
+                this.sendData(userData)
+                    .then(() => this.getData())
+                    .then(() => {
+                        (this.usernameBtn as HTMLElement).textContent = JSON.parse(
+                            window.localStorage.getItem('UserInfo') as string
+                        ).name;
+                    });
             }
         };
         window.addEventListener('click', listener);
@@ -33,6 +41,9 @@ export class Authorize {
             if (window.localStorage.getItem('Logged') === 'logged') {
                 this.loggedButtons?.classList.add('header__logged-active');
                 this.headerLogin?.classList.add('header__login-disabled');
+                (this.usernameBtn as HTMLElement).textContent = JSON.parse(
+                    window.localStorage.getItem('UserInfo') as string
+                ).name;
             }
         });
     }
