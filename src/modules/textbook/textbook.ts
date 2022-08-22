@@ -4,15 +4,30 @@ import renderWordCard from './cardWord';
 
 export class Textbook {
     textbookWords: Element | null;
+
     textbookLvls: Element | null;
+
     paginationList: Element | null;
+
     textbookPage: Element | null;
+
+    prevBtn: HTMLElement | null;
+
+    firstBtn: HTMLElement | null;
+
+    nextBtn: HTMLElement | null;
+
+    lastBtn: HTMLElement | null;
 
     constructor() {
         this.textbookWords = document.querySelector('.textbook__words');
         this.textbookLvls = document.querySelector('.textbook__lvls');
         this.paginationList = document.querySelector('.pagination__list');
         this.textbookPage = document.querySelector('#textbook-count');
+        this.prevBtn = document.getElementById('textbook-prev');
+        this.firstBtn = document.getElementById('textbook-first');
+        this.nextBtn = document.getElementById('textbook-next');
+        this.lastBtn = document.getElementById('textbook-last');
     }
 
     init() {
@@ -21,15 +36,15 @@ export class Textbook {
                 this.textbookWords.innerHTML = renderWordCard(result);
             }
 
-            this.playlist();
+            this.playWordAudio();
         });
 
         this.toGroup();
-        this.pagination();
+        this.listenPaginationBtns();
         (this.textbookPage as Element).innerHTML = ` ${Number(storage.pageCount) + 1} / 30 `;
     }
 
-    playlist() {
+    playWordAudio() {
         if (this.textbookWords) {
             this.textbookWords.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
@@ -75,76 +90,71 @@ export class Textbook {
                     grandParent.classList.add('picked');
                     const count = arrayGroup.indexOf(grandParent) as number;
                     storage.groupCount = count;
-                    storage.pageCount = 0;
-                    this.init();
                 } else if (parent.classList.contains('lvl__card')) {
                     arrayGroup.forEach((item) => item.classList.remove('picked'));
                     parent.classList.add('picked');
                     const count = arrayGroup.indexOf(parent) as number;
                     storage.groupCount = count;
-                    storage.pageCount = 0;
-                    this.init();
                 }
+                storage.pageCount = 0;
+                this.disablePrevBtns();
+                this.activateNextBtns();
+                this.init();
             });
         }
     }
 
-    pagination() {
+    disableNextBtns() {
+        if (this.nextBtn && this.lastBtn) {
+            this.nextBtn.classList.add('disabled-btn');
+            this.lastBtn.classList.add('disabled-btn');
+            this.nextBtn.style.pointerEvents = 'none';
+            this.lastBtn.style.pointerEvents = 'none';
+        }
+    }
+
+    activateNextBtns() {
+        if (this.nextBtn && this.lastBtn) {
+            this.nextBtn.classList.remove('disabled-btn');
+            this.lastBtn.classList.remove('disabled-btn');
+            this.nextBtn.style.pointerEvents = 'auto';
+            this.lastBtn.style.pointerEvents = 'auto';
+        }
+    }
+
+    disablePrevBtns() {
+        if (this.prevBtn && this.firstBtn) {
+            this.prevBtn.classList.add('disabled-btn');
+            this.firstBtn.classList.add('disabled-btn');
+            this.prevBtn.style.pointerEvents = 'none';
+            this.firstBtn.style.pointerEvents = 'none';
+        }
+    }
+
+    activatePrevBtns() {
+        if (this.prevBtn && this.firstBtn) {
+            this.prevBtn.classList.remove('disabled-btn');
+            this.firstBtn.classList.remove('disabled-btn');
+            this.prevBtn.style.pointerEvents = 'auto';
+            this.firstBtn.style.pointerEvents = 'auto';
+        }
+    }
+
+    listenPaginationBtns() {
         if (this.paginationList) {
             this.paginationList.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
                 const target = event.target as Element;
                 const parent = target.parentNode as Element;
-                const nextBtn = document.getElementById('textbook-next') as HTMLLIElement;
-                const prevBtn = document.getElementById('textbook-prev') as HTMLLIElement;
-                const firstBtn = document.getElementById('textbook-first') as HTMLLIElement;
-                const lastBtn = document.getElementById('textbook-last') as HTMLLIElement;
 
                 if (parent.id === 'textbook-next') {
                     storage.pageCount++;
 
                     if (storage.pageCount === 29) {
-                        nextBtn.classList.remove('active-btn');
-                        nextBtn.classList.add('non-active-btn');
-                        nextBtn.style.pointerEvents = 'none';
-
-                        prevBtn.classList.remove('non-active-btn');
-                        prevBtn.classList.add('active-btn');
-                        prevBtn.style.pointerEvents = 'auto';
-
-                        lastBtn.classList.remove('active-btn');
-                        lastBtn.classList.add('non-active-btn');
-                        lastBtn.style.pointerEvents = 'none';
-
-                        firstBtn.classList.remove('non-active-btn');
-                        firstBtn.classList.add('active-btn');
-                        firstBtn.style.pointerEvents = 'auto';
-                    } else {
-                        nextBtn.style.pointerEvents = 'auto';
-                        if (nextBtn.classList.contains('non-active-btn')) {
-                            nextBtn.classList.remove('non-active-btn');
-                            nextBtn.classList.add('active-btn');
-                        }
-
-                        prevBtn.style.pointerEvents = 'auto';
-                        if (prevBtn.classList.contains('non-active-btn')) {
-                            prevBtn.classList.remove('non-active-btn');
-                            prevBtn.classList.add('active-btn');
-                        }
-
-                        lastBtn.style.pointerEvents = 'auto';
-                        if (lastBtn.classList.contains('non-active-btn')) {
-                            lastBtn.classList.remove('non-active-btn');
-                            lastBtn.classList.add('active-btn');
-                        }
-
-                        firstBtn.style.pointerEvents = 'auto';
-                        if (firstBtn.classList.contains('non-active-btn')) {
-                            firstBtn.classList.remove('non-active-btn');
-                            firstBtn.classList.add('active-btn');
-                        }
+                        this.disableNextBtns();
+                    } else if (storage.pageCount !== 0) {
+                        this.activatePrevBtns();
                     }
-
                     this.init();
                 }
 
@@ -152,91 +162,24 @@ export class Textbook {
                     storage.pageCount--;
 
                     if (storage.pageCount === 0) {
-                        prevBtn.classList.remove('active-btn');
-                        prevBtn.classList.add('non-active-btn');
-                        prevBtn.style.pointerEvents = 'none';
-
-                        nextBtn.classList.remove('non-active-btn');
-                        nextBtn.classList.add('active-btn');
-                        nextBtn.style.pointerEvents = 'auto';
-
-                        firstBtn.classList.remove('active-btn');
-                        firstBtn.classList.add('non-active-btn');
-                        firstBtn.style.pointerEvents = 'none';
-
-                        lastBtn.classList.remove('non-active-btn');
-                        lastBtn.classList.add('active-btn');
-                        lastBtn.style.pointerEvents = 'auto';
-                    } else {
-                        nextBtn.style.pointerEvents = 'auto';
-                        if (nextBtn.classList.contains('non-active-btn')) {
-                            nextBtn.classList.remove('non-active-btn');
-                            nextBtn.classList.add('active-btn');
-                        }
-
-                        prevBtn.style.pointerEvents = 'auto';
-                        if (prevBtn.classList.contains('non-active-btn')) {
-                            prevBtn.classList.remove('non-active-btn');
-                            prevBtn.classList.add('active-btn');
-                        }
-
-                        lastBtn.style.pointerEvents = 'auto';
-                        if (lastBtn.classList.contains('non-active-btn')) {
-                            lastBtn.classList.remove('non-active-btn');
-                            lastBtn.classList.add('active-btn');
-                        }
-
-                        firstBtn.style.pointerEvents = 'auto';
-                        if (firstBtn.classList.contains('non-active-btn')) {
-                            firstBtn.classList.remove('non-active-btn');
-                            firstBtn.classList.add('active-btn');
-                        }
+                        this.disablePrevBtns();
+                    } else if (storage.pageCount !== 0) {
+                        this.activateNextBtns();
                     }
-
                     this.init();
                 }
 
                 if (parent.id === 'textbook-last') {
                     storage.pageCount = 29;
-
-                    nextBtn.classList.remove('active-btn');
-                    nextBtn.classList.add('non-active-btn');
-                    nextBtn.style.pointerEvents = 'none';
-
-                    prevBtn.classList.remove('non-active-btn');
-                    prevBtn.classList.add('active-btn');
-                    prevBtn.style.pointerEvents = 'auto';
-
-                    lastBtn.classList.remove('active-btn');
-                    lastBtn.classList.add('non-active-btn');
-                    lastBtn.style.pointerEvents = 'none';
-
-                    firstBtn.classList.remove('non-active-btn');
-                    firstBtn.classList.add('active-btn');
-                    firstBtn.style.pointerEvents = 'auto';
-
+                    this.disableNextBtns();
+                    this.activatePrevBtns();
                     this.init();
                 }
 
                 if (parent.id === 'textbook-first') {
                     storage.pageCount = 0;
-
-                    prevBtn.classList.remove('active-btn');
-                    prevBtn.classList.add('non-active-btn');
-                    prevBtn.style.pointerEvents = 'none';
-
-                    nextBtn.classList.remove('non-active-btn');
-                    nextBtn.classList.add('active-btn');
-                    nextBtn.style.pointerEvents = 'auto';
-
-                    firstBtn.classList.remove('active-btn');
-                    firstBtn.classList.add('non-active-btn');
-                    firstBtn.style.pointerEvents = 'none';
-
-                    lastBtn.classList.remove('non-active-btn');
-                    lastBtn.classList.add('active-btn');
-                    lastBtn.style.pointerEvents = 'auto';
-
+                    this.disablePrevBtns();
+                    this.activateNextBtns();
                     this.init();
                 }
             });

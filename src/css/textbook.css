@@ -22,7 +22,6 @@
 .textbook__lvls {
   display: flex;
   flex-direction: row;
-  /* flex-wrap: wrap; */
   gap: 30px;
   justify-content: space-between;
   margin: 20px auto;
@@ -86,12 +85,21 @@
   transition: all 0.2s;
 }
 
-.active-btn:hover {
+.pagination__btn:hover {
   background-color: rgb(182, 182, 182);
 }
 
-.non-active-btn {
+.page-count-btn {
   cursor: default;
+}
+
+.disabled-btn {
+  cursor: default;
+  color: #fff;
+}
+
+.page-count-btn:hover, .disabled-btn:hover {
+  background-color: #e6e7eb;
 }
 
 .textbook__words {
@@ -130,6 +138,10 @@
 
 .word__translate {
   color: rgb(92, 92, 92);
+}
+
+.word__audio {
+  cursor: pointer;
 }
 
 .word__img {

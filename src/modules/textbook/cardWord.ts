@@ -8,7 +8,7 @@ export default function renderWordCard(result: GetWords[]) {
                 <img class="word__img" src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
                 <div class="word__card--right">
                     <h2 class="word__title">${item.word} ${item.transcription}
-                        <span class="material-symbols-outlined" data-volume=${i}>
+                        <span class="material-symbols-outlined word__audio" data-volume=${i}>
                             volume_up
                         </span>
                     </h2>
