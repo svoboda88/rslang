@@ -1,4 +1,5 @@
 import { Authorize } from './modules/authorization/authorization';
+import { Logout } from './modules/authorization/logout';
 import { Register } from './modules/authorization/registration';
 import { UI } from './modules/ui/ui';
 import './style.css';
@@ -11,3 +12,6 @@ authorization.createUser();
 
 const userSignIn = new Authorize();
 userSignIn.signIn();
+
+const logOut = new Logout();
+logOut.goOut();
