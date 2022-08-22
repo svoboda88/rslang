@@ -220,11 +220,12 @@ export class UI {
                     <img class="word__img" src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
                     <div class="word__card--right">
                         <div class="word-card__text">
-                            <h2 class="word__title">${item.word} ${item.transcription}
+                            <div class="word__title">
+                                <h2>${item.word} ${item.transcription}</h2>
                                 <span class="material-symbols-outlined word__audio" data-volume=${i}>
-                                    volume_up
+                                volume_up
                                 </span>
-                            </h2>
+                            </div>
                             <div class="words__audio" data-audio=${i}>
                                 <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
                                 <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>

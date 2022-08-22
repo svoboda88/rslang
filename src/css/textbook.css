@@ -142,17 +142,18 @@
 }
 
 .word__card--right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
+  width: 60%;
   text-align: left;
-  padding: 10px;
+  padding: 15px;
 }
 
 .word__title {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 0;
+  border-radius: 10px;
+  transition: all 0.3s;
 }
 
 .word__translate {
@@ -161,6 +162,14 @@
 
 .word__audio {
   cursor: pointer;
+}
+
+.audio-active {
+  color: #fff;
+  background-color: #a41268;
+  border-radius: 10px;
+  padding: 5px;
+
 }
 
 .word__img {
