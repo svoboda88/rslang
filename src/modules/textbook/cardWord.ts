@@ -1,4 +1,4 @@
-import { GetWordsResult } from './request';
+import { GetWords } from './request';
 
 export default function renderWordCard(result: GetWords[]) {
     let card = '';
