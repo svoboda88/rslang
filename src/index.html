@@ -203,6 +203,14 @@
           arrow_downward
         </span>
       </button>
+
+      <div class="textbook__sections hidden">
+        <a class="textbook__section section--active" id="section-textbook">Учебник</a>
+        <span class="material-symbols-outlined">
+          compare_arrows
+        </span>
+        <a class="textbook__section" id="section-learned">Изученные слова</a>
+      </div>
       <div class="textbook__wrapper">
         <div class="textbook__lvls">
           <div class="lvl__card picked">
@@ -259,9 +267,22 @@
               <h1>C2</h1>
             </div>
           </div>
+          <div class="lvl__card">
+            <div class="lvl__card--left">
+              <h3>Раздел 7</h3>
+              <p>Сложные</p>
+            </div>
+            <div class="lvl__card--right">
+              <span class="material-symbols-outlined">
+                psychology_alt
+              </span>
+            </div>
+          </div>
         </div>
+
         <div class="textbook__words">
         </div>
+
         <div class="textbook__pagination">
           <ul class="pagination__list">
             <li id="textbook-first" class="pagination__btn disabled-btn">
@@ -285,6 +306,11 @@
               </span>
             </li>
           </ul>
+        </div>
+      </div>
+      <div class="learned__wrapper hidden">
+        <div class="learned__words">
+          <h2>Пока ничего не изучено :(</h2>
         </div>
       </div>
     </section>

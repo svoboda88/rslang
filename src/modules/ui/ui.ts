@@ -58,6 +58,7 @@ export class UI {
         this.listenLogin();
         this.listenSignup();
         this.listenModalClosure();
+        this.listenTextbookSections();
     }
 
     listenLogo() {
@@ -219,30 +220,38 @@ export class UI {
                 <div class="words__card">
                     <img class="word__img" src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
                     <div class="word__card--right">
-                        <div class="word-card__text">
                             <div class="word__title">
-                                <h2>${item.word} ${item.transcription}</h2>
-                                <span class="material-symbols-outlined word__audio" data-volume=${i}>
-                                volume_up
-                                </span>
+                                <div class="word__title--top">
+                                    <h2>${item.word} ${item.transcription}</h2>
+                                    <span class="material-symbols-outlined word__audio" data-volume=${i}>
+                                    volume_up
+                                    </span>
+                                </div>
+                                <p class="word__translate">${item.wordTranslate}</p>
                             </div>
+
                             <div class="words__audio" data-audio=${i}>
                                 <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
                                 <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>
                                 <audio src="https://react-learnwords-english.herokuapp.com/${item.audioExample}"></audio>
                             </div>
-                            <p class="word__translate">${item.wordTranslate}</p>
+                            <br>
+                            <div class="word__games hidden">
+                                <h3>Ответы в играх:</h3>
+                                <p>Спринт - 0 из 0</p>
+                                <p>Аудиовызов - 0 из 0</p>
+                            </div>
                             <br>
                             <p>${item.textMeaning}</p>
                             <p class="word__translate">${item.textMeaningTranslate}</p>
-                            <br>
                             <p>${item.textExample}</p>
                             <p class="word__translate">${item.textExampleTranslate}</p>
-                        </div>
                         <div class="word__btns hidden">
-                            <button class="word__btns--hard" data-id="${item.id}">в сложные</button>
-                            <button class="word__btns--delete" data-id="${item.id}">удалить</button>  
+                            <button class="word__btns--hard" data-id="${item.id}">Изученное</button>
+                            <button class="word__btns--hard" data-id="${item.id}">Сложное</button>
+                            <button class="word__btns--delete" data-id="${item.id}">Удалить</button>  
                         </div>
+
                     </div>
                 </div>
             `;
@@ -288,5 +297,33 @@ export class UI {
               `;
             }
         };
+    }
+
+    listenTextbookSections() {
+        const textbookBtn = document.getElementById('section-textbook');
+        const learnedBtn = document.getElementById('section-learned');
+
+        const textbookSection = document.querySelector<HTMLElement>('.textbook__wrapper');
+        const learnedSection = document.querySelector<HTMLElement>('.learned__wrapper');
+
+        const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
+
+        if (textbookBtn && learnedBtn && textbookSection && learnedSection && scrollBtn) {
+            textbookBtn.addEventListener('click', () => {
+                textbookBtn.classList.add('section--active');
+                learnedBtn.classList.remove('section--active');
+                textbookSection.classList.remove('hidden');
+                learnedSection.classList.add('hidden');
+                scrollBtn.classList.remove('hidden');
+            });
+
+            learnedBtn.addEventListener('click', () => {
+                learnedBtn.classList.add('section--active');
+                textbookBtn.classList.remove('section--active');
+                textbookSection.classList.add('hidden');
+                learnedSection.classList.remove('hidden');
+                scrollBtn.classList.add('hidden');
+            });
+        }
     }
 }
