@@ -8,7 +8,7 @@ export class Register {
     modalWrapper: HTMLElement | null;
 
     constructor() {
-        this.modalWrapper = document.querySelector('.modal__wrapper');
+        this.modalWrapper = document.querySelector('.modal');
         this.closeBtn = document.querySelector('.modal__close-btn');
         this.signUpBtn = document.querySelector('.modal__signup-btn');
         this.emailInput = document.querySelector('.registration-email');
@@ -29,6 +29,7 @@ export class Register {
                 confirmPassword: JSON.stringify((this.confirmPasswordInput as HTMLInputElement).value),
             };
             const userData = {
+                name: (this.usernameInput as HTMLInputElement).value,
                 email: (this.emailInput as HTMLInputElement).value,
                 password: JSON.stringify((this.passwordInput as HTMLInputElement).value),
             };
@@ -75,6 +76,7 @@ export class Register {
         if (dataResponse.ok) {
             const content = await dataResponse.json();
             window.localStorage.setItem('userInfo', JSON.stringify(content));
+            this.modalWrapper?.classList.add('hidden');
         } else {
             userExist?.classList.add('user-exist_validation-active');
             window.addEventListener('click', (e) => {

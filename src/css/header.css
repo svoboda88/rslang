@@ -27,7 +27,9 @@
   margin-left: 30px;
 }
 
-.nav__btn, .login__btn {
+.nav__btn, 
+.login__btn,
+.logout__btn {
 	background: none;
 	color: #fff;
 	border: none;
@@ -42,7 +44,8 @@
   color: #000;
 }
 
-.header__login {
+.header__login,
+.header__logged {
   margin-left: auto;
   display: flex;
   flex-direction: row;
@@ -63,4 +66,16 @@
 
 .signup__btn:hover {
   background-color: #31073d;
+}
+
+.header__logged {
+  display: none;
+}
+
+.header__logged-active {
+  display: block;
+}
+
+.header__login-disabled {
+  display: none;
 }

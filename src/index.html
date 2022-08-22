@@ -40,6 +40,9 @@
         <button class="login__btn" id="login-btn">Войти</button>
         <button class="signup__btn" id="signup-btn">Регистрация</button>
       </div>
+      <div class="header__logged">
+        <button class="logout__btn" id="login-btn">Выход</button>
+      </div>
     </div>
   </header>
 
@@ -54,13 +57,18 @@
           <h2>Уже с нами?</h2>
           <p>войди в свой аккаунт RSLang</p>
           <form id="form" class="modal__form--login" novalidate>
-            <label for="email"><b>Email</b>
+            <label for="email">
+              <b>Email</b>
+              <p class="correct-data_validation">Пожалуйста, введите корректные данные</p>
             </label>
-            <input type="email" placeholder="Введите email" name="email" class="login-email">
+            <input type="email" placeholder="Введите email" name="email" class="login-email" onkeydown="if(event.keyCode == 13){return false;}">
             <label for="psw"><b>Пароль</b></label>
-            <input type="password" placeholder="Введите пароль" name="psw" class="login-password">
-            <button class="modal__login-btn">Войти!</button>
-            <p class="modal__login">Ещё не зарегистрированы?<span class="signup-span"> Регистрация</span></p>
+            <input type="password" placeholder="Введите пароль" name="psw" class="login-password" onkeydown="if(event.keyCode == 13){return false;}">
+          </form>
+            <div class="modal__btns">
+              <button class="modal__login-btn">Войти!</button>
+              <p class="modal__login">Ещё не зарегистрированы?<span class="signup-span"> Регистрация</span></p>
+            </div>
         </div>
         <div class="modal__text--signup hidden">
           <h2>Регестрируйся в RSLang</h2>

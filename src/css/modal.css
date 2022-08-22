@@ -122,14 +122,16 @@ input[type=email] {
 .email_validation,
 .name_validation,
 .password_validation,
-.user-exist_validation {
+.user-exist_validation,
+.correct-data_validation {
   display: none;
 }
 
 .email_validation-active,
 .name_validation-active,
 .password_validation-active,
-.user-exist_validation-active {
+.user-exist_validation-active,
+.correct-data_validation-active {
   display: block;
   position: absolute;
   background-color: white;
