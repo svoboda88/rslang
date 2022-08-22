@@ -58,7 +58,7 @@
 }
 
 .nav__btn:hover, .login__btn:hover, .logout__btn:hover {
-  color:#000000;  
+  color:#000000; 
 }
 
 .nav__btn:hover::before, .login__btn:hover::before, .logout__btn:hover::before {
@@ -97,6 +97,10 @@
   background-color: #a41268;
   outline: none;
   transition: all 0.3s;
+}
+
+.username__btn {
+  cursor: auto;
 }
 
 .signup__btn:hover {

@@ -29,9 +29,6 @@
           <li class="nav__item">
             <a class="nav__btn" id="textbook-btn">Учебник</a>
           </li>
-          <li class="nav__item hidden">
-            <a class="nav__btn" id="dictionary-btn">Словарь</a>
-          </li>
           <li class="nav__item">
             <a class="nav__btn" id="games-btn">Игры</a>
           </li>
@@ -45,8 +42,8 @@
         <a class="signup__btn" id="signup-btn">Регистрация</a>
       </div>
       <div class="header__logged">
-        <button class="logout__btn" id="login-btn">Выход</button>
-        <button class="username__btn" id="signup-btn"></button>
+        <a class="logout__btn" id="login-btn">Выход</a>
+        <a class="username__btn" id="signup-btn"></a>
       </div>
     </div>
   </header>
@@ -66,14 +63,16 @@
               <b>Email</b>
               <p class="correct-data_validation">Пожалуйста, введите корректные данные</p>
             </label>
-            <input type="email" placeholder="Введите email" name="email" class="login-email" onkeydown="if(event.keyCode == 13){return false;}">
+            <input type="email" placeholder="Введите email" name="email" class="login-email"
+              onkeydown="if(event.keyCode == 13){return false;}">
             <label for="psw"><b>Пароль</b></label>
-            <input type="password" placeholder="Введите пароль" name="psw" class="login-password" onkeydown="if(event.keyCode == 13){return false;}">
+            <input type="password" placeholder="Введите пароль" name="psw" class="login-password"
+              onkeydown="if(event.keyCode == 13){return false;}">
           </form>
-            <div class="modal__btns">
-              <button class="modal__login-btn">Войти!</button>
-              <p class="modal__login">Ещё не зарегистрированы?<span class="signup-span"> Регистрация</span></p>
-            </div>
+          <div class="modal__btns">
+            <button class="modal__login-btn">Войти!</button>
+            <p class="modal__login">Ещё не зарегистрированы?<span class="signup-span"> Регистрация</span></p>
+          </div>
         </div>
         <div class="modal__text--signup hidden">
           <h2>Регистрируйся в RSLang</h2>
@@ -84,19 +83,23 @@
               <p class="user-exist_validation">Такой пользователь уже существует</p>
               <p class="email_validation">Введите корректный адрес электронной почты</p>
             </label>
-            <input type="email" placeholder="Введите email" name="email" class="registration-email" onkeydown="if(event.keyCode == 13){return false;}">
+            <input type="email" placeholder="Введите email" name="email" class="registration-email"
+              onkeydown="if(event.keyCode == 13){return false;}">
             <label for="username" class="registration_name-label">
               <b>Имя</b>
               <p class="name_validation">Не все поля заполнены</p>
             </label>
-            <input type="text" name="username" placeholder="Введите имя" class="registration-name" onkeydown="if(event.keyCode == 13){return false;}">
+            <input type="text" name="username" placeholder="Введите имя" class="registration-name"
+              onkeydown="if(event.keyCode == 13){return false;}">
             <label for="psw" class="registration_password-label">
               <b>Пароль</b>
               <p class="password_validation">Пароли не совпадают либо длина менее 8 символов</p>
             </label>
-            <input type="password" placeholder="Введите пароль" name="psw" class="registration-password" onkeydown="if(event.keyCode == 13){return false;}">
+            <input type="password" placeholder="Введите пароль" name="psw" class="registration-password"
+              onkeydown="if(event.keyCode == 13){return false;}">
             <label for="psw" class="registration_confirmpassword-label"><b>Подтверждение пароля</b></label>
-            <input type="password" placeholder="Введите пароль ещё раз, для проверки" name="psw2" class="registration-password-confirm" onkeydown="if(event.keyCode == 13){return false;}">
+            <input type="password" placeholder="Введите пароль ещё раз, для проверки" name="psw2"
+              class="registration-password-confirm" onkeydown="if(event.keyCode == 13){return false;}">
           </form>
           <div class="modal__btns">
             <button class="modal__signup-btn">Зарегестрироваться!</button>
@@ -284,9 +287,6 @@
           </ul>
         </div>
       </div>
-    </section>
-    <section class="page dictionary hidden" id="dictionary-page">
-      <h2>тут словарь</h2>
     </section>
     <section class="page games hidden" id="games-page">
       <h2>тут игры</h2>
