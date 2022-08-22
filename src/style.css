@@ -25,12 +25,7 @@ body {
   margin: 0 auto;
 }
 
-.games {
-  background-color: #ffffff;
-  height: calc(100vh - 160px);
-}
-
-.stats {
+.games, .stats, .dictionary {
   background-color: #ffffff;
   height: calc(100vh - 160px);
 }

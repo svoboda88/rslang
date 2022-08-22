@@ -5,7 +5,7 @@ export class UI {
 
     textbookPage: HTMLElement | null;
 
-    dictionaryPage: HTMLElement | null;
+    dictPage: HTMLElement | null;
 
     gamesPage: HTMLElement | null;
 
@@ -16,6 +16,8 @@ export class UI {
     mainPageBtn: HTMLElement | null;
 
     textbookPageBtn: HTMLElement | null;
+
+    dictPageBtn: HTMLElement | null;
 
     gamesPageBtn: HTMLElement | null;
 
@@ -30,13 +32,14 @@ export class UI {
     constructor() {
         this.mainPage = document.getElementById('main-page');
         this.textbookPage = document.getElementById('textbook-page');
-        this.dictionaryPage = document.getElementById('dictionary-page');
+        this.dictPage = document.getElementById('dictionary-page');
         this.gamesPage = document.getElementById('games-page');
         this.statsPage = document.getElementById('stats-page');
 
         this.logo = document.querySelector('.header__logo');
         this.mainPageBtn = document.getElementById('main-btn');
         this.textbookPageBtn = document.getElementById('textbook-btn');
+        this.dictPageBtn = document.getElementById('dictionary-btn');
         this.gamesPageBtn = document.getElementById('games-btn');
         this.statsPageBtn = document.getElementById('stats-btn');
 
@@ -49,6 +52,7 @@ export class UI {
         this.listenLogo();
         this.listenMainPageBtn();
         this.listenTextbookPageBtn();
+        this.listenDictionaryBtn();
         this.listenGamesBtn();
         this.listenStatsBtn();
         this.listenLogin();
@@ -82,6 +86,16 @@ export class UI {
             this.textbookPageBtn.addEventListener('click', () => {
                 if (this.textbookPage && this.textbookPageBtn) {
                     this.showPage(this.textbookPage, this.textbookPageBtn);
+                }
+            });
+        }
+    }
+
+    listenDictionaryBtn() {
+        if (this.dictPageBtn) {
+            this.dictPageBtn.addEventListener('click', () => {
+                if (this.dictPage && this.dictPageBtn) {
+                    this.showPage(this.dictPage, this.dictPageBtn);
                 }
             });
         }
