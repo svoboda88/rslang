@@ -74,8 +74,6 @@ export class Register {
             body: JSON.stringify(data),
         });
         if (dataResponse.ok) {
-            const content = await dataResponse.json();
-            window.localStorage.setItem('userInfo', JSON.stringify(content));
             this.modalWrapper?.classList.add('hidden');
         } else {
             userExist?.classList.add('user-exist_validation-active');

@@ -20,17 +20,12 @@ export class Authorize {
     }
     signIn() {
         const listener = (e: Event): void => {
-            //  const userId = JSON.parse(window.localStorage.getItem('UserToken') as string).userId;
             const userData = {
                 email: (this.loginEmail as HTMLInputElement).value,
                 password: JSON.stringify((this.loginPassword as HTMLInputElement).value),
             };
             if (e.target === this.signInButton) {
-                this.sendData(userData);
-                this.modalWindow?.classList.add('hidden');
-                this.loggedButtons?.classList.add('header__logged-active');
-                this.headerLogin?.classList.add('header__login-disabled');
-                window.localStorage.setItem('Logged', 'logged');
+                this.sendData(userData).then(() => this.getData());
             }
         };
         window.addEventListener('click', listener);
@@ -54,6 +49,10 @@ export class Authorize {
         if (rawResponse.ok) {
             const content = await rawResponse.json();
             window.localStorage.setItem('UserToken', JSON.stringify(content));
+            this.modalWindow?.classList.add('hidden');
+            this.loggedButtons?.classList.add('header__logged-active');
+            this.headerLogin?.classList.add('header__login-disabled');
+            window.localStorage.setItem('Logged', 'logged');
         } else {
             this.incorrectDataWarning?.classList.add('correct-data_validation-active');
             window.addEventListener('click', (e) => {
@@ -64,15 +63,19 @@ export class Authorize {
         }
     }
 
-    /*    async getData(id: string) {
-        const rawResponse = await fetch(`https://react-learnwords-english.herokuapp.com/users/{${id}}`, {
+    async getData() {
+        const token = JSON.parse(window.localStorage.getItem('UserToken') as string).token;
+        const userId = JSON.parse(window.localStorage.getItem('UserToken') as string).userId;
+        const rawResponse = await fetch(`https://react-learnwords-english.herokuapp.com/users/${userId}`, {
             method: 'GET',
             headers: {
+                Authorization: `Bearer ${token}`,
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
         });
         const content = await rawResponse.json();
-        console.log(content);
-    } */
+        window.localStorage.setItem('UserInfo', JSON.stringify(content));
+        return content;
+    }
 }
