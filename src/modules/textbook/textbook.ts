@@ -1,8 +1,10 @@
 import { getWordsResult } from './request';
 import { storage } from '../storage/storage';
-import renderWordCard from './cardWord';
+import { UI } from '../ui/ui';
 
 export class Textbook {
+    UI: UI;
+
     textbookWords: Element | null;
 
     textbookLvls: Element | null;
@@ -19,7 +21,8 @@ export class Textbook {
 
     lastBtn: HTMLElement | null;
 
-    constructor() {
+    constructor(UI: UI) {
+        this.UI = UI;
         this.textbookWords = document.querySelector('.textbook__words');
         this.textbookLvls = document.querySelector('.textbook__lvls');
         this.paginationList = document.querySelector('.pagination__list');
@@ -33,7 +36,7 @@ export class Textbook {
     init() {
         getWordsResult(storage.groupCount, storage.pageCount).then((result) => {
             if (this.textbookWords) {
-                this.textbookWords.innerHTML = renderWordCard(result);
+                this.textbookWords.innerHTML = this.UI.renderWordCards(result);
             }
 
             this.playWordAudio();
