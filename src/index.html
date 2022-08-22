@@ -24,7 +24,7 @@
       <div class="header__nav">
         <ul class="nav__list">
           <li class="nav__item">
-            <a class="nav__btn" id="main-btn">Главная</a>
+            <a class="nav__btn nav__btn--active" id="main-btn">Главная</a>
           </li>
           <li class="nav__item">
             <a class="nav__btn" id="textbook-btn">Учебник</a>
@@ -89,7 +89,7 @@
     </div>
     </div>
 
-    <section class="main-page" id="main-page">
+    <section class="page main-page" id="main-page">
       <section class="hero">
         <div class="hero__text">
           <h2 class="hero__title">Изучайте английский с RSLang</h2>
@@ -172,9 +172,13 @@
         </div>
       </section>
     </section>
-    <section class="textbook hidden" id="textbook-page">
+    <section class="page textbook hidden" id="textbook-page">
+      <button class="scroll-btn btn-down">
+        <span class="material-symbols-outlined">
+          arrow_downward
+        </span>
+      </button>
       <div class="textbook__wrapper">
-        <h2 class="textbook__title">Учебник</h2>
         <div class="textbook__lvls">
           <div class="lvl__card picked">
             <div class="lvl__card--left">
@@ -258,6 +262,15 @@
           </ul>
         </div>
       </div>
+    </section>
+    <section class="page dictionary hidden" id="dictionary-page">
+      <h2>тут словарь</h2>
+    </section>
+    <section class="page games hidden" id="games-page">
+      <h2>тут игры</h2>
+    </section>
+    <section class="page stats hidden" id="stats-page">
+      <h2>тут статистика</h2>
     </section>
 
   </main>

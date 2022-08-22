@@ -5,9 +5,28 @@
   margin: 0 auto;
 }
 
-.textbook__title {
-  margin-bottom: 10px;
+.scroll-btn {
+  position: fixed;
+  z-index: 2;
+  bottom: 20px;
+  right: 20px;
+  width: 70px;
+  height: 70px;
+  border-radius: 100px;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background-color: #a41268;
+  outline: none;
+  transition: all 0.3s;
+  line-height: 90px;
 }
+
+.scroll-btn:hover {
+  background-color: #31073d;
+}
+
 
 .textbook__wrapper {
   width: 70%;

@@ -25,6 +25,16 @@ body {
   margin: 0 auto;
 }
 
+.games {
+  background-color: #ffffff;
+  height: calc(100vh - 160px);
+}
+
+.stats {
+  background-color: #ffffff;
+  height: calc(100vh - 160px);
+}
+
 .hidden {
   display: none;
 }

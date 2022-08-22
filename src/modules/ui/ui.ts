@@ -5,11 +5,21 @@ export class UI {
 
     textbookPage: HTMLElement | null;
 
+    dictionaryPage: HTMLElement | null;
+
+    gamesPage: HTMLElement | null;
+
+    statsPage: HTMLElement | null;
+
     logo: HTMLElement | null;
 
     mainPageBtn: HTMLElement | null;
 
     textbookPageBtn: HTMLElement | null;
+
+    gamesPageBtn: HTMLElement | null;
+
+    statsPageBtn: HTMLElement | null;
 
     modal: HTMLElement | null;
 
@@ -20,10 +30,15 @@ export class UI {
     constructor() {
         this.mainPage = document.getElementById('main-page');
         this.textbookPage = document.getElementById('textbook-page');
+        this.dictionaryPage = document.getElementById('dictionary-page');
+        this.gamesPage = document.getElementById('games-page');
+        this.statsPage = document.getElementById('stats-page');
 
         this.logo = document.querySelector('.header__logo');
         this.mainPageBtn = document.getElementById('main-btn');
         this.textbookPageBtn = document.getElementById('textbook-btn');
+        this.gamesPageBtn = document.getElementById('games-btn');
+        this.statsPageBtn = document.getElementById('stats-btn');
 
         this.modal = document.querySelector<HTMLElement>('.modal');
         this.loginBtn = document.getElementById('login-btn');
@@ -34,17 +49,19 @@ export class UI {
         this.listenLogo();
         this.listenMainPageBtn();
         this.listenTextbookPageBtn();
+        this.listenGamesBtn();
+        this.listenStatsBtn();
         this.listenLogin();
         this.listenSignup();
         this.listenModalClosure();
+        this.listenScrollBtn();
     }
 
     listenLogo() {
         if (this.logo) {
             this.logo.addEventListener('click', () => {
-                if (this.mainPage && this.textbookPage) {
-                    this.mainPage.classList.remove('hidden');
-                    this.textbookPage.classList.add('hidden');
+                if (this.mainPage && this.mainPageBtn) {
+                    this.showPage(this.mainPage, this.mainPageBtn);
                 }
             });
         }
@@ -53,9 +70,8 @@ export class UI {
     listenMainPageBtn() {
         if (this.mainPageBtn) {
             this.mainPageBtn.addEventListener('click', () => {
-                if (this.mainPage && this.textbookPage) {
-                    this.mainPage.classList.remove('hidden');
-                    this.textbookPage.classList.add('hidden');
+                if (this.mainPage && this.mainPageBtn) {
+                    this.showPage(this.mainPage, this.mainPageBtn);
                 }
             });
         }
@@ -64,9 +80,28 @@ export class UI {
     listenTextbookPageBtn() {
         if (this.textbookPageBtn) {
             this.textbookPageBtn.addEventListener('click', () => {
-                if (this.mainPage && this.textbookPage) {
-                    this.textbookPage.classList.remove('hidden');
-                    this.mainPage.classList.add('hidden');
+                if (this.textbookPage && this.textbookPageBtn) {
+                    this.showPage(this.textbookPage, this.textbookPageBtn);
+                }
+            });
+        }
+    }
+
+    listenGamesBtn() {
+        if (this.gamesPageBtn) {
+            this.gamesPageBtn.addEventListener('click', () => {
+                if (this.gamesPage && this.gamesPageBtn) {
+                    this.showPage(this.gamesPage, this.gamesPageBtn);
+                }
+            });
+        }
+    }
+
+    listenStatsBtn() {
+        if (this.statsPageBtn) {
+            this.statsPageBtn.addEventListener('click', () => {
+                if (this.statsPage && this.statsPageBtn) {
+                    this.showPage(this.statsPage, this.statsPageBtn);
                 }
             });
         }
@@ -82,6 +117,20 @@ export class UI {
         if (this.signupBtn) {
             this.signupBtn.addEventListener('click', () => this.showModal('signup'));
         }
+    }
+
+    showPage(page: HTMLElement, pageBtn: HTMLElement) {
+        const pagesArray = document.querySelectorAll('.page');
+        const navBtsArray = document.querySelectorAll('.nav__btn');
+
+        pagesArray.forEach((page) => page.classList.add('hidden'));
+        navBtsArray.forEach((btn) => {
+            if (btn.classList.contains('nav__btn--active')) {
+                btn.classList.remove('nav__btn--active');
+            }
+        });
+        page.classList.remove('hidden');
+        pageBtn.classList.add('nav__btn--active');
     }
 
     listenLoginSpan() {
@@ -181,5 +230,35 @@ export class UI {
         });
 
         return card;
+    }
+
+    listenScrollBtn() {
+        const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
+        if (scrollBtn) {
+            scrollBtn.addEventListener('click', () => {
+                if (scrollBtn.classList.contains('btn-down')) {
+                    console.log('btn-down');
+                    window.scrollTo(0, document.body.scrollHeight);
+                    scrollBtn.classList.remove('btn-down');
+                    scrollBtn.classList.add('btn-up');
+                    scrollBtn.style.bottom = '100px';
+                    scrollBtn.innerHTML = `
+                    <span class="material-symbols-outlined">
+                    arrow_upward
+                    </span>
+                  `;
+                } else if (scrollBtn.classList.contains('btn-up')) {
+                    window.scrollTo(document.body.scrollHeight, 0);
+                    scrollBtn.classList.add('btn-down');
+                    scrollBtn.classList.remove('btn-up');
+                    scrollBtn.style.bottom = '20px';
+                    scrollBtn.innerHTML = `
+                    <span class="material-symbols-outlined">
+                    arrow_downward
+                    </span>
+                  `;
+                }
+            });
+        }
     }
 }

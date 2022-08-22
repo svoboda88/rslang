@@ -71,6 +71,13 @@
   transition: transform .6s cubic-bezier(.08, .35, .13, 1.02), opacity
 }
 
+.nav__btn--active {
+  opacity: 1;
+  background-color: #fff;
+  border-radius: 16px;
+  color:#000000;
+}
+
 .header__login {
   margin-left: auto;
   display: flex;
