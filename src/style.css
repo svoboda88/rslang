@@ -5,6 +5,7 @@
 @import './css/developers.css';
 @import './css/textbook.css';
 @import './css/modal.css';
+@import './css/footer.css';
 
 * {
   margin: 0;
@@ -24,16 +25,13 @@ body {
   margin: 0 auto;
 }
 
-.hidden {
-  display: none;
+.games, .stats, .dictionary {
+  background-color: #ffffff;
+  height: calc(100vh - 160px);
 }
 
-footer {
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
-  font-family: 'Roboto Mono', monospace;
-  height: 80px;
-  color: #fff;
-  text-align: center;
+.hidden {
+  display: none;
 }
 
 .material-symbols-outlined {

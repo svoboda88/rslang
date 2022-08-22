@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Karla:wght@800&display=swap" rel="stylesheet">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="shortcut icon" href="./assets/favico.png" type="image/x-icon">
@@ -18,27 +19,30 @@
   <header class="header">
     <div class="header__wrapper">
       <div class="header__logo">
-        <h2>RSLang</h2>
+        <h1>RSLang</h1>
       </div>
       <div class="header__nav">
         <ul class="nav__list">
           <li class="nav__item">
-            <button class="nav__btn" id="main-btn">Главная</button>
+            <a class="nav__btn nav__btn--active" id="main-btn">Главная</a>
           </li>
           <li class="nav__item">
-            <button class="nav__btn" id="textbook-btn">Учебник</button>
+            <a class="nav__btn" id="textbook-btn">Учебник</a>
+          </li>
+          <li class="nav__item hidden">
+            <a class="nav__btn" id="dictionary-btn">Словарь</a>
           </li>
           <li class="nav__item">
-            <button class="nav__btn" id="games-btn">Игры</button>
+            <a class="nav__btn" id="games-btn">Игры</a>
           </li>
           <li class="nav__item">
-            <button class="nav__btn" id="stats-btn">Статистика</button>
+            <a class="nav__btn" id="stats-btn">Статистика</a>
           </li>
         </ul>
       </div>
       <div class="header__login">
-        <button class="login__btn" id="login-btn">Войти</button>
-        <button class="signup__btn" id="signup-btn">Регистрация</button>
+        <a class="login__btn" id="login-btn">Войти</a>
+        <a class="signup__btn" id="signup-btn">Регистрация</a>
       </div>
       <div class="header__logged">
         <button class="logout__btn" id="login-btn">Выход</button>
@@ -72,7 +76,7 @@
             </div>
         </div>
         <div class="modal__text--signup hidden">
-          <h2>Регестрируйся в RSLang</h2>
+          <h2>Регистрируйся в RSLang</h2>
           <p>и начни своё путешествие в мир английского языка вместе с нами!</p>
           <form id="form" class="modal__form--signup" novalidate>
             <label for="email" class="registration_email-label">
@@ -95,9 +99,6 @@
             <input type="password" placeholder="Введите пароль ещё раз, для проверки" name="psw2" class="registration-password-confirm" onkeydown="if(event.keyCode == 13){return false;}">
           </form>
           <div class="modal__btns">
-            <!-- <input class="file-upload hidden" type="file" accept="image/*" id="avatar" />
-            <label class="modal__avatar-btn" for="avatar">
-              Загрузить аватар</label> -->
             <button class="modal__signup-btn">Зарегестрироваться!</button>
             <p class="modal__login">Уже зарегестрированы? <span class="login-span">Войти</span></p>
           </div>
@@ -109,9 +110,8 @@
         </div>
       </div>
     </div>
-    </div>
 
-    <section class="main-page" id="main-page">
+    <section class="page main-page" id="main-page">
       <section class="hero">
         <div class="hero__text">
           <h2 class="hero__title">Изучайте английский с RSLang</h2>
@@ -194,9 +194,13 @@
         </div>
       </section>
     </section>
-    <section class="textbook hidden" id="textbook-page">
+    <section class="page textbook hidden" id="textbook-page">
+      <button class="scroll-btn btn-down">
+        <span class="material-symbols-outlined">
+          arrow_downward
+        </span>
+      </button>
       <div class="textbook__wrapper">
-        <h2 class="textbook__title">Учебник</h2>
         <div class="textbook__lvls">
           <div class="lvl__card picked">
             <div class="lvl__card--left">
@@ -254,44 +258,25 @@
           </div>
         </div>
         <div class="textbook__words">
-          <!-- <div class="words__card">
-            <img class="word__img" src="./word.jpg" alt="word image">
-
-            <div class="word__card--right">
-              <h2 class="word__title">Alcohol [ǽlkəhɔ̀ːl]
-                <span class="material-symbols-outlined listen">
-                  volume_up
-                </span>
-              </h2>
-              <p class="word__translate">алкоголь</p>
-              <br>
-              <p><i>Alcohol</i> is a type of drink that can make people drunk.</p>
-              <p class="word__translate">Алкоголь - это тип напитка, который может сделать людей пьяными</p>
-              <br>
-              <p> A person should not drive a car after he or she has been drinking <b>alcohol</b>.</p>
-              <p class="word__translate">Человек не должен водить машину после того, как он выпил алкоголь</p>
-            </div>
-          </div> -->
-
         </div>
         <div class="textbook__pagination">
           <ul class="pagination__list">
-            <li class="pagination__btn non-active-btn">
+            <li id="textbook-first" class="pagination__btn disabled-btn">
               <span class="material-symbols-outlined">
                 keyboard_double_arrow_left
               </span>
             </li>
-            <li class="pagination__btn non-active-btn">
+            <li id="textbook-prev" class="pagination__btn disabled-btn">
               <span class="material-symbols-outlined">
                 chevron_left
               </span>
             </li>
-            <li class="pagination__btn non-active-btn"> 1 / 30 </li>
-            <li class="pagination__btn active-btn"> <span class="material-symbols-outlined">
+            <li id="textbook-count" class="pagination__btn page-count-btn"> 1 / 30 </li>
+            <li id="textbook-next" class="pagination__btn"> <span class="material-symbols-outlined">
                 chevron_right
               </span>
             </li>
-            <li class="pagination__btn active-btn">
+            <li id="textbook-last" class="pagination__btn">
               <span class="material-symbols-outlined">
                 keyboard_double_arrow_right
               </span>
@@ -300,11 +285,40 @@
         </div>
       </div>
     </section>
+    <section class="page dictionary hidden" id="dictionary-page">
+      <h2>тут словарь</h2>
+    </section>
+    <section class="page games hidden" id="games-page">
+      <h2>тут игры</h2>
+    </section>
+    <section class="page stats hidden" id="stats-page">
+      <h2>тут статистика</h2>
+    </section>
 
   </main>
 
   <footer class="footer">
-    <h2>тут будет футер</h2>
+    <div class="footer__wrapper">
+      <a class="footer__wrapper-item rsschool" href="https://rs.school/js/">
+        <img src="./assets/rs_school.svg" alt="rs school js course">
+      </a>
+      <a class="footer__wrapper-item source" href="https://github.com/svoboda88/rslang">
+        <h2>RSLang, 2022</h2>
+      </a>
+      <div class="footer__wrapper-list">
+        <a class="footer__wrapper-item github" href="https://github.com/svoboda88">
+          <img src="./assets/github.svg" alt="author's github icon">
+          Yauheni
+        </a>
+        <a class="footer__wrapper-item github" href="https://github.com/udushanov">
+          <img src="./assets/github.svg" alt="author's github icon">
+          Ulugbek
+        </a>
+        <a class="footer__wrapper-item github" href="https://github.com/aniamarkh">
+          <img src="./assets/github.svg" alt="author's github icon">
+          Anya
+        </a>
+      </div>
   </footer>
 </body>
 

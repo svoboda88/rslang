@@ -1,13 +1,27 @@
+import { GetWords } from '../textbook/request';
+
 export class UI {
     mainPage: HTMLElement | null;
 
     textbookPage: HTMLElement | null;
+
+    dictPage: HTMLElement | null;
+
+    gamesPage: HTMLElement | null;
+
+    statsPage: HTMLElement | null;
 
     logo: HTMLElement | null;
 
     mainPageBtn: HTMLElement | null;
 
     textbookPageBtn: HTMLElement | null;
+
+    dictPageBtn: HTMLElement | null;
+
+    gamesPageBtn: HTMLElement | null;
+
+    statsPageBtn: HTMLElement | null;
 
     modal: HTMLElement | null;
 
@@ -18,10 +32,16 @@ export class UI {
     constructor() {
         this.mainPage = document.getElementById('main-page');
         this.textbookPage = document.getElementById('textbook-page');
+        this.dictPage = document.getElementById('dictionary-page');
+        this.gamesPage = document.getElementById('games-page');
+        this.statsPage = document.getElementById('stats-page');
 
         this.logo = document.querySelector('.header__logo');
         this.mainPageBtn = document.getElementById('main-btn');
         this.textbookPageBtn = document.getElementById('textbook-btn');
+        this.dictPageBtn = document.getElementById('dictionary-btn');
+        this.gamesPageBtn = document.getElementById('games-btn');
+        this.statsPageBtn = document.getElementById('stats-btn');
 
         this.modal = document.querySelector<HTMLElement>('.modal');
         this.loginBtn = document.getElementById('login-btn');
@@ -32,6 +52,9 @@ export class UI {
         this.listenLogo();
         this.listenMainPageBtn();
         this.listenTextbookPageBtn();
+        this.listenDictionaryBtn();
+        this.listenGamesBtn();
+        this.listenStatsBtn();
         this.listenLogin();
         this.listenSignup();
         this.listenModalClosure();
@@ -40,9 +63,8 @@ export class UI {
     listenLogo() {
         if (this.logo) {
             this.logo.addEventListener('click', () => {
-                if (this.mainPage && this.textbookPage) {
-                    this.mainPage.classList.remove('hidden');
-                    this.textbookPage.classList.add('hidden');
+                if (this.mainPage && this.mainPageBtn) {
+                    this.showPage(this.mainPage, this.mainPageBtn);
                 }
             });
         }
@@ -51,9 +73,8 @@ export class UI {
     listenMainPageBtn() {
         if (this.mainPageBtn) {
             this.mainPageBtn.addEventListener('click', () => {
-                if (this.mainPage && this.textbookPage) {
-                    this.mainPage.classList.remove('hidden');
-                    this.textbookPage.classList.add('hidden');
+                if (this.mainPage && this.mainPageBtn) {
+                    this.showPage(this.mainPage, this.mainPageBtn);
                 }
             });
         }
@@ -62,9 +83,38 @@ export class UI {
     listenTextbookPageBtn() {
         if (this.textbookPageBtn) {
             this.textbookPageBtn.addEventListener('click', () => {
-                if (this.mainPage && this.textbookPage) {
-                    this.textbookPage.classList.remove('hidden');
-                    this.mainPage.classList.add('hidden');
+                if (this.textbookPage && this.textbookPageBtn) {
+                    this.showPage(this.textbookPage, this.textbookPageBtn);
+                }
+            });
+        }
+    }
+
+    listenDictionaryBtn() {
+        if (this.dictPageBtn) {
+            this.dictPageBtn.addEventListener('click', () => {
+                if (this.dictPage && this.dictPageBtn) {
+                    this.showPage(this.dictPage, this.dictPageBtn);
+                }
+            });
+        }
+    }
+
+    listenGamesBtn() {
+        if (this.gamesPageBtn) {
+            this.gamesPageBtn.addEventListener('click', () => {
+                if (this.gamesPage && this.gamesPageBtn) {
+                    this.showPage(this.gamesPage, this.gamesPageBtn);
+                }
+            });
+        }
+    }
+
+    listenStatsBtn() {
+        if (this.statsPageBtn) {
+            this.statsPageBtn.addEventListener('click', () => {
+                if (this.statsPage && this.statsPageBtn) {
+                    this.showPage(this.statsPage, this.statsPageBtn);
                 }
             });
         }
@@ -79,6 +129,25 @@ export class UI {
     listenSignup() {
         if (this.signupBtn) {
             this.signupBtn.addEventListener('click', () => this.showModal('signup'));
+        }
+    }
+
+    showPage(page: HTMLElement, pageBtn: HTMLElement) {
+        const pagesArray = document.querySelectorAll('.page');
+        const navBtsArray = document.querySelectorAll('.nav__btn');
+
+        pagesArray.forEach((page) => page.classList.add('hidden'));
+        navBtsArray.forEach((btn) => {
+            if (btn.classList.contains('nav__btn--active')) {
+                btn.classList.remove('nav__btn--active');
+            }
+        });
+        page.classList.remove('hidden');
+        pageBtn.classList.add('nav__btn--active');
+
+        if (page === this.textbookPage) {
+            this.listenScrollBtn();
+            this.listenTextbookScroll();
         }
     }
 
@@ -98,8 +167,18 @@ export class UI {
 
     listenModalClosure() {
         const crossBtn = document.querySelector<HTMLElement>('.modal__close-btn');
+        const modal = document.getElementById('modal');
+
         if (crossBtn) {
             crossBtn.addEventListener('click', this.closeModal);
+        }
+
+        if (modal) {
+            modal.addEventListener('click', (event) => {
+                if (event.target instanceof HTMLElement && event.target.classList.contains('modal')) {
+                    this.closeModal();
+                }
+            });
         }
     }
 
@@ -131,5 +210,83 @@ export class UI {
                 this.listenLoginSpan();
             }
         }
+    }
+
+    renderWordCards(result: GetWords[]) {
+        let card = '';
+        result.forEach((item, i) => {
+            card += `
+                <div class="words__card">
+                    <img class="word__img" src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
+                    <div class="word__card--right">
+                        <div class="word-card__text">
+                            <div class="word__title">
+                                <h2>${item.word} ${item.transcription}</h2>
+                                <span class="material-symbols-outlined word__audio" data-volume=${i}>
+                                volume_up
+                                </span>
+                            </div>
+                            <div class="words__audio" data-audio=${i}>
+                                <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
+                                <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>
+                                <audio src="https://react-learnwords-english.herokuapp.com/${item.audioExample}"></audio>
+                            </div>
+                            <p class="word__translate">${item.wordTranslate}</p>
+                            <br>
+                            <p>${item.textMeaning}</p>
+                            <p class="word__translate">${item.textMeaningTranslate}</p>
+                            <br>
+                            <p>${item.textExample}</p>
+                            <p class="word__translate">${item.textExampleTranslate}</p>
+                        </div>
+                        <div class="word__btns hidden">
+                            <button class="word__btns--hard" data-id="${item.id}">в сложные</button>
+                            <button class="word__btns--delete" data-id="${item.id}">удалить</button>  
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        return card;
+    }
+
+    listenScrollBtn() {
+        const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
+        if (scrollBtn) {
+            scrollBtn.addEventListener('click', () => {
+                if (scrollBtn.classList.contains('btn-down')) {
+                    window.scrollTo(0, document.body.scrollHeight);
+                } else if (scrollBtn.classList.contains('btn-up')) {
+                    window.scrollTo(document.body.scrollHeight, 0);
+                }
+            });
+        }
+    }
+
+    listenTextbookScroll() {
+        const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
+
+        window.onscroll = function () {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300 && scrollBtn) {
+                scrollBtn.classList.remove('btn-down');
+                scrollBtn.classList.add('btn-up');
+                scrollBtn.style.bottom = '100px';
+                scrollBtn.innerHTML = `
+                <span class="material-symbols-outlined">
+                arrow_upward
+                </span>
+              `;
+            } else if (document.body.scrollTop === 0 && scrollBtn) {
+                scrollBtn.classList.add('btn-down');
+                scrollBtn.classList.remove('btn-up');
+                scrollBtn.style.bottom = '20px';
+                scrollBtn.innerHTML = `
+                <span class="material-symbols-outlined">
+                arrow_downward
+                </span>
+              `;
+            }
+        };
     }
 }
