@@ -6,11 +6,13 @@ export class Textbook {
     textbookWords: Element | null;
     textbookLvls: Element | null;
     paginationList: Element | null;
+    textbookPage: Element | null;
 
     constructor() {
         this.textbookWords = document.querySelector('.textbook__words');
         this.textbookLvls = document.querySelector('.textbook__lvls');
         this.paginationList = document.querySelector('.pagination__list');
+        this.textbookPage = document.querySelector('#textbook-count');
     }
 
     init() {
@@ -24,6 +26,7 @@ export class Textbook {
 
         this.toGroup();
         this.pagination();
+        (this.textbookPage as Element).innerHTML = ` ${Number(storage.pageCount) + 1} / 30 `;
     }
 
     playlist() {
@@ -59,12 +62,29 @@ export class Textbook {
 
     toGroup() {
         if (this.textbookLvls) {
+            const arrayGroup = Array.from((this.textbookLvls as HTMLElement).children);
+
             this.textbookLvls.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
                 const target = event.target as HTMLDivElement;
-                const count = Array.from((this.textbookLvls as HTMLElement).children).indexOf(target) as number;
-                storage.groupCount = count;
-                this.init();
+                const parent = target.parentNode as HTMLDivElement;
+                const grandParent = parent.parentNode as HTMLDivElement;
+
+                if (grandParent.classList.contains('lvl__card')) {
+                    arrayGroup.forEach((item) => item.classList.remove('picked'));
+                    grandParent.classList.add('picked');
+                    const count = arrayGroup.indexOf(grandParent) as number;
+                    storage.groupCount = count;
+                    storage.pageCount = 0;
+                    this.init();
+                } else if (parent.classList.contains('lvl__card')) {
+                    arrayGroup.forEach((item) => item.classList.remove('picked'));
+                    parent.classList.add('picked');
+                    const count = arrayGroup.indexOf(parent) as number;
+                    storage.groupCount = count;
+                    storage.pageCount = 0;
+                    this.init();
+                }
             });
         }
     }
@@ -73,25 +93,150 @@ export class Textbook {
         if (this.paginationList) {
             this.paginationList.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
-                const target = event.target as HTMLLIElement;
+                const target = event.target as Element;
+                const parent = target.parentNode as Element;
+                const nextBtn = document.getElementById('textbook-next') as HTMLLIElement;
+                const prevBtn = document.getElementById('textbook-prev') as HTMLLIElement;
+                const firstBtn = document.getElementById('textbook-first') as HTMLLIElement;
+                const lastBtn = document.getElementById('textbook-last') as HTMLLIElement;
 
-                if (target.id === 'textbook-next') {
+                if (parent.id === 'textbook-next') {
                     storage.pageCount++;
+
+                    if (storage.pageCount === 29) {
+                        nextBtn.classList.remove('active-btn');
+                        nextBtn.classList.add('non-active-btn');
+                        nextBtn.style.pointerEvents = 'none';
+
+                        prevBtn.classList.remove('non-active-btn');
+                        prevBtn.classList.add('active-btn');
+                        prevBtn.style.pointerEvents = 'auto';
+
+                        lastBtn.classList.remove('active-btn');
+                        lastBtn.classList.add('non-active-btn');
+                        lastBtn.style.pointerEvents = 'none';
+
+                        firstBtn.classList.remove('non-active-btn');
+                        firstBtn.classList.add('active-btn');
+                        firstBtn.style.pointerEvents = 'auto';
+                    } else {
+                        nextBtn.style.pointerEvents = 'auto';
+                        if (nextBtn.classList.contains('non-active-btn')) {
+                            nextBtn.classList.remove('non-active-btn');
+                            nextBtn.classList.add('active-btn');
+                        }
+
+                        prevBtn.style.pointerEvents = 'auto';
+                        if (prevBtn.classList.contains('non-active-btn')) {
+                            prevBtn.classList.remove('non-active-btn');
+                            prevBtn.classList.add('active-btn');
+                        }
+
+                        lastBtn.style.pointerEvents = 'auto';
+                        if (lastBtn.classList.contains('non-active-btn')) {
+                            lastBtn.classList.remove('non-active-btn');
+                            lastBtn.classList.add('active-btn');
+                        }
+
+                        firstBtn.style.pointerEvents = 'auto';
+                        if (firstBtn.classList.contains('non-active-btn')) {
+                            firstBtn.classList.remove('non-active-btn');
+                            firstBtn.classList.add('active-btn');
+                        }
+                    }
+
                     this.init();
                 }
 
-                if (target.id === 'textbook-prev') {
+                if (parent.id === 'textbook-prev') {
                     storage.pageCount--;
+
+                    if (storage.pageCount === 0) {
+                        prevBtn.classList.remove('active-btn');
+                        prevBtn.classList.add('non-active-btn');
+                        prevBtn.style.pointerEvents = 'none';
+
+                        nextBtn.classList.remove('non-active-btn');
+                        nextBtn.classList.add('active-btn');
+                        nextBtn.style.pointerEvents = 'auto';
+
+                        firstBtn.classList.remove('active-btn');
+                        firstBtn.classList.add('non-active-btn');
+                        firstBtn.style.pointerEvents = 'none';
+
+                        lastBtn.classList.remove('non-active-btn');
+                        lastBtn.classList.add('active-btn');
+                        lastBtn.style.pointerEvents = 'auto';
+                    } else {
+                        nextBtn.style.pointerEvents = 'auto';
+                        if (nextBtn.classList.contains('non-active-btn')) {
+                            nextBtn.classList.remove('non-active-btn');
+                            nextBtn.classList.add('active-btn');
+                        }
+
+                        prevBtn.style.pointerEvents = 'auto';
+                        if (prevBtn.classList.contains('non-active-btn')) {
+                            prevBtn.classList.remove('non-active-btn');
+                            prevBtn.classList.add('active-btn');
+                        }
+
+                        lastBtn.style.pointerEvents = 'auto';
+                        if (lastBtn.classList.contains('non-active-btn')) {
+                            lastBtn.classList.remove('non-active-btn');
+                            lastBtn.classList.add('active-btn');
+                        }
+
+                        firstBtn.style.pointerEvents = 'auto';
+                        if (firstBtn.classList.contains('non-active-btn')) {
+                            firstBtn.classList.remove('non-active-btn');
+                            firstBtn.classList.add('active-btn');
+                        }
+                    }
+
                     this.init();
                 }
 
-                if (target.id === 'textbook-last') {
+                if (parent.id === 'textbook-last') {
                     storage.pageCount = 29;
+
+                    nextBtn.classList.remove('active-btn');
+                    nextBtn.classList.add('non-active-btn');
+                    nextBtn.style.pointerEvents = 'none';
+
+                    prevBtn.classList.remove('non-active-btn');
+                    prevBtn.classList.add('active-btn');
+                    prevBtn.style.pointerEvents = 'auto';
+
+                    lastBtn.classList.remove('active-btn');
+                    lastBtn.classList.add('non-active-btn');
+                    lastBtn.style.pointerEvents = 'none';
+
+                    firstBtn.classList.remove('non-active-btn');
+                    firstBtn.classList.add('active-btn');
+                    firstBtn.style.pointerEvents = 'auto';
+
                     this.init();
                 }
 
-                if (target.id === 'textbook-first') {
+                if (parent.id === 'textbook-first') {
                     storage.pageCount = 0;
+
+                    prevBtn.classList.remove('active-btn');
+                    prevBtn.classList.add('non-active-btn');
+                    prevBtn.style.pointerEvents = 'none';
+
+                    nextBtn.classList.remove('non-active-btn');
+                    nextBtn.classList.add('active-btn');
+                    nextBtn.style.pointerEvents = 'auto';
+
+                    firstBtn.classList.remove('active-btn');
+                    firstBtn.classList.add('non-active-btn');
+                    firstBtn.style.pointerEvents = 'none';
+
+                    lastBtn.classList.remove('non-active-btn');
+                    lastBtn.classList.add('active-btn');
+                    lastBtn.style.pointerEvents = 'auto';
+
                     this.init();
                 }
             });
