@@ -44,6 +44,10 @@
         <a class="login__btn" id="login-btn">Войти</a>
         <a class="signup__btn" id="signup-btn">Регистрация</a>
       </div>
+      <div class="header__logged">
+        <button class="logout__btn" id="login-btn">Выход</button>
+        <button class="username__btn" id="signup-btn"></button>
+      </div>
     </div>
   </header>
 
@@ -57,26 +61,42 @@
         <div class="modal__text--login hidden">
           <h2>Уже с нами?</h2>
           <p>войди в свой аккаунт RSLang</p>
-          <form id="form" class="modal__form--login">
-            <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Введите email" name="email" required>
+          <form id="form" class="modal__form--login" novalidate>
+            <label for="email">
+              <b>Email</b>
+              <p class="correct-data_validation">Пожалуйста, введите корректные данные</p>
+            </label>
+            <input type="email" placeholder="Введите email" name="email" class="login-email" onkeydown="if(event.keyCode == 13){return false;}">
             <label for="psw"><b>Пароль</b></label>
-            <input type="password" placeholder="Введите пароль" name="psw" required>
-            <button class="modal__login-btn">Войти!</button>
-            <p class="modal__login">Ещё не зарегистрированы?<span class="signup-span"> Регистрация</span></p>
+            <input type="password" placeholder="Введите пароль" name="psw" class="login-password" onkeydown="if(event.keyCode == 13){return false;}">
+          </form>
+            <div class="modal__btns">
+              <button class="modal__login-btn">Войти!</button>
+              <p class="modal__login">Ещё не зарегистрированы?<span class="signup-span"> Регистрация</span></p>
+            </div>
         </div>
         <div class="modal__text--signup hidden">
           <h2>Регистрируйся в RSLang</h2>
           <p>и начни своё путешествие в мир английского языка вместе с нами!</p>
-          <form id="form" class="modal__form--signup">
-            <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Введите email" name="email" required>
-            <label for="email"><b>Имя</b></label>
-            <input type="text" name="username" placeholder="Введите имя" required>
-            <label for="psw"><b>Пароль</b></label>
-            <input type="password" placeholder="Введите пароль" name="psw" required>
-            <label for="psw"><b>Подтверждение пароля</b></label>
-            <input type="password" placeholder="Введите пароль ещё раз, для проверки" name="psw2" required>
+          <form id="form" class="modal__form--signup" novalidate>
+            <label for="email" class="registration_email-label">
+              <b>Email</b>
+              <p class="user-exist_validation">Такой пользователь уже существует</p>
+              <p class="email_validation">Введите корректный адрес электронной почты</p>
+            </label>
+            <input type="email" placeholder="Введите email" name="email" class="registration-email" onkeydown="if(event.keyCode == 13){return false;}">
+            <label for="username" class="registration_name-label">
+              <b>Имя</b>
+              <p class="name_validation">Не все поля заполнены</p>
+            </label>
+            <input type="text" name="username" placeholder="Введите имя" class="registration-name" onkeydown="if(event.keyCode == 13){return false;}">
+            <label for="psw" class="registration_password-label">
+              <b>Пароль</b>
+              <p class="password_validation">Пароли не совпадают либо длина менее 8 символов</p>
+            </label>
+            <input type="password" placeholder="Введите пароль" name="psw" class="registration-password" onkeydown="if(event.keyCode == 13){return false;}">
+            <label for="psw" class="registration_confirmpassword-label"><b>Подтверждение пароля</b></label>
+            <input type="password" placeholder="Введите пароль ещё раз, для проверки" name="psw2" class="registration-password-confirm" onkeydown="if(event.keyCode == 13){return false;}">
           </form>
           <div class="modal__btns">
             <button class="modal__signup-btn">Зарегестрироваться!</button>

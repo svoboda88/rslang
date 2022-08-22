@@ -31,7 +31,7 @@
   margin-left: 30px;
 }
 
-.nav__btn, .login__btn {
+.nav__btn, .login__btn, .logout__btn {
   color: #fff;
   padding: 5px 10px;
   text-align: center;
@@ -41,7 +41,7 @@
   cursor: pointer;
 }
 
-.nav__btn::before, .login__btn::before {
+.nav__btn::before, .login__btn::before, .logout__btn::before {
   content: "";
   position: absolute;
   top: 0;
@@ -57,11 +57,11 @@
   transition: all .3s
 }
 
-.nav__btn:hover, .login__btn:hover {
+.nav__btn:hover, .login__btn:hover, .logout__btn:hover {
   color:#000000;  
 }
 
-.nav__btn:hover::before, .login__btn:hover::before {
+.nav__btn:hover::before, .login__btn:hover::before, .logout__btn:hover::before {
   opacity: 1;
   background-color: #fff;
   border-radius: 16px;
@@ -78,14 +78,16 @@
   color:#000000;
 }
 
-.header__login {
+.header__login,
+.header__logged {
   margin-left: auto;
   display: flex;
   flex-direction: row;
   gap: 20px;
 }
 
-.signup__btn {
+.signup__btn,
+.username__btn {
   border: none;
   border-radius: 16px;
   padding: 5px 10px;
@@ -99,4 +101,16 @@
 
 .signup__btn:hover {
   background-color: #31073d;
+}
+
+.header__logged {
+  display: none;
+}
+
+.header__logged-active {
+  display: block;
+}
+
+.header__login-disabled {
+  display: none;
 }
