@@ -131,7 +131,7 @@ align-items: center;
 }
 
 .pagination__btn:hover {
-  background-color: rgb(182, 182, 182);
+  background-color: #B6B6B6;
 }
 
 .page-count-btn {
@@ -162,22 +162,28 @@ align-items: center;
   display: flex;
   flex-direction: row;
   width: 48%;
-  min-height: 250px;
-  gap: 10px;
+  min-height: 300px;
   border-radius: 15px;
   background-color: #f3f4f8;
 }
 
 .card--learned {
-  background-color: rgb(204, 159, 186);
+  background-color: rgb(226, 207, 218);
 }
 
 .listen {
   cursor: pointer;
 }
 
-.word__card--right {
-  width: 70%;
+.word__img {
+  width: 35%;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.word__text {
+  width: 65%;
   text-align: left;
   padding: 10px;
   display: flex;
@@ -215,40 +221,40 @@ align-items: center;
   padding: 5px 0;
 }
 
-.word__img {
-  width: 30%;
-  object-fit: cover;
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
-}
-
 .word__btns {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  margin-left: auto;
 }
 
 .word__games {
   display: flex;
   flex-direction: column;
-
 }
 
-.word__btns--hard, .word__btns--delete {
+.word__btns--learned, .word__btns--hard, .word__btns--delete {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
   font: inherit;
   cursor: pointer;
-  color: #fff;
-  background-color: #a41268;
+  color: #000;
+  background-color: #e6e7eb;
   outline: none;
   transition: all 0.3s;
   width: auto;
 }
 
-.word__btns--hard:hover, .word__btns--delete:hover {
+.word__btns--learned:hover, .word__btns--hard:hover, .word__btns--delete:hover {
+  background-color: #B6B6B6;
+}
+
+.word__btns--checked {
+  background-color: #a41268;
+  color: #fff;
+}
+
+.word__btns--checked:hover {
   background-color: #31073d;
 }
 

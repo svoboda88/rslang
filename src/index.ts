@@ -14,8 +14,8 @@ textbook.init();
 const authorization = new Register();
 authorization.createUser();
 
-const userSignIn = new Authorize();
+const userSignIn = new Authorize(ui);
 userSignIn.signIn();
 
-const logOut = new Logout();
+const logOut = new Logout(ui);
 logOut.goOut();
