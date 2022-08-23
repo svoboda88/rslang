@@ -27,6 +27,8 @@ export class UI {
 
     modal: HTMLElement | null;
 
+    modalGame: HTMLElement | null;
+
     loginBtn: HTMLElement | null;
 
     signupBtn: HTMLElement | null;
@@ -47,6 +49,7 @@ export class UI {
         this.textbookSections = document.querySelector<HTMLElement>('.textbook__sections');
 
         this.modal = document.querySelector<HTMLElement>('.modal');
+        this.modalGame = document.querySelector<HTMLElement>('.game__modal');
         this.loginBtn = document.getElementById('login-btn');
         this.signupBtn = document.getElementById('signup-btn');
     }
@@ -63,6 +66,8 @@ export class UI {
         this.listenModalClosure();
         this.listenTextbookSections();
         this.checkIfLogged();
+        this.listenGamePage();
+        this.listenCloseGame();
     }
 
     checkIfLogged() {
@@ -350,13 +355,16 @@ export class UI {
 
         const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
 
-        if (textbookBtn && learnedBtn && textbookSection && learnedSection && scrollBtn) {
+        const gamesBtns = document.querySelector<HTMLElement>('.textbook__games');
+
+        if (textbookBtn && learnedBtn && textbookSection && learnedSection && scrollBtn && gamesBtns) {
             textbookBtn.addEventListener('click', () => {
                 textbookBtn.classList.add('section--active');
                 learnedBtn.classList.remove('section--active');
                 textbookSection.classList.remove('hidden');
                 learnedSection.classList.add('hidden');
                 scrollBtn.classList.remove('hidden');
+                gamesBtns.classList.remove('hidden');
             });
 
             learnedBtn.addEventListener('click', () => {
@@ -365,6 +373,31 @@ export class UI {
                 textbookSection.classList.add('hidden');
                 learnedSection.classList.remove('hidden');
                 scrollBtn.classList.add('hidden');
+                gamesBtns.classList.add('hidden');
+            });
+        }
+    }
+
+    listenGamePage() {
+        const sprintCard = document.getElementById('sprint-from-games');
+        if (sprintCard) {
+            sprintCard.addEventListener('click', () => {
+                if (this.modalGame) {
+                    document.body.style.overflow = 'hidden';
+                    this.modalGame.classList.remove('hidden');
+                }
+            });
+        }
+    }
+
+    listenCloseGame() {
+        const closeBtn = document.querySelector<HTMLElement>('.games__close-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                if (this.modalGame) {
+                    document.body.style.overflow = 'visible';
+                    this.modalGame.classList.add('hidden');
+                }
             });
         }
     }
