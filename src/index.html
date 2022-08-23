@@ -267,7 +267,7 @@
               <h1>C2</h1>
             </div>
           </div>
-          <div class="lvl__card">
+          <div class="lvl__card" id="hard-lvl">
             <div class="lvl__card--left">
               <h3>Раздел 7</h3>
               <p>Сложные</p>
@@ -317,12 +317,12 @@
         <h2>Игры</h2>
         <p>Начни игру со словами с этой страницы</p>
         <div class="games__wrapper">
-          <div class="games__card">
+          <div class="games__card" id="sprint-from-textbook">
             <img src="./assets/sprintgame.png" alt="sprint game image">
             <h3>Спринт</h3>
             <p>Определяй, верен ли перевод слова, как можно быстрее.</p>
           </div>
-          <div class="games__card">
+          <div class="games__card" id="sprint-from-textbook">
             <img src="./assets/audiogame.png" alt="sprint game image">
             <h3>Аудиовызов</h3>
             <p>Тренируй восприятие речи на слух.</p>
@@ -333,13 +333,13 @@
     <section class="page games hidden" id="games-page">
       <h3>Выбери уровень сложности и закрепи свои знания в играх:</h3>
       <div class="games__wrapper">
-        <div class="games__card">
+        <div class="games__card" id="sprint-from-games">
           <img src="./assets/sprintgame.png" alt="sprint game image">
           <h3>Спринт</h3>
           <p>Определяй, верен ли перевод слова, как можно быстрее.</p>
         </div>
-        <div class="games__card">
-          <img src="./assets/audiogame.png" alt="sprint game image">
+        <div class="games__card" id="audiogame-from-games">
+          <img src="./assets/audiogame.png" alt="audio game image">
           <h3>Аудиовызов</h3>
           <p>Тренируй восприятие речи на слух.</p>
         </div>
@@ -348,6 +348,20 @@
     <section class="page stats hidden" id="stats-page">
       <h2>тут статистика</h2>
     </section>
+
+    <div class="game__modal hidden">
+      <div class="games__close-btn">
+        <span class="material-symbols-outlined close-btn">
+          close
+        </span>
+      </div>
+      <div class="game__load-screen">
+        <div class="spinner">
+          <div class="bubble-1"></div>
+          <div class="bubble-2"></div>
+        </div>
+      </div>
+    </div>
 
   </main>
 
