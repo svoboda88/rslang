@@ -114,6 +114,16 @@ export class Textbook {
                 this.disablePrevBtns();
                 this.activateNextBtns();
                 this.init();
+
+                const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
+
+                if (storage.groupCount === 6 && this.paginationList && scrollBtn) {
+                    this.paginationList.classList.add('hidden');
+                    scrollBtn.classList.add('hidden');
+                } else if (this.paginationList && scrollBtn) {
+                    this.paginationList.classList.remove('hidden');
+                    scrollBtn.classList.remove('hidden');
+                }
             });
         }
     }

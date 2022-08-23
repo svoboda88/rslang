@@ -42,8 +42,8 @@
         <a class="signup__btn" id="signup-btn">Регистрация</a>
       </div>
       <div class="header__logged">
-        <a class="logout__btn" id="login-btn">Выход</a>
-        <a class="username__btn" id="signup-btn"></a>
+        <a class="logout__btn" id="logout-btn">Выход</a>
+        <a class="username__btn"></a>
       </div>
     </div>
   </header>
@@ -203,6 +203,14 @@
           arrow_downward
         </span>
       </button>
+
+      <div class="textbook__sections">
+        <a class="textbook__section section--active" id="section-textbook">Учебник</a>
+        <span class="material-symbols-outlined">
+          compare_arrows
+        </span>
+        <a class="textbook__section" id="section-learned">Изученные слова</a>
+      </div>
       <div class="textbook__wrapper">
         <div class="textbook__lvls">
           <div class="lvl__card picked">
@@ -259,9 +267,22 @@
               <h1>C2</h1>
             </div>
           </div>
+          <div class="lvl__card">
+            <div class="lvl__card--left">
+              <h3>Раздел 7</h3>
+              <p>Сложные</p>
+            </div>
+            <div class="lvl__card--right">
+              <span class="material-symbols-outlined">
+                psychology_alt
+              </span>
+            </div>
+          </div>
         </div>
+
         <div class="textbook__words">
         </div>
+
         <div class="textbook__pagination">
           <ul class="pagination__list">
             <li id="textbook-first" class="pagination__btn disabled-btn">
@@ -287,9 +308,42 @@
           </ul>
         </div>
       </div>
+      <div class="learned__wrapper hidden">
+        <div class="learned__words">
+          <h2>Пока ничего не изучено :(</h2>
+        </div>
+      </div>
+      <div class="textbook__games">
+        <h2>Игры</h2>
+        <p>Начни игру со словами с этой страницы</p>
+        <div class="games__wrapper">
+          <div class="games__card">
+            <img src="./assets/sprintgame.png" alt="sprint game image">
+            <h3>Спринт</h3>
+            <p>Определяй, верен ли перевод слова, как можно быстрее.</p>
+          </div>
+          <div class="games__card">
+            <img src="./assets/audiogame.png" alt="sprint game image">
+            <h3>Аудиовызов</h3>
+            <p>Тренируй восприятие речи на слух.</p>
+          </div>
+        </div>
+      </div>
     </section>
     <section class="page games hidden" id="games-page">
-      <h2>тут игры</h2>
+      <h3>Выбери уровень сложности и закрепи свои знания в играх:</h3>
+      <div class="games__wrapper">
+        <div class="games__card">
+          <img src="./assets/sprintgame.png" alt="sprint game image">
+          <h3>Спринт</h3>
+          <p>Определяй, верен ли перевод слова, как можно быстрее.</p>
+        </div>
+        <div class="games__card">
+          <img src="./assets/audiogame.png" alt="sprint game image">
+          <h3>Аудиовызов</h3>
+          <p>Тренируй восприятие речи на слух.</p>
+        </div>
+      </div>
     </section>
     <section class="page stats hidden" id="stats-page">
       <h2>тут статистика</h2>

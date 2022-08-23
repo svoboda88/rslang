@@ -27,23 +27,46 @@
   background-color: #31073d;
 }
 
+.textbook__sections {
+  display: flex;
+  flex-direction: row;
+justify-content: center;
+gap: 10px;
+align-items: center;
+}
+
+.textbook__section {
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 32px;
+  color: rgb(182, 182, 182);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.textbook__section:hover {
+  color: #000000;
+}
+
+.section--active {
+  color: #000;
+  cursor: auto;
+}
+
 
 .textbook__wrapper {
-  width: 70%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
   align-items: center;
 }
 
 .textbook__lvls {
   display: flex;
   flex-direction: row;
-  gap: 30px;
-  justify-content: space-between;
-  margin: 20px auto;
+  gap: 15px;
+  margin: 20px;
 }
 
 .lvl__card {
@@ -78,6 +101,9 @@
   text-align: center;
   line-height: 50px;
   width: 30%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .textbook__pagination {
@@ -105,7 +131,7 @@
 }
 
 .pagination__btn:hover {
-  background-color: rgb(182, 182, 182);
+  background-color: #B6B6B6;
 }
 
 .page-count-btn {
@@ -121,38 +147,62 @@
   background-color: #e6e7eb;
 }
 
-.textbook__words {
+.textbook__words, .learned__words {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  width: 90%;
   gap: 20px 20px;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 330px);
 }
 
 .words__card {
   display: flex;
   flex-direction: row;
   width: 48%;
-  gap: 10px;
+  min-height: 300px;
   border-radius: 15px;
   background-color: #f3f4f8;
+}
+
+.card--learned {
+  background-color: rgb(226, 207, 218);
 }
 
 .listen {
   cursor: pointer;
 }
 
-.word__card--right {
-  width: 60%;
+.word__img {
+  width: 35%;
+  object-fit: cover;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.word__text {
+  width: 65%;
   text-align: left;
-  padding: 15px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .word__title {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 5px 0;
+  flex-direction: column;
   border-radius: 10px;
+}
+
+.word__title--top {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+
   transition: all 0.3s;
 }
 
@@ -168,38 +218,50 @@
   color: #fff;
   background-color: #a41268;
   border-radius: 10px;
-  padding: 5px;
-
-}
-
-.word__img {
-  width: 40%;
-  object-fit: cover;
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
+  padding: 5px 0;
 }
 
 .word__btns {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  margin-top: 10px;
-  margin-left: auto;
 }
 
-.word__btns--hard, .word__btns--delete {
+.word__games {
+  display: flex;
+  flex-direction: column;
+}
+
+.word__btns--learned, .word__btns--hard, .word__btns--delete {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
   font: inherit;
   cursor: pointer;
-  color: #fff;
-  background-color: #a41268;
+  color: #000;
+  background-color: #e6e7eb;
   outline: none;
   transition: all 0.3s;
   width: auto;
 }
 
-.word__btns--hard:hover, .word__btns--delete:hover {
+.word__btns--learned:hover, .word__btns--hard:hover, .word__btns--delete:hover {
+  background-color: #B6B6B6;
+}
+
+.word__btns--checked {
+  background-color: #a41268;
+  color: #fff;
+}
+
+.word__btns--checked:hover {
   background-color: #31073d;
+}
+
+.learned__wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 245px);
 }

@@ -100,7 +100,7 @@
 }
 
 .username__btn {
-  cursor: auto;
+  cursor: default;
 }
 
 .signup__btn:hover {

@@ -1,4 +1,7 @@
+import { UI } from '../ui/ui';
+
 export class Authorize {
+    UI: UI;
     userInfo: string | null;
     loginEmail: HTMLInputElement | null;
     loginPassword: HTMLInputElement | null;
@@ -9,7 +12,8 @@ export class Authorize {
     headerLogin: HTMLElement | null;
     usernameBtn: HTMLElement | null;
 
-    constructor() {
+    constructor(UI: UI) {
+        this.UI = UI;
         this.userInfo = JSON.parse(window.localStorage.getItem('userInfo') as string);
         this.loginEmail = document.querySelector('.login-email');
         this.loginPassword = document.querySelector('.login-password');
@@ -33,6 +37,9 @@ export class Authorize {
                         (this.usernameBtn as HTMLElement).textContent = JSON.parse(
                             window.localStorage.getItem('UserInfo') as string
                         ).name;
+                    })
+                    .then(() => {
+                        this.UI.showAuthorizedSections();
                     });
             }
         };
