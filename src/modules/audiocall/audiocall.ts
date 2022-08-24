@@ -44,11 +44,12 @@ export class Audiocall {
                         this.wordVoice(sliced, index);
                     });
                     let resultWords = '';
-                    sliced.forEach((item) => {
-                        resultWords += `<div>${item.word}</div>`;
+                    sliced.forEach((item, i) => {
+                        resultWords += `<div data-call-word=${i}>${item.word}</div>`;
                     });
                     (this.wordVariants as HTMLDivElement).innerHTML = resultWords;
                     (this.startBtn as HTMLDivElement).innerHTML = 'Next';
+                    this.answerWord(index);
                 });
             });
         }
@@ -58,5 +59,19 @@ export class Audiocall {
         const audioSource = `https://react-learnwords-english.herokuapp.com/${arr[i].audio}`;
         const audio = new Audio(audioSource);
         audio.play();
+    }
+
+    answerWord(i: number) {
+        if (this.wordVariants) {
+            this.wordVariants.addEventListener('click', (event) => {
+                const target = event.target as HTMLDivElement;
+                const choosenWord = target.dataset.callWord;
+                if (choosenWord === i.toString()) {
+                    target.style.backgroundColor = 'green';
+                } else {
+                    target.style.backgroundColor = 'red';
+                }
+            });
+        }
     }
 }
