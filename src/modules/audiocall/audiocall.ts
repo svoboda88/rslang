@@ -7,6 +7,7 @@ export class Audiocall {
     startBtn: Element | null;
     voiceBtn: Element | null;
     wordVariants: Element | null;
+    wrapper: Element | null;
 
     constructor() {
         this.modal = document.querySelector('.game__modal');
@@ -14,6 +15,7 @@ export class Audiocall {
         this.startBtn = document.getElementById('start-call');
         this.voiceBtn = document.getElementById('word-voice');
         this.wordVariants = document.getElementById('word-variants');
+        this.wrapper = document.querySelector('.audiocall');
     }
 
     init() {
@@ -34,22 +36,28 @@ export class Audiocall {
     startGame() {
         if (this.startBtn) {
             this.startBtn.addEventListener('click', () => {
+                // console.log(storage);
                 const pageCount = Math.floor(Math.random() * 20);
                 getWordsResult(storage.groupCountAudiocall, pageCount).then((result) => {
                     const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
                     const sliced: GetWords[] = shuffled.slice(0, 5);
                     const index = Math.floor(Math.random() * 5);
-                    this.wordVoice(sliced, index);
-                    (this.voiceBtn as HTMLDivElement).addEventListener('click', () => {
-                        this.wordVoice(sliced, index);
+                    storage.wordVariants = [];
+                    storage.wordVariants = [...sliced];
+                    storage.wordIndex = index;
+                    (this.voiceBtn as HTMLDivElement).addEventListener('click', (event) => {
+                        event.stopImmediatePropagation();
+                        this.wordVoice(storage.wordVariants, storage.wordIndex);
                     });
+                    this.wordVoice(sliced, index);
                     let resultWords = '';
                     sliced.forEach((item, i) => {
                         resultWords += `<div data-call-word=${i}>${item.word}</div>`;
                     });
                     (this.wordVariants as HTMLDivElement).innerHTML = resultWords;
                     (this.startBtn as HTMLDivElement).innerHTML = 'Next';
-                    this.answerWord(index);
+                    this.answerWord(sliced, index);
+                    this.showResult();
                 });
             });
         }
@@ -61,17 +69,43 @@ export class Audiocall {
         audio.play();
     }
 
-    answerWord(i: number) {
+    answerWord(arr: GetWords[], i: number) {
         if (this.wordVariants) {
             this.wordVariants.addEventListener('click', (event) => {
                 const target = event.target as HTMLDivElement;
-                const choosenWord = target.dataset.callWord;
-                if (choosenWord === i.toString()) {
+                const choosenWord = Number(target.dataset.callWord);
+                if (choosenWord === i) {
                     target.style.backgroundColor = 'green';
+                    arr.forEach((item) => {
+                        if (item.word === target.textContent) {
+                            storage.correctAnswers.push({
+                                audio: item.audio,
+                                word: item.word,
+                                translate: item.wordTranslate,
+                            });
+                        }
+                    });
                 } else {
                     target.style.backgroundColor = 'red';
+                    arr.forEach((item) => {
+                        if (item.word === target.textContent) {
+                            storage.wrongAnswers.push({
+                                audio: item.audio,
+                                word: item.word,
+                                translate: item.wordTranslate,
+                            });
+                        }
+                    });
                 }
             });
+        }
+    }
+
+    showResult() {
+        const answersSum = storage.correctAnswers.length + storage.wrongAnswers.length;
+        console.log(answersSum);
+        if (answersSum === 10) {
+            (this.wrapper as HTMLDivElement).innerHTML = `Correct:`;
         }
     }
 }
