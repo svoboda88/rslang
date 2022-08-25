@@ -350,17 +350,56 @@
     </section>
 
     <div class="game__modal hidden">
+
       <div class="games__close-btn">
         <span class="material-symbols-outlined close-btn">
           close
         </span>
       </div>
-      <div class="game__load-screen">
+
+      <div class="game__load-screen hidden">
         <div class="spinner">
           <div class="bubble-1"></div>
           <div class="bubble-2"></div>
         </div>
       </div>
+
+      <div class="countdown hidden"></div>
+
+      <div class="sprint__lvl hidden"></div>
+
+      <div class="game__sprint hidden">
+        <div class="sprint__window">
+          <div class="window__result">
+            <h3>Текущий результат:</h3>
+            <h3 id="sprint-result">0</h3>
+          </div>
+          <div class="window">
+            <div class="words__count">
+              <div class="count__btn"></div>
+              <div class="count__btn"></div>
+              <div class="count__btn"></div>
+            </div>
+
+            <div class="words__price">
+              <p id="word-price">10</p>
+              <p class=>баллов за слово</p>
+            </div>
+
+            <div class="words__word">
+              <h1 class="sprint__word"></h1>
+              <h3 class="sprint__translate"></h3>
+            </div>
+
+            <div class="sprint__btns">
+              <button type="button" class="sprint__right">
+                < Верно</button>
+                  <button type="button" class="sprint__wrong">Неверно ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
 
   </main>

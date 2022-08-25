@@ -4,6 +4,7 @@ import { Register } from './modules/authorization/registration';
 import { UI } from './modules/ui/ui';
 import { Textbook } from './modules/textbook/textbook';
 import './style.css';
+import { Sprint } from './modules/sprint/sprint';
 
 const ui = new UI();
 const textbook = new Textbook(ui);
@@ -19,3 +20,6 @@ userSignIn.signIn();
 
 const logOut = new Logout(ui);
 logOut.goOut();
+
+const sprint = new Sprint();
+sprint.init();
