@@ -58,7 +58,14 @@ export class Sprint {
 
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
-                if (this.modal && this.gameContainer && this.loadingScreen && countdownContainer) {
+                if (
+                    this.modal &&
+                    this.gameContainer &&
+                    this.loadingScreen &&
+                    countdownContainer &&
+                    this.resultCountContainer &&
+                    this.wordPriceContainer
+                ) {
                     document.body.style.overflow = 'visible';
                     this.modal.classList.add('hidden');
                     this.gameContainer.classList.add('hidden');
@@ -67,6 +74,9 @@ export class Sprint {
                     this.wordIndex = 0;
                     this.wordPrice = 10;
                     this.resultCount = 0;
+                    this.correctAnswerCount = 0;
+                    this.resultCountContainer.innerHTML = '0';
+                    this.wordPriceContainer.innerHTML = '10';
                 }
             });
         }
@@ -217,6 +227,18 @@ export class Sprint {
             }
             if (this.correctAnswerCount === 12) {
                 this.wordPrice = 60;
+            }
+            if (this.correctAnswerCount === 16) {
+                this.wordPrice = 80;
+            }
+            if (this.correctAnswerCount === 18) {
+                this.wordPrice = 100;
+            }
+            if (this.correctAnswerCount === 24) {
+                this.wordPrice = 120;
+            }
+            if (this.correctAnswerCount === 28) {
+                this.wordPrice = 140;
             }
             this.wordPriceContainer.innerHTML = String(this.wordPrice);
         }
