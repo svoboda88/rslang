@@ -65,21 +65,10 @@
 }
 
 .words__count {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-}
-
-.count__btn {
-  width: 20px;
-  height: 20px;
-  border-radius: 20px;
-  background-color: #ffffff;
-  opacity: 0.5;
-}
-
-.filled {
-  opacity: 1;
+  width: 80px;
+  height: 24px;
+  background-image: url('../assets/sprint0.png');
+  background-repeat: no-repeat;
 }
 
 .words__price {
@@ -127,4 +116,55 @@
 .countdown {
   font-size: 30px;
   color: #ffffff;
+}
+
+.sprint__results {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  width: 30vw;
+  height: auto;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.sprint__results h2 {
+  text-align: center;
+}
+
+.wrong__count {
+  display: inline-block;
+  background-color: #f02d2d;
+  text-align: center;
+  border-radius: 10px;
+  color: #ffffff;
+  width: 40px;
+}
+
+.correct__count {
+  display: inline-block;
+  background-color: #84ff53;
+  text-align: center;
+  border-radius: 10px;
+  color: #ffffff;
+  width: 40px;
+}
+
+.results__play-btn {
+  align-self: center;
+  border: none;
+  border-radius: 16px;
+  padding: 5px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background-color: #a41268;
+  outline: none;
+  margin-top: 20px;
+  width: 150px;
+  transition: all 0.3s;
+}
+
+.results__play-btn:hover {
+  background-color: #31073d;
 }

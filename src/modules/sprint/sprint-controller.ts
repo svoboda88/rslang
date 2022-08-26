@@ -13,13 +13,16 @@ export class SprintController {
     init() {
         this.view.listenStartFromMain();
         this.view.listenCloseGame(this);
-        this.view.listenAnswerBtns(this);
         this.view.listenLvlBtns(this);
+        this.view.listenAnswerBtns(this);
+        this.view.listenKeyboard(this);
+        this.view.listenPlayAgain(this);
     }
 
     async startGame(lvl: number) {
         this.view.showCountdown();
         setTimeout(this.view.renderGame, 3000);
+        setTimeout(this.view.startTimer, 3000, this);
         await this.model.getWordsForLvl(lvl);
         this.view.renderWord(this.model.getWord(0));
     }
@@ -28,11 +31,13 @@ export class SprintController {
         if (this.model.game.isWordCorrect) {
             this.model.game.resultCount += this.model.game.wordPrice;
             this.view.updateResultContainer(this.model.game.resultCount);
-            this.model.game.correctAnswerCount += 1;
-            this.model.updateWordPrice();
+            this.model.updateWordPrice(this.view.dotsCount);
             this.view.updateWordPriceContainer(this.model.game.wordPrice);
+            this.view.updateDotsCount('correct');
+            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
         } else {
-            console.log('Это неверно!');
+            this.model.writeAnswer(this.model.game.wordIndex, 'error');
+            this.view.updateDotsCount('error');
         }
         this.model.game.wordIndex++;
         this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
@@ -42,17 +47,29 @@ export class SprintController {
         if (!this.model.game.isWordCorrect) {
             this.model.game.resultCount += this.model.game.wordPrice;
             this.view.updateResultContainer(this.model.game.resultCount);
-            this.model.game.correctAnswerCount += 1;
-            this.model.updateWordPrice();
+            this.model.updateWordPrice(this.view.dotsCount);
             this.view.updateWordPriceContainer(this.model.game.wordPrice);
+            this.view.updateDotsCount('correct');
+            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
         } else {
-            console.log('Это было верно!');
+            this.model.writeAnswer(this.model.game.wordIndex, 'error');
+            this.view.updateDotsCount('error');
         }
         this.model.game.wordIndex++;
         this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
     }
 
+    showResult() {
+        this.view.showResult(this.model.game.correctAnswers, this.model.game.wrongAnswers);
+    }
+
     endGame() {
         this.model.toInitState();
+        this.view.closeGame();
+    }
+
+    restartGame() {
+        this.model.toInitState();
+        this.view.restartGame();
     }
 }

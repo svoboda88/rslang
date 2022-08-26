@@ -1,3 +1,4 @@
+import { GetWords } from '../textbook/request';
 import { SprintController } from './sprint-controller';
 
 export class SprintView {
@@ -6,19 +7,40 @@ export class SprintView {
     gameContainer: HTMLElement | null;
     lvls: HTMLElement | null;
     resultCountContainer: HTMLElement | null;
+    dotsContainer: HTMLElement | null;
+    dotsCount: number;
     wordPriceContainer: HTMLElement | null;
     rightBtn: HTMLElement | null;
     wrongBtn: HTMLElement | null;
+    gameResultsContainer: HTMLElement | null;
+    gameResultsCorrect: HTMLElement | null;
+    gameResultsWrong: HTMLElement | null;
+    correctCount: HTMLElement | null;
+    wrongCount: HTMLElement | null;
+    resultCount: HTMLElement | null;
+    playAgainBtn: HTMLElement | null;
 
     constructor() {
         this.modal = document.querySelector<HTMLElement>('.sprint__modal');
         this.loadingScreen = document.querySelector<HTMLElement>('.sprint__load-screen');
         this.gameContainer = document.querySelector<HTMLElement>('.sprint__game');
         this.lvls = document.querySelector<HTMLElement>('.sprint__lvl');
+
         this.resultCountContainer = document.getElementById('sprint-result');
+        this.dotsContainer = document.querySelector<HTMLElement>('.words__count');
+        this.dotsCount = 0;
         this.wordPriceContainer = document.getElementById('word-price');
+
         this.rightBtn = document.querySelector<HTMLElement>('.sprint__right');
         this.wrongBtn = document.querySelector<HTMLElement>('.sprint__wrong');
+
+        this.gameResultsContainer = document.querySelector<HTMLElement>('.sprint__results');
+        this.gameResultsCorrect = document.querySelector<HTMLElement>('.results__correct');
+        this.gameResultsWrong = document.querySelector<HTMLElement>('.results__wrong');
+        this.correctCount = document.querySelector<HTMLElement>('.correct__count');
+        this.wrongCount = document.querySelector<HTMLElement>('.wrong__count');
+        this.resultCount = document.querySelector<HTMLElement>('.results__result');
+        this.playAgainBtn = document.querySelector<HTMLElement>('.results__play-btn');
     }
 
     listenStartFromMain() {
@@ -38,28 +60,17 @@ export class SprintView {
 
     listenCloseGame(controller: SprintController) {
         const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
-        const countdownContainer = document.querySelector<HTMLElement>('.countdown');
 
         if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                if (
-                    this.modal &&
-                    this.gameContainer &&
-                    this.loadingScreen &&
-                    countdownContainer &&
-                    this.resultCountContainer &&
-                    this.wordPriceContainer
-                ) {
-                    document.body.style.overflow = 'visible';
-                    this.modal.classList.add('hidden');
-                    this.gameContainer.classList.add('hidden');
-                    this.loadingScreen.classList.add('hidden');
-                    countdownContainer.classList.add('hidden');
-                    this.resultCountContainer.innerHTML = '0';
-                    this.wordPriceContainer.innerHTML = '10';
-                    controller.endGame();
-                }
-            });
+            closeBtn.addEventListener('click', () => controller.endGame());
+        }
+    }
+
+    closeGame() {
+        if (this.modal) {
+            document.body.style.overflow = 'visible';
+            this.modal.classList.add('hidden');
+            this.restartGame();
         }
     }
 
@@ -68,8 +79,9 @@ export class SprintView {
         if (lvlBtnsArray) {
             lvlBtnsArray.forEach((btn) => {
                 btn.addEventListener('click', async () => {
-                    if (btn instanceof HTMLElement && this.lvls) {
+                    if (btn instanceof HTMLElement && this.lvls && this.resultCountContainer) {
                         this.lvls.classList.add('hidden');
+                        this.resultCountContainer.classList.remove('hidden');
                         controller.startGame(Number(btn.dataset.lvl));
                     }
                 });
@@ -126,6 +138,18 @@ export class SprintView {
         }
     }
 
+    listenKeyboard(controller: SprintController) {
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'ArrowLeft') {
+                event.preventDefault();
+                controller.checkIfRight();
+            } else if (event.code === 'ArrowRight') {
+                event.preventDefault();
+                controller.checkIfWrong();
+            }
+        });
+    }
+
     updateResultContainer(points: number) {
         if (this.resultCountContainer) {
             this.resultCountContainer.innerHTML = String(points);
@@ -135,6 +159,128 @@ export class SprintView {
     updateWordPriceContainer(price: number) {
         if (this.wordPriceContainer) {
             this.wordPriceContainer.innerHTML = String(price);
+        }
+    }
+
+    updateDotsCount(answer: 'correct' | 'error') {
+        if (answer === 'correct' && this.dotsContainer) {
+            switch (this.dotsCount) {
+                case 0:
+                    this.dotsContainer.innerHTML = `<img src="./assets/sprint1.png" alt="word count">`;
+                    this.dotsCount += 1;
+                    break;
+                case 1:
+                    this.dotsContainer.innerHTML = `<img src="./assets/sprint2.png" alt="word count">`;
+                    this.dotsCount += 1;
+                    break;
+                case 2:
+                    this.dotsContainer.innerHTML = `<img src="./assets/sprint3.png" alt="word count">`;
+                    this.dotsCount += 1;
+                    break;
+                case 3:
+                    this.dotsContainer.innerHTML = `<img src="./assets/sprint0.png" alt="word count">`;
+                    this.dotsCount = 0;
+                    break;
+            }
+        } else if (answer === 'error' && this.dotsContainer) {
+            this.dotsContainer.innerHTML = `<img src="./assets/sprint0.png" alt="word count">`;
+            this.dotsCount = 0;
+        }
+    }
+
+    startTimer(controller: SprintController) {
+        console.log('игра началась');
+        const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+        const thatController = controller;
+        let count = 10;
+        const interval = setInterval(
+            () => {
+                count--;
+                console.log(count);
+                if (count === 0) {
+                    console.log('время вышло');
+                    clearInterval(interval);
+                    thatController.showResult();
+                }
+            },
+            1000,
+            thatController
+        );
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => clearInterval(interval));
+        }
+    }
+
+    showResult(correctAnswers: GetWords[], wrongAnswers: GetWords[]) {
+        if (this.gameContainer && this.gameResultsContainer && this.correctCount && this.wrongCount) {
+            this.gameContainer.classList.add('hidden');
+            this.gameResultsContainer.classList.remove('hidden');
+            correctAnswers.forEach((word) => {
+                if (this.gameResultsCorrect) {
+                    this.gameResultsCorrect.innerHTML += `
+                    <div class="results__word">
+                        <p><b>${word.word}</b> ${word.wordTranslate}</p>
+                    </div>`;
+                }
+            });
+            wrongAnswers.forEach((word) => {
+                if (this.gameResultsWrong) {
+                    this.gameResultsWrong.innerHTML += `
+                    <div class="results__word">
+                        <p><b>${word.word}</b> ${word.wordTranslate}</p>
+                    </div>`;
+                }
+            });
+            if (this.resultCount && this.resultCountContainer) {
+                this.resultCount.innerHTML = this.resultCountContainer.innerHTML;
+                this.resultCountContainer.classList.add('hidden');
+            }
+            this.correctCount.innerHTML = String(correctAnswers.length);
+            this.wrongCount.innerHTML = String(wrongAnswers.length);
+        }
+    }
+
+    listenPlayAgain(controller: SprintController) {
+        if (this.playAgainBtn) {
+            this.playAgainBtn.addEventListener('click', () => controller.restartGame());
+        }
+    }
+
+    restartGame() {
+        const countdownContainer = document.querySelector<HTMLElement>('.countdown');
+
+        if (
+            this.gameContainer &&
+            this.loadingScreen &&
+            this.resultCountContainer &&
+            countdownContainer &&
+            this.wordPriceContainer &&
+            this.dotsContainer &&
+            this.gameResultsContainer &&
+            this.gameResultsCorrect &&
+            this.gameResultsWrong &&
+            this.correctCount &&
+            this.wrongCount &&
+            this.resultCount
+        ) {
+            this.gameContainer.classList.add('hidden');
+            this.loadingScreen.classList.add('hidden');
+            countdownContainer.classList.add('hidden');
+            this.resultCountContainer.innerHTML = '0';
+            this.wordPriceContainer.innerHTML = '10';
+            this.dotsContainer.innerHTML = `<img src="./assets/sprint0.png" alt="word count">`;
+            this.dotsCount = 0;
+            this.gameResultsContainer.classList.add('hidden');
+            this.gameResultsCorrect.innerHTML = '';
+            this.gameResultsWrong.innerHTML = '';
+            this.correctCount.innerHTML = '0';
+            this.wrongCount.innerHTML = '0';
+            this.resultCount.innerHTML = '0';
+        }
+
+        if (this.lvls && this.loadingScreen) {
+            this.lvls.classList.remove('hidden');
+            this.loadingScreen.classList.remove('hidden');
         }
     }
 }

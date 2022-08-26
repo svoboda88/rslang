@@ -10,8 +10,9 @@ export class SprintModel {
             isWordCorrect: false,
             wordIndex: 0,
             wordPrice: 10,
-            correctAnswerCount: 0,
             resultCount: 0,
+            correctAnswers: [],
+            wrongAnswers: [],
         };
     }
 
@@ -42,32 +43,20 @@ export class SprintModel {
         return [word, translate];
     }
 
-    updateWordPrice() {
-        console.log(this.game.correctAnswerCount);
-        switch (this.game.correctAnswerCount) {
-            case 4:
-                this.game.wordPrice = 20;
-                break;
-            case 8:
-                this.game.wordPrice = 40;
-                break;
-            case 12:
-                this.game.wordPrice = 60;
-                break;
-            case 16:
-                this.game.wordPrice = 80;
-                break;
-            case 18:
-                this.game.wordPrice = 100;
-                break;
-            case 24:
-                this.game.wordPrice = 120;
-                break;
-            case 28:
-                this.game.wordPrice = 140;
-                break;
-            default:
-                this.game.wordPrice = this.game.wordPrice;
+    writeAnswer(index: number, result: 'correct' | 'error') {
+        const word = this.game.wordsToPlay[index];
+        if (result === 'correct') {
+            this.game.correctAnswers.push(word);
+        } else if (result === 'error') {
+            this.game.wrongAnswers.push(word);
+        }
+    }
+
+    updateWordPrice(dotsCount: number) {
+        if (dotsCount === 3 && this.game.wordPrice === 10) {
+            this.game.wordPrice = 20;
+        } else if (dotsCount === 3) {
+            this.game.wordPrice += 20;
         }
     }
 
@@ -76,7 +65,8 @@ export class SprintModel {
         this.game.isWordCorrect = false;
         this.game.wordIndex = 0;
         this.game.wordPrice = 10;
-        this.game.correctAnswerCount = 0;
         this.game.resultCount = 0;
+        this.game.correctAnswers = [];
+        this.game.wrongAnswers = [];
     }
 }
