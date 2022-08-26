@@ -21,7 +21,7 @@ html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   background: rgb(2,0,36);
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
+  background: var(--gradient);
   font-family: 'Roboto Mono', monospace;
 }
 
@@ -32,7 +32,7 @@ body {
 }
 
 .stats {
-  background-color: #ffffff;
+  background-color: var(--white);
   height: calc(100vh - 160px);
 }
 

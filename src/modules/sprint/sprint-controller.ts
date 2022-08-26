@@ -20,10 +20,10 @@ export class SprintController {
     }
 
     async startGame(lvl: number) {
-        this.view.showCountdown(this);
-        setTimeout(this.view.renderGame, 3000);
+        this.view.showCountdown();
+        setTimeout(this.view.renderGame, 3000, this.view);
+        setTimeout(this.view.startTimer, 3000, this, this.view);
         await this.model.getWordsForLvl(lvl);
-        this.view.startTimer(this);
         this.view.renderWord(this.model.getWord(0));
     }
 
@@ -40,6 +40,9 @@ export class SprintController {
             this.view.updateDotsCount('error');
         }
         this.model.game.wordIndex++;
+        if (this.model.game.wordIndex > 39) {
+            this.model.game.wordIndex = 0;
+        }
         this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
     }
 
@@ -56,6 +59,9 @@ export class SprintController {
             this.view.updateDotsCount('error');
         }
         this.model.game.wordIndex++;
+        if (this.model.game.wordIndex > 39) {
+            this.model.game.wordIndex = 0;
+        }
         this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
     }
 

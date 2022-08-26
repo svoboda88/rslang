@@ -1,4 +1,4 @@
-import { getWordsResult } from '../textbook/request';
+import { GetWords, getWordsResult } from '../textbook/request';
 import { Game } from './types';
 
 export class SprintModel {
@@ -18,11 +18,15 @@ export class SprintModel {
 
     async getWordsForLvl(lvl: number) {
         const randomPageNumber = Math.floor(Math.random() * 30);
-
+        let pageHarder: GetWords[];
         const wordsArray = await getWordsResult(lvl, randomPageNumber);
-        const hardWordsArr = await getWordsResult(lvl, randomPageNumber + 1);
+        if (randomPageNumber === 29) {
+            pageHarder = await getWordsResult(lvl, randomPageNumber - 1);
+        } else {
+            pageHarder = await getWordsResult(lvl, randomPageNumber + 1);
+        }
 
-        this.game.wordsToPlay = [...wordsArray, ...hardWordsArr];
+        this.game.wordsToPlay = [...wordsArray, ...pageHarder];
     }
 
     getWord(index: number): string[] {

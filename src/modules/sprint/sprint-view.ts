@@ -6,6 +6,8 @@ export class SprintView {
     loadingScreen: HTMLElement | null;
     gameContainer: HTMLElement | null;
     lvls: HTMLElement | null;
+    timerContainer: HTMLElement | null;
+    ringFilled: SVGCircleElement | null;
     resultCountContainer: HTMLElement | null;
     dotsContainer: HTMLElement | null;
     dotsCount: number;
@@ -26,6 +28,8 @@ export class SprintView {
         this.loadingScreen = document.querySelector<HTMLElement>('.sprint__load-screen');
         this.gameContainer = document.querySelector<HTMLElement>('.sprint__game');
         this.lvls = document.querySelector<HTMLElement>('.sprint__lvl');
+        this.timerContainer = document.querySelector<HTMLElement>('.sprint__timer');
+        this.ringFilled = document.querySelector('.ring__circle--filled');
 
         this.resultCountContainer = document.getElementById('sprint-result');
         this.dotsContainer = document.querySelector<HTMLElement>('.words__count');
@@ -50,12 +54,20 @@ export class SprintView {
 
         if (sprintCardGames) {
             sprintCardGames.addEventListener('click', () => {
-                if (this.modal && this.gameResultsContainer && this.gameContainer && this.loadingScreen) {
+                if (
+                    this.modal &&
+                    this.gameResultsContainer &&
+                    this.gameContainer &&
+                    this.loadingScreen &&
+                    this.timerContainer
+                ) {
                     document.body.style.overflow = 'hidden';
                     this.modal.classList.remove('hidden');
                     this.gameResultsContainer.classList.add('hidden');
                     this.gameContainer.classList.add('hidden');
                     this.loadingScreen.classList.remove('hidden');
+                    this.timerContainer.classList.add('hidden');
+                    this.updateTimer(0);
                 }
             });
         }
@@ -92,9 +104,8 @@ export class SprintView {
         }
     }
 
-    showCountdown(controller: SprintController) {
+    showCountdown() {
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
-        const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
         let count = 3;
         if (countdownContainer) {
             countdownContainer.classList.remove('hidden');
@@ -111,24 +122,19 @@ export class SprintView {
                     }
                 }
             }, 1000);
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    clearInterval(interval);
-                    controller.endGame();
-                });
-            }
         }
     }
 
-    renderGame() {
-        const gameContainer = document.querySelector<HTMLElement>('.sprint__game');
-        const loadingScreen = document.querySelector<HTMLElement>('.sprint__load-screen');
+    renderGame(view: SprintView) {
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
 
-        if (gameContainer && loadingScreen && countdownContainer) {
-            loadingScreen.classList.add('hidden');
+        if (view.timerContainer) {
+            view.timerContainer.classList.remove('hidden');
+        }
+        if (view.gameContainer && view.loadingScreen && countdownContainer) {
+            view.loadingScreen.classList.add('hidden');
             countdownContainer.classList.add('hidden');
-            gameContainer.classList.remove('hidden');
+            view.gameContainer.classList.remove('hidden');
         }
     }
 
@@ -149,7 +155,7 @@ export class SprintView {
     }
 
     listenKeyboard(controller: SprintController) {
-        document.addEventListener('keydown', (event) => {
+        document.addEventListener('keyup', (event) => {
             if (event.code === 'ArrowLeft') {
                 event.preventDefault();
                 controller.checkIfRight();
@@ -198,26 +204,50 @@ export class SprintView {
         }
     }
 
-    startTimer(controller: SprintController) {
-        console.log('игра началась');
+    startTimer(controller: SprintController, view: SprintView) {
         const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
         const thatController = controller;
-        let count = 10;
+        const thatView = view;
+        thatView.updateTimer(0);
+        let count = 5;
+        let percent = 0;
         this.interval = setInterval(
             () => {
                 count--;
-                console.log(count);
+                percent += 100 / 5;
+                thatView.updateTimer(percent);
                 if (count === 0) {
-                    console.log('время вышло');
+                    percent = 100;
+                    thatView.updateTimer(percent);
                     clearInterval(this.interval);
                     thatController.showResult();
                 }
             },
             1000,
-            thatController
+            thatController,
+            thatView
         );
         if (closeBtn) {
-            closeBtn.addEventListener('click', () => clearInterval(this.interval));
+            closeBtn.addEventListener('click', () => {
+                clearInterval(this.interval);
+                thatView.updateTimer(0);
+                if (thatView.timerContainer) {
+                    thatView.timerContainer?.classList.add('hidden');
+                }
+            });
+        }
+    }
+
+    updateTimer(percent: number) {
+        if (this.ringFilled) {
+            const radius = this.ringFilled.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+
+            this.ringFilled.style.strokeDasharray = `${circumference}  ${circumference}`;
+            this.ringFilled.style.strokeDashoffset = String(circumference);
+
+            const offset = circumference - (percent / 100) * circumference;
+            this.ringFilled.style.strokeDashoffset = String(offset);
         }
     }
 
@@ -226,10 +256,31 @@ export class SprintView {
     }
 
     showResult(correctAnswers: GetWords[], wrongAnswers: GetWords[]) {
-        if (this.gameContainer && this.gameResultsContainer && this.correctCount && this.wrongCount) {
+        const correctAnswersSet = [...new Set(correctAnswers)];
+        const wrongAnswersSet = [...new Set(wrongAnswers)];
+
+        wrongAnswersSet.forEach((wrongAnswer) => {
+            correctAnswersSet.forEach((correctAnswer, index) => {
+                if (correctAnswer.word === wrongAnswer.word) {
+                    correctAnswersSet.splice(index, 1);
+                }
+            });
+        });
+
+        const percent = correctAnswersSet.length / (correctAnswersSet.length + wrongAnswersSet.length);
+        this.renderResultBar(Math.round(percent * 100));
+
+        if (
+            this.gameContainer &&
+            this.gameResultsContainer &&
+            this.correctCount &&
+            this.wrongCount &&
+            this.timerContainer
+        ) {
+            this.timerContainer.classList.add('hidden');
             this.gameContainer.classList.add('hidden');
             this.gameResultsContainer.classList.remove('hidden');
-            correctAnswers.forEach((word) => {
+            correctAnswersSet.forEach((word) => {
                 if (this.gameResultsCorrect) {
                     this.gameResultsCorrect.innerHTML += `
                     <div class="results__word">
@@ -237,7 +288,7 @@ export class SprintView {
                     </div>`;
                 }
             });
-            wrongAnswers.forEach((word) => {
+            wrongAnswersSet.forEach((word) => {
                 if (this.gameResultsWrong) {
                     this.gameResultsWrong.innerHTML += `
                     <div class="results__word">
@@ -248,8 +299,26 @@ export class SprintView {
             if (this.resultCount && this.resultCountContainer) {
                 this.resultCount.innerHTML = this.resultCountContainer.innerHTML;
             }
-            this.correctCount.innerHTML = String(correctAnswers.length);
-            this.wrongCount.innerHTML = String(wrongAnswers.length);
+            this.correctCount.innerHTML = String(correctAnswersSet.length);
+            this.wrongCount.innerHTML = String(wrongAnswersSet.length);
+        }
+    }
+
+    renderResultBar(percent: number) {
+        const barFilled = document.querySelector<SVGCircleElement>('.bar__circle--filled');
+        const resultPercent = document.querySelector<HTMLElement>('.result__percent');
+
+        if (barFilled && resultPercent) {
+            const radius = barFilled.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+
+            barFilled.style.strokeDasharray = `${circumference}  ${circumference}`;
+            barFilled.style.strokeDashoffset = String(circumference);
+
+            const offset = circumference - (percent / 100) * circumference;
+            barFilled.style.strokeDashoffset = String(offset);
+
+            resultPercent.innerHTML = `${percent}%`;
         }
     }
 
@@ -270,8 +339,6 @@ export class SprintView {
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
 
         if (
-            this.gameContainer &&
-            this.loadingScreen &&
             this.resultCountContainer &&
             this.wordPriceContainer &&
             this.dotsContainer &&
@@ -282,7 +349,6 @@ export class SprintView {
             this.wrongCount &&
             this.resultCount
         ) {
-            this.gameContainer.classList.remove('hidden');
             this.resultCountContainer.innerHTML = '0';
             this.wordPriceContainer.innerHTML = '10';
             this.dotsContainer.innerHTML = `<img src="./assets/sprint0.png" alt="word count">`;
@@ -294,10 +360,13 @@ export class SprintView {
             this.resultCount.innerHTML = '0';
         }
 
-        if (this.lvls && this.loadingScreen && countdownContainer) {
+        if (this.gameContainer && this.lvls && this.loadingScreen && countdownContainer && this.timerContainer) {
+            this.gameContainer.classList.remove('hidden');
+
             this.lvls.classList.remove('hidden');
             this.loadingScreen.classList.remove('hidden');
             countdownContainer.classList.add('hidden');
+            this.timerContainer.classList.add('hidden');
         }
     }
 }

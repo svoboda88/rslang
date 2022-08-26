@@ -370,12 +370,12 @@
         <h1>Спринт</h1>
         <h2>Выберите уровень сложности:</h2>
         <div class="lvls__wrapper">
-          <button class="lvls__btn" type="button" data-lvl="1">1</button>
-          <button class="lvls__btn" type="button" data-lvl="2">2</button>
-          <button class="lvls__btn" type="button" data-lvl="3">3</button>
-          <button class="lvls__btn" type="button" data-lvl="4">4</button>
-          <button class="lvls__btn" type="button" data-lvl="5">5</button>
-          <button class="lvls__btn" type="button" data-lvl="6">6</button>
+          <button class="lvls__btn" type="button" data-lvl="0">1</button>
+          <button class="lvls__btn" type="button" data-lvl="1">2</button>
+          <button class="lvls__btn" type="button" data-lvl="2">3</button>
+          <button class="lvls__btn" type="button" data-lvl="3">4</button>
+          <button class="lvls__btn" type="button" data-lvl="4">5</button>
+          <button class="lvls__btn" type="button" data-lvl="5">6</button>
         </div>
       </div>
 
@@ -409,14 +409,43 @@
         </div>
       </div>
 
+      <div class="sprint__timer hidden">
+        <svg class="timer__ring">
+          <circle class="ring__circle" stroke="#ffffff" stroke-opacity="0.3" fill="transparent" stroke-width="20"
+            cx="350" cy="350" r="310">
+          </circle>
+          <circle class="ring__circle--filled" stroke="#ffffff" stroke-opacity="1" fill="transparent" stroke-width="20"
+            cx="350" cy="350" r="310">
+          </circle>
+        </svg>
+      </div>
+
       <div class="sprint__results">
         <h2>Твой результат: <span class="results__result">0</span></h2>
-        <br>
-        <h3>Ошибки в словах <span class="wrong__count">0</span></h3>
-        <div class="results__wrong"></div>
-        <br>
-        <h3>Изученные слова <span class="correct__count">0</span></h3>
-        <div class="results__correct"></div>
+        <div class="result__bar">
+          <svg class="bar" viewBox="0 0 300 300">
+            <circle class="bar__circle" stroke="#a41268" stroke-opacity="0.3" fill="transparent" stroke-width="30"
+              cx="150" cy="150" r="90">
+            </circle>
+            <circle class="bar__circle--filled" stroke="#a41268" stroke-opacity="1" fill="transparent" stroke-width="30"
+              cx="150" cy="150" r="90">
+            </circle>
+          </svg>
+          <h2 class="result__percent"></h2>
+          <p>слов изучено</p>
+        </div>
+        <div class="results__words">
+          <div class="results__words--wrong">
+            <h3>Ошибки в словах <span class="wrong__count">0</span></h3>
+            <br>
+            <div class="results__wrong"></div>
+          </div>
+          <div class="results__words--correct">
+            <h3>Изученные слова <span class="correct__count">0</span></h3>
+            <br>
+            <div class="results__correct"></div>
+          </div>
+        </div>
         <button class="results__play-btn">Играть ещё!</button>
       </div>
     </div>
