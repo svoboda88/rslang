@@ -4,12 +4,15 @@ import { Register } from './modules/authorization/registration';
 import { UI } from './modules/ui/ui';
 import { Textbook } from './modules/textbook/textbook';
 import './style.css';
+import { hardWords } from './modules/wordList/userCards';
+import { checkUserWords } from './modules/wordList/checkUserWords';
 
 const ui = new UI();
 const textbook = new Textbook(ui);
 
 ui.init();
-textbook.init();
+
+textbook.init().then(hardWords.getWordCards).then(checkUserWords);
 
 const authorization = new Register();
 authorization.createUser();
