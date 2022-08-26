@@ -1,14 +1,15 @@
-@import './css/header.css';
-@import './css/hero.css';
-@import './css/video.css';
-@import './css/benefits.css';
-@import './css/developers.css';
-@import './css/textbook.css';
-@import './css/modal.css';
-@import './css/footer.css';
-@import './css/games-cards.css';
-@import './css/games.css';
-@import './css/sprint.css';
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --magenta: #a41268;
+  --dark-magenta: #31073d;
+  --light-gray: #f3f4f8;
+  --gray: #e6e7eb;
+  --dark-gray: #B6B6B6;
+  --green: #84ff53;
+  --red: #f02d2d;
+  --gradient: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
+}
 
 * {
   margin: 0;
@@ -42,3 +43,15 @@ body {
 .material-symbols-outlined {
   font-size: 30px;
 }
+
+@import './css/header.css';
+@import './css/hero.css';
+@import './css/video.css';
+@import './css/benefits.css';
+@import './css/developers.css';
+@import './css/textbook.css';
+@import './css/modal.css';
+@import './css/footer.css';
+@import './css/games-cards.css';
+@import './css/games.css';
+@import './css/sprint.css';

@@ -1,16 +1,14 @@
 footer {
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
+  background: var(--gradient);
   font-family: 'Roboto Mono', monospace;
-  height: 80px;
-  color: #fff;
+  color: var(--white);
   text-align: center;
 }
 
 .footer__wrapper {
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
   font-family: 'Roboto Mono', monospace;
   height: 80px;
-  color: #fff;
+  color: var(--white);
   text-align: center;
   display: flex;
   flex-direction: row;
@@ -38,10 +36,15 @@ footer {
 
 .github {
   text-decoration: none;
-  color: rgba(164,18,104,1);
+  color: var(--magenta);
+}
+
+.github:hover {
+  color: var(--dark-magenta);
 }
 
 .source {
   text-decoration: none;
-  color: #fff;
+  font-family: 'Karla', sans-serif;
+  color: var(--white);
 }

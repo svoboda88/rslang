@@ -1,5 +1,5 @@
 .textbook {
-  background-color: #fff;
+  background-color: var(--white);
   text-align: center;
   padding: 20px 0;
   margin: 0 auto;
@@ -16,23 +16,23 @@
   border: none;
   font: inherit;
   cursor: pointer;
-  color: #fff;
-  background-color: #a41268;
+  color: var(--white);
+  background-color: var(--magenta);
   outline: none;
   transition: all 0.3s;
   line-height: 90px;
 }
 
 .scroll-btn:hover {
-  background-color: #31073d;
+  background-color: var(--dark-magenta);
 }
 
 .textbook__sections {
   display: flex;
   flex-direction: row;
-justify-content: center;
-gap: 10px;
-align-items: center;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
 }
 
 .textbook__section {
@@ -45,11 +45,11 @@ align-items: center;
 }
 
 .textbook__section:hover {
-  color: #000000;
+  color: var(--black);
 }
 
 .section--active {
-  color: #000;
+  color: var(--black);
   cursor: auto;
 }
 
@@ -70,12 +70,12 @@ align-items: center;
 }
 
 .lvl__card {
-  background-color: rgba(164,18,104,1);
+  background-color: var(--magenta);
   font-family: 'Roboto Mono', monospace;
   border-radius: 15px;
   width: 170px;
   height: 50px;
-  color: #fff;
+  color: var(--white);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -94,8 +94,8 @@ align-items: center;
 }
 
 .lvl__card--right {
-  background-color: black;
-  color: #fff;
+  background-color: var(--black);
+  color: var(--white);
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
   text-align: center;
@@ -120,7 +120,7 @@ align-items: center;
 
 .pagination__btn {
   color: rgb(0, 0, 0);
-  background-color: #e6e7eb;
+  background-color: var(--gray);
   border-radius: 10px;
   height: 32px;
   padding: 0 5px;
@@ -131,7 +131,7 @@ align-items: center;
 }
 
 .pagination__btn:hover {
-  background-color: #B6B6B6;
+  background-color: var(--dark-gray);
 }
 
 .page-count-btn {
@@ -140,11 +140,12 @@ align-items: center;
 
 .disabled-btn {
   cursor: default;
-  color: #fff;
+  color: var(--white);
 }
 
-.page-count-btn:hover, .disabled-btn:hover {
-  background-color: #e6e7eb;
+.page-count-btn:hover,
+.disabled-btn:hover {
+  background-color: var(--gray);
 }
 
 .textbook__words, .learned__words {
@@ -164,11 +165,7 @@ align-items: center;
   width: 48%;
   min-height: 300px;
   border-radius: 15px;
-  background-color: #f3f4f8;
-}
-
-.card--learned {
-  background-color: rgb(226, 207, 218);
+  background-color: var(--light-gray);
 }
 
 .listen {
@@ -207,7 +204,7 @@ align-items: center;
 }
 
 .word__translate {
-  color: rgb(92, 92, 92);
+  color: #5C5C5C;
 }
 
 .word__audio {
@@ -216,7 +213,7 @@ align-items: center;
 
 .audio-active {
   color: #fff;
-  background-color: #a41268;
+  background-color: var(--magenta);
   border-radius: 10px;
   padding: 5px 0;
 }
@@ -232,30 +229,34 @@ align-items: center;
   flex-direction: column;
 }
 
-.word__btns--learned, .word__btns--hard, .word__btns--delete {
+.word__btns--learned,
+.word__btns--hard,
+.word__btns--delete {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
   font: inherit;
   cursor: pointer;
   color: #000;
-  background-color: #e6e7eb;
+  background-color:var(--gray);
   outline: none;
   transition: all 0.3s;
   width: auto;
 }
 
-.word__btns--learned:hover, .word__btns--hard:hover, .word__btns--delete:hover {
-  background-color: #B6B6B6;
+.word__btns--learned:hover,
+.word__btns--hard:hover,
+.word__btns--delete:hover {
+  background-color: var(--dark-gray);
 }
 
 .word__btns--checked {
-  background-color: #a41268;
-  color: #fff;
+  background-color: var(--magenta);
+  color: var(--white);
 }
 
 .word__btns--checked:hover {
-  background-color: #31073d;
+  background-color: var(--dark-magenta);
 }
 
 .learned__wrapper {
