@@ -36,7 +36,6 @@ export class Audiocall {
     startGame() {
         if (this.startBtn) {
             this.startBtn.addEventListener('click', () => {
-                // console.log(storage);
                 const pageCount = Math.floor(Math.random() * 20);
                 getWordsResult(storage.groupCountAudiocall, pageCount).then((result) => {
                     const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
