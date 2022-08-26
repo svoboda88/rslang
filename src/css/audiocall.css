@@ -1,4 +1,4 @@
-.audiocall__lvl {
+.audiocall__lvls {
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
@@ -22,7 +22,7 @@
 }
 
 
-.lvls__btn {
+.audiocall-lvls__btn {
   background-color: #a41268;
   border: none;  
   width: 50px;
@@ -38,7 +38,7 @@
   color: #ffffff;
 }
 
-.lvls__btn:hover {
+.audiocall-lvls__btn:hover {
   background-color: #31073d;
   transform: scale(1.1); 
 }
@@ -86,11 +86,29 @@
   justify-content: center;
 }
 
-.audiocall__word {
-  font-size: 60px;
+.audiocall__voice {
+  font-size: 100px !important;
+  cursor: pointer;
 }
 
-.sprint__right, .sprint__wrong {
+.audiocall__words {
+  display: flex;
+  gap: 30px;
+}
+
+.audiocall__word-btn {
+  padding: 5px 10px;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.audiocall__word-btn:hover {
+  color: #000;
+  border: 1px solid #000;
+}
+
+.audiocall__next {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
@@ -105,11 +123,7 @@
   margin-top: 10px;
 }
 
-.sprint__wrong {
-  background-color: #f02d2d;
-}
-
-.sprint__right:hover, .sprint__wrong:hover {
+.audiocall__next:hover {
   transform: scale(1.05); 
 }
 

@@ -4,33 +4,50 @@ import { GetWords, getWordsResult } from '../textbook/request';
 export class Audiocall {
     mainPage: HTMLElement | null;
     modal: HTMLElement | null;
+    modalCloseBtn: HTMLElement | null;
     audiocallLvls: HTMLElement | null;
-    startBtn: HTMLElement | null;
+    nextBtn: HTMLElement | null;
     voiceBtn: HTMLElement | null;
-    wordVariants: HTMLElement | null;
-    wrapper: HTMLElement | null;
+    audiocallWords: HTMLElement | null;
+    gameWindow: HTMLElement | null;
+    gameResults: HTMLElement | null;
 
     constructor() {
         this.mainPage = document.getElementById('audiocall-from-games');
         this.modal = document.querySelector('.audiocall__modal');
-        this.audiocallLvls = document.querySelector('.audiocall-lvls');
-        this.startBtn = document.getElementById('start-call');
-        this.voiceBtn = document.getElementById('word-voice');
-        this.wordVariants = document.getElementById('word-variants');
-        this.wrapper = document.querySelector('.audiocall');
+        this.modalCloseBtn = document.querySelector('.audiocall__close-btn');
+        this.audiocallLvls = document.querySelector('.audiocall__lvls');
+        this.nextBtn = document.querySelector('.audiocall__next');
+        this.voiceBtn = document.querySelector('.audiocall__voice');
+        this.audiocallWords = document.querySelector('.audiocall__words');
+        this.gameWindow = document.querySelector('.audiocall__game');
+        this.gameResults = document.querySelector('.audiocall__results');
     }
 
     init() {
         this.openModal();
+        this.closeModal();
         this.levelSelection();
-        this.startGame();
     }
 
     openModal() {
         this.mainPage?.addEventListener('click', () => {
-            if (this.modal) {
+            if (this.modal && this.audiocallLvls) {
                 document.body.style.overflow = 'hidden';
                 this.modal.classList.remove('hidden');
+                this.audiocallLvls.classList.remove('hidden');
+            }
+        });
+    }
+
+    closeModal() {
+        this.modalCloseBtn?.addEventListener('click', () => {
+            if (this.modal) {
+                document.body.style.overflow = 'visible';
+                this.modal.classList.add('hidden');
+                if (!this.gameResults?.classList.contains('hidden')) {
+                    this.gameResults?.classList.add('hidden');
+                }
             }
         });
     }
@@ -41,35 +58,42 @@ export class Audiocall {
                 const target = event.target as HTMLDivElement;
                 const groupCount = Number(target.dataset.callLvl);
                 storage.groupCountAudiocall = groupCount;
+                this.startGame();
             });
         }
     }
 
     startGame() {
-        if (this.startBtn) {
-            this.startBtn.addEventListener('click', () => {
-                const pageCount = Math.floor(Math.random() * 20);
-                getWordsResult(storage.groupCountAudiocall, pageCount).then((result) => {
-                    const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
-                    const sliced: GetWords[] = shuffled.slice(0, 5);
-                    const index = Math.floor(Math.random() * 5);
-                    storage.wordVariants = [];
-                    storage.wordVariants = [...sliced];
-                    storage.wordIndex = index;
-                    this.voiceBtn?.addEventListener('click', (event) => {
-                        event.stopImmediatePropagation();
-                        this.wordVoice(storage.wordVariants, storage.wordIndex);
-                    });
-                    this.wordVoice(sliced, index);
-                    let resultWords = '';
-                    sliced.forEach((item, i) => {
-                        resultWords += `<div data-call-word=${i}>${item.word}</div>`;
-                    });
-                    (this.wordVariants as HTMLDivElement).innerHTML = resultWords;
-                    (this.startBtn as HTMLDivElement).innerHTML = 'Next';
-                    this.answerWord(sliced, index);
-                    this.showResult();
+        if (this.audiocallLvls && this.gameWindow) {
+            this.audiocallLvls.classList.add('hidden');
+            this.gameWindow.classList.remove('hidden');
+            const pageCount = Math.floor(Math.random() * 20);
+            getWordsResult(storage.groupCountAudiocall, pageCount).then((result) => {
+                const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
+                const sliced: GetWords[] = shuffled.slice(0, 5);
+                const index = Math.floor(Math.random() * 5);
+                storage.wordVariants = [];
+                storage.wordVariants = [...sliced];
+                storage.wordIndex = index;
+                this.voiceBtn?.addEventListener('click', (event) => {
+                    event.stopImmediatePropagation();
+                    this.wordVoice(storage.wordVariants, storage.wordIndex);
                 });
+                this.wordVoice(sliced, index);
+                let resultWords = '';
+                sliced.forEach((item, i) => {
+                    resultWords += `
+                        <div class="audiocall__word-btn" data-call-word=${i}>${item.word}</div>
+                    `;
+                });
+                (this.audiocallWords as HTMLDivElement).innerHTML = resultWords;
+                console.log(this.audiocallWords);
+                this.answerWord(sliced, index);
+                this.nextBtn?.addEventListener('click', (event) => {
+                    event.stopImmediatePropagation();
+                    this.startGame();
+                });
+                this.showResult();
             });
         }
     }
@@ -81,8 +105,8 @@ export class Audiocall {
     }
 
     answerWord(arr: GetWords[], i: number) {
-        if (this.wordVariants) {
-            this.wordVariants.addEventListener('click', (event) => {
+        if (this.audiocallWords) {
+            this.audiocallWords.addEventListener('click', (event) => {
                 const target = event.target as HTMLDivElement;
                 const choosenWord = Number(target.dataset.callWord);
                 if (choosenWord === i) {
@@ -96,6 +120,7 @@ export class Audiocall {
                             });
                         }
                     });
+                    (this.nextBtn as HTMLDivElement).textContent = 'Дальше';
                 } else {
                     target.style.backgroundColor = 'red';
                     arr.forEach((item) => {
@@ -107,6 +132,7 @@ export class Audiocall {
                             });
                         }
                     });
+                    (this.nextBtn as HTMLDivElement).textContent = 'Дальше';
                 }
             });
         }
@@ -116,7 +142,8 @@ export class Audiocall {
         const answersSum = storage.correctAnswers.length + storage.wrongAnswers.length;
         console.log(answersSum);
         if (answersSum === 10) {
-            (this.wrapper as HTMLDivElement).innerHTML = `Correct:`;
+            this.gameWindow?.classList.add('hidden');
+            this.gameResults?.classList.remove('hidden');
         }
     }
 }
