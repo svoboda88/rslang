@@ -1,0 +1,170 @@
+.audiocall__lvl {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 15px;
+  gap: 20px;
+  width: 40vw;
+  height: 40vh;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
+.lvls__wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 70%;
+}
+
+
+.lvls__btn {
+  background-color: #a41268;
+  border: none;  
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 30px;
+  color: #ffffff;
+}
+
+.lvls__btn:hover {
+  background-color: #31073d;
+  transform: scale(1.1); 
+}
+
+.window__result {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 9px;
+  position: fixed;
+  top: 35px;
+  right: 100px;
+}
+
+.window {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.words__count {
+  width: 80px;
+  height: 24px;
+  background-image: url('../assets/sprint0.png');
+  background-repeat: no-repeat;
+}
+
+.words__price {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  color: #ffffff;
+}
+
+.words__word {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.audiocall__word {
+  font-size: 60px;
+}
+
+.sprint__right, .sprint__wrong {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: #000;
+  background-color: #84ff53;
+  outline: none;
+  transition: all 0.2s;
+  width: 150px;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.sprint__wrong {
+  background-color: #f02d2d;
+}
+
+.sprint__right:hover, .sprint__wrong:hover {
+  transform: scale(1.05); 
+}
+
+.countdown {
+  font-size: 30px;
+  color: #ffffff;
+}
+
+.audiocall__results {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  width: 30vw;
+  height: auto;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.audiocall__results h2 {
+  text-align: center;
+}
+
+.wrong__count {
+  display: inline-block;
+  background-color: #f02d2d;
+  text-align: center;
+  border-radius: 10px;
+  color: #ffffff;
+  width: 40px;
+}
+
+.correct__count {
+  display: inline-block;
+  background-color: #84ff53;
+  text-align: center;
+  border-radius: 10px;
+  color: #ffffff;
+  width: 40px;
+}
+
+.results__play-btn {
+  align-self: center;
+  border: none;
+  border-radius: 16px;
+  padding: 5px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: #fff;
+  background-color: #a41268;
+  outline: none;
+  margin-top: 20px;
+  width: 150px;
+  transition: all 0.3s;
+}
+
+.results__play-btn:hover {
+  background-color: #31073d;
+}

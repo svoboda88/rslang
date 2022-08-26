@@ -338,7 +338,7 @@
           <h3>Спринт</h3>
           <p>Определяй, верен ли перевод слова, как можно быстрее.</p>
         </div>
-        <div class="games__card" id="audiogame-from-games">
+        <div class="games__card" id="audiocall-from-games">
           <img src="./assets/audiogame.png" alt="audio game image">
           <h3>Аудиовызов</h3>
           <p>Тренируй восприятие речи на слух.</p>
@@ -420,6 +420,76 @@
         <button class="results__play-btn">Играть ещё!</button>
       </div>
     </div>
+    </div>
+
+    <div class="audiocall__modal hidden">
+
+      <div class="audiocall__close-btn">
+        <span class="material-symbols-outlined close-btn">
+          close
+        </span>
+      </div>
+
+      <div class="audiocall__load-screen hidden">
+        <!-- <div class="spinner">
+          <div class="bubble-1"></div>
+          <div class="bubble-2"></div>
+        </div> -->
+      </div>
+
+      <div class="audiocall__lvl hidden">
+        <h1>Аудиовызов</h1>
+        <h2>Выберите уровень сложности:</h2>
+        <div class="lvls__wrapper">
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="0">1</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="1">2</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="2">3</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="3">4</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="4">5</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="5">6</button>
+        </div>
+      </div>
+
+      <div class="audiocall__game hidden">
+        <div class="audiocall__window">
+          <div class="audiocall__result">
+            <h3>Текущий результат:</h3>
+            <h3 id="audiocall-result">0</h3>
+          </div>
+          <div class="window">
+            <div class="words__count">
+              <img src="./assets/sprint0.png" alt="word count">
+            </div>
+
+            <div class="words__price">
+              <p id="word-price">10</p>
+              <p class=>баллов за слово</p>
+            </div>
+
+            <div class="words__word">
+              <h1 class="sprint__word"></h1>
+              <h3 class="sprint__translate"></h3>
+            </div>
+
+            <div class="sprint__btns">
+              <button type="button" class="sprint__right">
+                < Верно</button>
+                  <button type="button" class="sprint__wrong">Неверно ></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="audiocall__results hidden">
+        <h2>Твой результат: <span class="results__result">0</span></h2>
+        <br>
+        <h3>Ошибки в словах <span class="wrong__count">0</span></h3>
+        <div class="results__wrong"></div>
+        <br>
+        <h3>Изученные слова <span class="correct__count">0</span></h3>
+        <div class="results__correct"></div>
+        <button class="results__play-btn">Играть ещё!</button>
+      </div>
     </div>
 
   </main>

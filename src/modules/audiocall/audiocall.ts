@@ -2,15 +2,17 @@ import { storage } from '../storage/storage';
 import { GetWords, getWordsResult } from '../textbook/request';
 
 export class Audiocall {
-    modal: Element | null;
-    audiocallLvls: Element | null;
-    startBtn: Element | null;
-    voiceBtn: Element | null;
-    wordVariants: Element | null;
-    wrapper: Element | null;
+    mainPage: HTMLElement | null;
+    modal: HTMLElement | null;
+    audiocallLvls: HTMLElement | null;
+    startBtn: HTMLElement | null;
+    voiceBtn: HTMLElement | null;
+    wordVariants: HTMLElement | null;
+    wrapper: HTMLElement | null;
 
     constructor() {
-        this.modal = document.querySelector('.game__modal');
+        this.mainPage = document.getElementById('audiocall-from-games');
+        this.modal = document.querySelector('.audiocall__modal');
         this.audiocallLvls = document.querySelector('.audiocall-lvls');
         this.startBtn = document.getElementById('start-call');
         this.voiceBtn = document.getElementById('word-voice');
@@ -19,8 +21,18 @@ export class Audiocall {
     }
 
     init() {
+        this.openModal();
         this.levelSelection();
         this.startGame();
+    }
+
+    openModal() {
+        this.mainPage?.addEventListener('click', () => {
+            if (this.modal) {
+                document.body.style.overflow = 'hidden';
+                this.modal.classList.remove('hidden');
+            }
+        });
     }
 
     levelSelection() {
@@ -44,7 +56,7 @@ export class Audiocall {
                     storage.wordVariants = [];
                     storage.wordVariants = [...sliced];
                     storage.wordIndex = index;
-                    (this.voiceBtn as HTMLDivElement).addEventListener('click', (event) => {
+                    this.voiceBtn?.addEventListener('click', (event) => {
                         event.stopImmediatePropagation();
                         this.wordVoice(storage.wordVariants, storage.wordIndex);
                     });
