@@ -39,6 +39,7 @@ export class UI {
         this.dictPage = document.getElementById('dictionary-page');
         this.gamesPage = document.getElementById('games-page');
         this.statsPage = document.getElementById('stats-page');
+        this.textbookSections = document.querySelector<HTMLElement>('.textbook__sections');
 
         this.logo = document.querySelector('.header__logo');
         this.mainPageBtn = document.getElementById('main-btn');
@@ -46,7 +47,6 @@ export class UI {
         this.dictPageBtn = document.getElementById('dictionary-btn');
         this.gamesPageBtn = document.getElementById('games-btn');
         this.statsPageBtn = document.getElementById('stats-btn');
-        this.textbookSections = document.querySelector<HTMLElement>('.textbook__sections');
 
         this.modal = document.querySelector<HTMLElement>('.modal');
         this.modalGame = document.querySelector<HTMLElement>('.game__modal');
@@ -66,8 +66,6 @@ export class UI {
         this.listenModalClosure();
         this.listenTextbookSections();
         this.checkIfLogged();
-        this.listenGamePage();
-        this.listenCloseGame();
     }
 
     checkIfLogged() {
@@ -276,7 +274,6 @@ export class UI {
                         "${localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'}">
                             <button class="word__btns--learned" data-id="${item.id}">Изученное</button>
                             <button class="word__btns--hard" data-id="${item.id}">Сложное</button>
-                            <button class="word__btns--delete" data-id="${item.id}">Удалить</button>  
                         </div>
 
                         <div class="words__audio" data-audio=${i}>
@@ -374,30 +371,6 @@ export class UI {
                 learnedSection.classList.remove('hidden');
                 scrollBtn.classList.add('hidden');
                 gamesBtns.classList.add('hidden');
-            });
-        }
-    }
-
-    listenGamePage() {
-        const sprintCard = document.getElementById('sprint-from-games');
-        if (sprintCard) {
-            sprintCard.addEventListener('click', () => {
-                if (this.modalGame) {
-                    document.body.style.overflow = 'hidden';
-                    this.modalGame.classList.remove('hidden');
-                }
-            });
-        }
-    }
-
-    listenCloseGame() {
-        const closeBtn = document.querySelector<HTMLElement>('.games__close-btn');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                if (this.modalGame) {
-                    document.body.style.overflow = 'visible';
-                    this.modalGame.classList.add('hidden');
-                }
             });
         }
     }
