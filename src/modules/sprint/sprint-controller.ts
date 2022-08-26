@@ -20,10 +20,10 @@ export class SprintController {
     }
 
     async startGame(lvl: number) {
-        this.view.showCountdown();
+        this.view.showCountdown(this);
         setTimeout(this.view.renderGame, 3000);
-        setTimeout(this.view.startTimer, 3000, this);
         await this.model.getWordsForLvl(lvl);
+        this.view.startTimer(this);
         this.view.renderWord(this.model.getWord(0));
     }
 
@@ -64,6 +64,7 @@ export class SprintController {
     }
 
     endGame() {
+        this.view.stopTimer();
         this.model.toInitState();
         this.view.closeGame();
     }

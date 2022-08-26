@@ -19,6 +19,7 @@ export class SprintView {
     wrongCount: HTMLElement | null;
     resultCount: HTMLElement | null;
     playAgainBtn: HTMLElement | null;
+    interval: number;
 
     constructor() {
         this.modal = document.querySelector<HTMLElement>('.sprint__modal');
@@ -41,6 +42,7 @@ export class SprintView {
         this.wrongCount = document.querySelector<HTMLElement>('.wrong__count');
         this.resultCount = document.querySelector<HTMLElement>('.results__result');
         this.playAgainBtn = document.querySelector<HTMLElement>('.results__play-btn');
+        this.interval = 0;
     }
 
     listenStartFromMain() {
@@ -48,11 +50,12 @@ export class SprintView {
 
         if (sprintCardGames) {
             sprintCardGames.addEventListener('click', () => {
-                if (this.modal && this.loadingScreen && this.lvls) {
+                if (this.modal && this.gameResultsContainer && this.gameContainer && this.loadingScreen) {
                     document.body.style.overflow = 'hidden';
                     this.modal.classList.remove('hidden');
+                    this.gameResultsContainer.classList.add('hidden');
+                    this.gameContainer.classList.add('hidden');
                     this.loadingScreen.classList.remove('hidden');
-                    this.lvls.classList.remove('hidden');
                 }
             });
         }
@@ -89,8 +92,9 @@ export class SprintView {
         }
     }
 
-    showCountdown() {
+    showCountdown(controller: SprintController) {
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
+        const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
         let count = 3;
         if (countdownContainer) {
             countdownContainer.classList.remove('hidden');
@@ -107,6 +111,12 @@ export class SprintView {
                     }
                 }
             }, 1000);
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    clearInterval(interval);
+                    controller.endGame();
+                });
+            }
         }
     }
 
@@ -193,13 +203,13 @@ export class SprintView {
         const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
         const thatController = controller;
         let count = 10;
-        const interval = setInterval(
+        this.interval = setInterval(
             () => {
                 count--;
                 console.log(count);
                 if (count === 0) {
                     console.log('время вышло');
-                    clearInterval(interval);
+                    clearInterval(this.interval);
                     thatController.showResult();
                 }
             },
@@ -207,8 +217,12 @@ export class SprintView {
             thatController
         );
         if (closeBtn) {
-            closeBtn.addEventListener('click', () => clearInterval(interval));
+            closeBtn.addEventListener('click', () => clearInterval(this.interval));
         }
+    }
+
+    stopTimer() {
+        clearInterval(this.interval);
     }
 
     showResult(correctAnswers: GetWords[], wrongAnswers: GetWords[]) {
@@ -233,7 +247,6 @@ export class SprintView {
             });
             if (this.resultCount && this.resultCountContainer) {
                 this.resultCount.innerHTML = this.resultCountContainer.innerHTML;
-                this.resultCountContainer.classList.add('hidden');
             }
             this.correctCount.innerHTML = String(correctAnswers.length);
             this.wrongCount.innerHTML = String(wrongAnswers.length);
@@ -242,7 +255,14 @@ export class SprintView {
 
     listenPlayAgain(controller: SprintController) {
         if (this.playAgainBtn) {
-            this.playAgainBtn.addEventListener('click', () => controller.restartGame());
+            this.playAgainBtn.addEventListener('click', () => {
+                controller.restartGame();
+                if (this.lvls && this.gameResultsContainer && this.gameContainer) {
+                    this.lvls.classList.remove('hidden');
+                    this.gameResultsContainer.classList.add('hidden');
+                    this.gameContainer.classList.add('hidden');
+                }
+            });
         }
     }
 
@@ -253,7 +273,6 @@ export class SprintView {
             this.gameContainer &&
             this.loadingScreen &&
             this.resultCountContainer &&
-            countdownContainer &&
             this.wordPriceContainer &&
             this.dotsContainer &&
             this.gameResultsContainer &&
@@ -263,14 +282,11 @@ export class SprintView {
             this.wrongCount &&
             this.resultCount
         ) {
-            this.gameContainer.classList.add('hidden');
-            this.loadingScreen.classList.add('hidden');
-            countdownContainer.classList.add('hidden');
+            this.gameContainer.classList.remove('hidden');
             this.resultCountContainer.innerHTML = '0';
             this.wordPriceContainer.innerHTML = '10';
             this.dotsContainer.innerHTML = `<img src="./assets/sprint0.png" alt="word count">`;
             this.dotsCount = 0;
-            this.gameResultsContainer.classList.add('hidden');
             this.gameResultsCorrect.innerHTML = '';
             this.gameResultsWrong.innerHTML = '';
             this.correctCount.innerHTML = '0';
@@ -278,9 +294,10 @@ export class SprintView {
             this.resultCount.innerHTML = '0';
         }
 
-        if (this.lvls && this.loadingScreen) {
+        if (this.lvls && this.loadingScreen && countdownContainer) {
             this.lvls.classList.remove('hidden');
             this.loadingScreen.classList.remove('hidden');
+            countdownContainer.classList.add('hidden');
         }
     }
 }
