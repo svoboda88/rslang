@@ -78,6 +78,12 @@
   color: #ffffff;
 }
 
+.audiocall__voice-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .words__word {
   display: flex;
   flex-direction: column;
@@ -89,6 +95,14 @@
 .audiocall__voice {
   font-size: 100px !important;
   cursor: pointer;
+}
+
+.smaller {
+  font-size: 50px !important;
+}
+
+.audiocall__correct-word {
+  padding-bottom: 6px;
 }
 
 .audiocall__words {

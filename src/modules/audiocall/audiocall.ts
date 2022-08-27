@@ -11,6 +11,8 @@ export class Audiocall {
     audiocallWords: HTMLElement | null;
     gameWindow: HTMLElement | null;
     gameResults: HTMLElement | null;
+    wordImg: HTMLElement | null;
+    correctWord: HTMLElement | null;
 
     constructor() {
         this.mainPage = document.getElementById('audiocall-from-games');
@@ -22,6 +24,8 @@ export class Audiocall {
         this.audiocallWords = document.querySelector('.audiocall__words');
         this.gameWindow = document.querySelector('.audiocall__game');
         this.gameResults = document.querySelector('.audiocall__results');
+        this.wordImg = document.querySelector('.audiocall__img');
+        this.correctWord = document.querySelector('.audiocall__correct-word');
     }
 
     init() {
@@ -45,6 +49,11 @@ export class Audiocall {
             if (this.modal) {
                 document.body.style.overflow = 'visible';
                 this.modal.classList.add('hidden');
+
+                if (!this.gameWindow?.classList.contains('hidden')) {
+                    this.gameWindow?.classList.add('hidden');
+                }
+
                 if (!this.gameResults?.classList.contains('hidden')) {
                     this.gameResults?.classList.add('hidden');
                 }
@@ -56,9 +65,13 @@ export class Audiocall {
         if (this.audiocallLvls) {
             this.audiocallLvls.addEventListener('click', (event) => {
                 const target = event.target as HTMLDivElement;
-                const groupCount = Number(target.dataset.callLvl);
-                storage.groupCountAudiocall = groupCount;
-                this.startGame();
+                if (target.classList.contains('audiocall-lvls__btn')) {
+                    const groupCount = Number(target.dataset.callLvl);
+                    storage.groupCountAudiocall = groupCount;
+                    this.startGame();
+                }
+
+                return;
             });
         }
     }
@@ -83,14 +96,16 @@ export class Audiocall {
                 let resultWords = '';
                 sliced.forEach((item, i) => {
                     resultWords += `
-                        <div class="audiocall__word-btn" data-call-word=${i}>${item.word}</div>
+                        <div class="audiocall__word-btn" data-call-word=${i}>${item.wordTranslate}</div>
                     `;
                 });
                 (this.audiocallWords as HTMLDivElement).innerHTML = resultWords;
-                console.log(this.audiocallWords);
                 this.answerWord(sliced, index);
                 this.nextBtn?.addEventListener('click', (event) => {
                     event.stopImmediatePropagation();
+                    (this.wordImg as HTMLDivElement).innerHTML = '';
+                    (this.correctWord as HTMLDivElement).textContent = '';
+                    this.voiceBtn?.classList.remove('smaller');
                     this.startGame();
                 });
                 this.showResult();
@@ -109,8 +124,12 @@ export class Audiocall {
             this.audiocallWords.addEventListener('click', (event) => {
                 const target = event.target as HTMLDivElement;
                 const choosenWord = Number(target.dataset.callWord);
+                Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
+                    (item as HTMLDivElement).style.backgroundColor = '';
+                });
+                (this.audiocallWords?.children[i] as HTMLDivElement).style.backgroundColor = 'green';
+
                 if (choosenWord === i) {
-                    target.style.backgroundColor = 'green';
                     arr.forEach((item) => {
                         if (item.word === target.textContent) {
                             storage.correctAnswers.push({
@@ -121,6 +140,11 @@ export class Audiocall {
                         }
                     });
                     (this.nextBtn as HTMLDivElement).textContent = 'Дальше';
+                    (this.wordImg as HTMLDivElement).innerHTML = `
+                        <img src="https://react-learnwords-english.herokuapp.com/${arr[i].image}">
+                    `;
+                    (this.correctWord as HTMLDivElement).textContent = arr[i].word;
+                    this.voiceBtn?.classList.add('smaller');
                 } else {
                     target.style.backgroundColor = 'red';
                     arr.forEach((item) => {
@@ -133,6 +157,11 @@ export class Audiocall {
                         }
                     });
                     (this.nextBtn as HTMLDivElement).textContent = 'Дальше';
+                    (this.wordImg as HTMLDivElement).innerHTML = `
+                        <img src="https://react-learnwords-english.herokuapp.com/${arr[i].image}">
+                    `;
+                    (this.correctWord as HTMLDivElement).textContent = arr[i].word;
+                    this.voiceBtn?.classList.add('smaller');
                 }
             });
         }
