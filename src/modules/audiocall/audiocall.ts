@@ -13,6 +13,11 @@ export class Audiocall {
     gameResults: HTMLElement | null;
     wordImg: HTMLElement | null;
     correctWord: HTMLElement | null;
+    resultsTitle: HTMLElement | null;
+    resultsWrong: HTMLElement | null;
+    resultsCorrect: HTMLElement | null;
+    wrongContainer: HTMLElement | null;
+    correctContainer: HTMLElement | null;
 
     constructor() {
         this.mainPage = document.getElementById('audiocall-from-games');
@@ -26,6 +31,11 @@ export class Audiocall {
         this.gameResults = document.querySelector('.audiocall__results');
         this.wordImg = document.querySelector('.audiocall__img');
         this.correctWord = document.querySelector('.audiocall__correct-word');
+        this.resultsTitle = document.querySelector('.audiocall__results-title');
+        this.resultsWrong = document.querySelector('.audiocall__results-wrong');
+        this.resultsCorrect = document.querySelector('.audiocall__results-correct');
+        this.wrongContainer = document.querySelector('.audiocall__wrong');
+        this.correctContainer = document.querySelector('.audiocall__correct');
     }
 
     init() {
@@ -57,6 +67,9 @@ export class Audiocall {
                 if (!this.gameResults?.classList.contains('hidden')) {
                     this.gameResults?.classList.add('hidden');
                 }
+
+                storage.correctAnswers = [];
+                storage.wrongAnswers = [];
             }
         });
     }
@@ -111,10 +124,12 @@ export class Audiocall {
                             word: storage.wordVariants[storage.wordIndex].word,
                             translate: storage.wordVariants[storage.wordIndex].wordTranslate,
                         });
-                        this.showResult();
                     } else {
                         this.hideCorrectWord();
-                        this.startGame();
+                        if (storage.correctAnswers.length + storage.wrongAnswers.length <= 9) {
+                            this.startGame();
+                        }
+                        this.showResult();
                     }
                 });
             });
@@ -163,25 +178,30 @@ export class Audiocall {
                         translate: storage.wordVariants[storage.wordIndex].wordTranslate,
                     });
                 } else {
-                    target.style.backgroundColor = 'red';
-                    storage.wrongAnswers.push({
-                        audio: storage.wordVariants[storage.wordIndex].audio,
-                        word: storage.wordVariants[storage.wordIndex].word,
-                        translate: storage.wordVariants[storage.wordIndex].wordTranslate,
-                    });
+                    if (target.classList.contains('audiocall__word-btn')) {
+                        target.style.backgroundColor = 'red';
+                        storage.wrongAnswers.push({
+                            audio: storage.wordVariants[storage.wordIndex].audio,
+                            word: storage.wordVariants[storage.wordIndex].word,
+                            translate: storage.wordVariants[storage.wordIndex].wordTranslate,
+                        });
+                    }
                 }
+
+                Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
+                    (item as HTMLDivElement).style.pointerEvents = 'none';
+                });
                 this.showCorrectWord();
-                this.showResult();
             });
         }
     }
 
     showResult() {
         const answersSum = storage.correctAnswers.length + storage.wrongAnswers.length;
-        console.log(storage.correctAnswers, storage.wrongAnswers);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
+            this.resultTable();
             this.gameResults?.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
                 const target = event.target as HTMLElement;
@@ -196,5 +216,82 @@ export class Audiocall {
                 return;
             });
         }
+    }
+
+    resultTable() {
+        const correctLength = storage.correctAnswers.length as number;
+        const wrongLength = storage.wrongAnswers.length as number;
+        let wrongList = '';
+        storage.wrongAnswers.forEach((item, i) => {
+            wrongList += `
+                <div class="audiocall__list">
+                    <span class="material-symbols-outlined smallest" data-audiocall-wrong=${i}>
+                        volume_up
+                    </span>
+                    <span class="audiocall__word audiocall__word-primary">
+                        ${item.word}
+                    </span> -
+                    <span class="audiocall__word">
+                        ${item.translate}
+                    </span>
+                </div>
+            `;
+        });
+        let correctlist = '';
+        storage.correctAnswers.forEach((item, i) => {
+            correctlist += `
+                <div class="audiocall__list">
+                    <span class="material-symbols-outlined smallest" data-audiocall-correct=${i}>
+                        volume_up
+                    </span>
+                    <span class="audiocall__word audiocall__word-primary">
+                        ${item.word}
+                    </span> -
+                    <span class="audiocall__word">
+                        ${item.translate}
+                    </span>
+                </div>
+            `;
+        });
+
+        (this.resultsTitle as HTMLHeadElement).innerHTML = `
+            Твой результат: <span class="results__result">${correctLength * 10}%</span>
+        `;
+
+        (this.resultsWrong as HTMLHeadElement).innerHTML = `
+            Ошибки в словах <span class="wrong__count">${wrongLength}</span>
+        `;
+        (this.wrongContainer as HTMLHeadElement).innerHTML = wrongList;
+        this.gameResults?.addEventListener('click', (event) => {
+            const target = event.target as HTMLElement;
+            const current = target.dataset;
+            storage.wrongAnswers.forEach((item, i) => {
+                if (Number(current.audiocallWrong) === i) {
+                    const audioSrc = `
+                        https://react-learnwords-english.herokuapp.com/${item.audio}
+                    `;
+                    const wordAudio = new Audio(audioSrc);
+                    wordAudio.play();
+                }
+            });
+        });
+
+        (this.resultsCorrect as HTMLHeadElement).innerHTML = `
+            Изученные слова <span class="correct__count">${correctLength}</span>
+        `;
+        (this.correctContainer as HTMLHeadElement).innerHTML = correctlist;
+        this.gameResults?.addEventListener('click', (event) => {
+            const target = event.target as HTMLElement;
+            const current = target.dataset;
+            storage.correctAnswers.forEach((item, i) => {
+                if (Number(current.audiocallCorrect) === i) {
+                    const audioSrc = `
+                        https://react-learnwords-english.herokuapp.com/${item.audio}
+                    `;
+                    const wordAudio = new Audio(audioSrc);
+                    wordAudio.play();
+                }
+            });
+        });
     }
 }

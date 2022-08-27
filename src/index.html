@@ -430,13 +430,6 @@
         </span>
       </div>
 
-      <div class="audiocall__load-screen hidden">
-        <!-- <div class="spinner">
-          <div class="bubble-1"></div>
-          <div class="bubble-2"></div>
-        </div> -->
-      </div>
-
       <div class="audiocall__lvls hidden">
         <h1>Аудиовызов</h1>
         <h2>Выберите уровень сложности:</h2>
@@ -477,13 +470,19 @@
       </div>
 
       <div class="audiocall__results hidden">
-        <h2>Твой результат: <span class="results__result">0</span></h2>
+        <h2 class="audiocall__results-title"></h2>
         <br>
-        <h3>Ошибки в словах <span class="wrong__count">0</span></h3>
-        <div class="results__wrong"></div>
-        <br>
-        <h3>Изученные слова <span class="correct__count">0</span></h3>
-        <div class="results__correct"></div>
+        <div class="audiocall__results-wrapper">
+          <div class="audiocall__results-inner">
+            <h3 class="audiocall__results-wrong"></h3>
+            <div class="audiocall__wrong"></div>
+          </div>
+          <div class="audiocall__results-inner">
+            <h3 class="audiocall__results-correct"></h3>
+            <div class="audiocall__correct"></div>
+          </div>
+        </div>
+        
         <button class="results__play-btn">Играть ещё!</button>
       </div>
     </div>

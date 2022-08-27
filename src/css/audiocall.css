@@ -64,20 +64,6 @@
   color: #ffffff;
 }
 
-.words__count {
-  width: 80px;
-  height: 24px;
-  background-image: url('../assets/sprint0.png');
-  background-repeat: no-repeat;
-}
-
-.words__price {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  color: #ffffff;
-}
-
 .audiocall__voice-wrapper {
   display: flex;
   align-items: center;
@@ -99,6 +85,10 @@
 
 .smaller {
   font-size: 50px !important;
+}
+
+.smallest {
+  cursor: pointer;
 }
 
 .audiocall__correct-word {
@@ -141,23 +131,31 @@
   transform: scale(1.05); 
 }
 
-.countdown {
-  font-size: 30px;
-  color: #ffffff;
-}
-
 .audiocall__results {
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  width: 30vw;
+  width: 40vw;
   height: auto;
   border-radius: 15px;
   padding: 20px;
 }
 
+.audiocall__results-wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
 .audiocall__results h2 {
   text-align: center;
+}
+
+.audiocall__results-wrong {
+  padding-bottom: 20px;
+}
+
+.audiocall__results-correct {
+  padding-bottom: 20px;
 }
 
 .wrong__count {
@@ -176,6 +174,32 @@
   border-radius: 10px;
   color: #ffffff;
   width: 40px;
+}
+
+.audiocall__wrong {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.audiocall__correct {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.audiocall__list {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.audiocall__word {
+  padding-bottom: 4px;
+}
+
+.audiocall__word-primary {
+  font-weight: bold;
 }
 
 .results__play-btn {
