@@ -11,13 +11,14 @@
   color: #000;
   border-radius: 15px;
   width: 15%;
-  height: 380px;
-  padding: 20px;
+  max-height: 380px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   cursor: pointer;
   transition: all .2s;
+  text-align: center;
 }
 
 .games__card:hover{
