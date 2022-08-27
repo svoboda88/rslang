@@ -1,6 +1,8 @@
 import { getWordsResult } from './request';
 import { storage } from '../storage/storage';
 import { UI } from '../ui/ui';
+import { hardWords } from '../wordList/userCards';
+import { checkUserWords } from '../wordList/checkUserWords';
 
 export class Textbook {
     UI: UI;
@@ -33,10 +35,11 @@ export class Textbook {
         this.lastBtn = document.getElementById('textbook-last');
     }
 
-    init() {
-        getWordsResult(storage.groupCount, storage.pageCount).then((result) => {
+    async init() {
+        await getWordsResult(storage.groupCount, storage.pageCount).then((result) => {
             if (this.textbookWords) {
-                this.textbookWords.innerHTML = this.UI.renderWordCards(result);
+                this.textbookWords.innerHTML = '';
+                this.textbookWords.append(...this.UI.getWordCards(result));
             }
 
             this.playWordAudio();
@@ -113,7 +116,7 @@ export class Textbook {
                 storage.pageCount = 0;
                 this.disablePrevBtns();
                 this.activateNextBtns();
-                this.init();
+                this.init().then(hardWords.getWordCards).then(checkUserWords);
 
                 const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
 
@@ -179,7 +182,7 @@ export class Textbook {
                     } else if (storage.pageCount !== 0) {
                         this.activatePrevBtns();
                     }
-                    this.init();
+                    this.init().then(hardWords.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-prev') {
@@ -190,21 +193,21 @@ export class Textbook {
                     } else if (storage.pageCount !== 0) {
                         this.activateNextBtns();
                     }
-                    this.init();
+                    this.init().then(hardWords.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-last') {
                     storage.pageCount = 29;
                     this.disableNextBtns();
                     this.activatePrevBtns();
-                    this.init();
+                    this.init().then(hardWords.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-first') {
                     storage.pageCount = 0;
                     this.disablePrevBtns();
                     this.activateNextBtns();
-                    this.init();
+                    this.init().then(hardWords.getWordCards).then(checkUserWords);
                 }
             });
         }

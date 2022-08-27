@@ -1,4 +1,5 @@
 import { GetWords } from '../textbook/request';
+import { sendWordsListener } from '../wordList/userWordsListeners';
 
 export class UI {
     mainPage: HTMLElement | null;
@@ -251,11 +252,13 @@ export class UI {
         }
     }
 
-    renderWordCards(result: GetWords[]) {
-        let card = '';
-        result.forEach((item, i) => {
-            card += `
-                <div class="words__card">
+    getWordCards(result: GetWords[]) {
+        return result.map((item, i) => {
+            const card = document.createElement('div');
+            card.classList.add('words__card');
+            card.id = item.id;
+
+            card.innerHTML = `
                     <img class="word__img"
                     src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
                     <div class="word__text">
@@ -273,7 +276,9 @@ export class UI {
                         <div class=
                         "${localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'}">
                             <button class="word__btns--learned" data-id="${item.id}">Изученное</button>
-                            <button class="word__btns--hard" data-id="${item.id}">Сложное</button>
+
+                            <button class="word__btns--hard" data-id="${item.id}">Сложное</button> 
+
                         </div>
 
                         <div class="words__audio" data-audio=${i}>
@@ -297,11 +302,11 @@ export class UI {
                         <p>${item.textExample}</p>
                         <p class="word__translate">${item.textExampleTranslate}</p>
                     </div>
-                </div>
             `;
-        });
 
-        return card;
+            card.addEventListener('click', sendWordsListener);
+            return card;
+        });
     }
 
     listenScrollBtn() {
