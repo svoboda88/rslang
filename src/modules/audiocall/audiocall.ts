@@ -114,23 +114,11 @@ export class Audiocall {
                     `;
                 });
                 (this.audiocallWords as HTMLDivElement).innerHTML = resultWords;
-                this.answerWord();
+                this.mouseControl();
+                this.keyboardControl();
                 this.nextBtn?.addEventListener('click', (event) => {
                     event.stopImmediatePropagation();
-                    if ((this.nextBtn as HTMLDivElement).textContent === 'Не знаю') {
-                        this.showCorrectWord();
-                        storage.wrongAnswers.push({
-                            audio: storage.wordVariants[storage.wordIndex].audio,
-                            word: storage.wordVariants[storage.wordIndex].word,
-                            translate: storage.wordVariants[storage.wordIndex].wordTranslate,
-                        });
-                    } else {
-                        this.hideCorrectWord();
-                        if (storage.correctAnswers.length + storage.wrongAnswers.length <= 9) {
-                            this.startGame();
-                        }
-                        this.showResult();
-                    }
+                    this.nextWords();
                 });
             });
         }
@@ -161,43 +149,167 @@ export class Audiocall {
         audio.play();
     }
 
-    answerWord() {
+    mouseControl() {
         if (this.audiocallWords) {
             this.audiocallWords.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
                 const target = event.target as HTMLDivElement;
-                const choosenWord = Number(target.dataset.callWord);
-                Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
-                    (item as HTMLDivElement).style.backgroundColor = '';
-                });
-                (this.audiocallWords?.children[storage.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
-                if (choosenWord === storage.wordIndex) {
-                    storage.correctAnswers.push({
-                        audio: storage.wordVariants[storage.wordIndex].audio,
-                        word: storage.wordVariants[storage.wordIndex].word,
-                        translate: storage.wordVariants[storage.wordIndex].wordTranslate,
-                    });
-                } else {
-                    if (target.classList.contains('audiocall__word-btn')) {
-                        target.style.backgroundColor = 'red';
-                        storage.wrongAnswers.push({
-                            audio: storage.wordVariants[storage.wordIndex].audio,
-                            word: storage.wordVariants[storage.wordIndex].word,
-                            translate: storage.wordVariants[storage.wordIndex].wordTranslate,
-                        });
-                    }
-                }
-
-                Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
-                    (item as HTMLDivElement).style.pointerEvents = 'none';
-                });
-                this.showCorrectWord();
+                this.checkWord(target);
             });
+        }
+    }
+
+    keyboardControl() {
+        const firstWord = this.audiocallWords?.children[0] as HTMLDivElement;
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Digit1') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(firstWord);
+            }
+        });
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Numpad1') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(firstWord);
+            }
+        });
+
+        const secondWord = this.audiocallWords?.children[1] as HTMLDivElement;
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Digit2') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(secondWord);
+            }
+        });
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Numpad2') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(secondWord);
+            }
+        });
+
+        const thirdWord = this.audiocallWords?.children[2] as HTMLDivElement;
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Digit3') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(thirdWord);
+            }
+        });
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Numpad3') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(thirdWord);
+            }
+        });
+
+        const fourthWord = this.audiocallWords?.children[3] as HTMLDivElement;
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Digit4') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(fourthWord);
+            }
+        });
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Numpad4') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(fourthWord);
+            }
+        });
+
+        const fifthWord = this.audiocallWords?.children[4] as HTMLDivElement;
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Digit5') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(fifthWord);
+            }
+        });
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Numpad5') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.checkWord(fifthWord);
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.nextWords();
+            }
+        });
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.nextWords();
+            }
+        });
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'NumpadEnter') {
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                this.nextWords();
+            }
+        });
+    }
+
+    checkWord(target: HTMLDivElement) {
+        const choosenWord = Number(target.dataset.callWord);
+        Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
+            (item as HTMLDivElement).style.backgroundColor = '';
+        });
+        (this.audiocallWords?.children[storage.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
+        if (choosenWord === storage.wordIndex) {
+            storage.correctAnswers.push({
+                audio: storage.wordVariants[storage.wordIndex].audio,
+                word: storage.wordVariants[storage.wordIndex].word,
+                translate: storage.wordVariants[storage.wordIndex].wordTranslate,
+            });
+        } else {
+            (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = 'red';
+            storage.wrongAnswers.push({
+                audio: storage.wordVariants[storage.wordIndex].audio,
+                word: storage.wordVariants[storage.wordIndex].word,
+                translate: storage.wordVariants[storage.wordIndex].wordTranslate,
+            });
+        }
+
+        Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
+            (item as HTMLDivElement).style.pointerEvents = 'none';
+        });
+        this.showCorrectWord();
+    }
+
+    nextWords() {
+        if ((this.nextBtn as HTMLDivElement).textContent === 'Не знаю') {
+            this.showCorrectWord();
+            storage.wrongAnswers.push({
+                audio: storage.wordVariants[storage.wordIndex].audio,
+                word: storage.wordVariants[storage.wordIndex].word,
+                translate: storage.wordVariants[storage.wordIndex].wordTranslate,
+            });
+        } else {
+            this.hideCorrectWord();
+            if (storage.correctAnswers.length + storage.wrongAnswers.length <= 9) {
+                this.startGame();
+            }
+            this.showResult();
         }
     }
 
     showResult() {
         const answersSum = storage.correctAnswers.length + storage.wrongAnswers.length;
+        console.log(storage.correctAnswers, storage.wrongAnswers);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
