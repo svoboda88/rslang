@@ -112,7 +112,13 @@ export class Textbook {
                     parent.classList.add('picked');
                     const count = arrayGroup.indexOf(parent) as number;
                     storage.groupCount = count;
+                } else if (target.classList.contains('lvl__card')) {
+                    arrayGroup.forEach((item) => item.classList.remove('picked'));
+                    target.classList.add('picked');
+                    const count = arrayGroup.indexOf(target) as number;
+                    storage.groupCount = count;
                 }
+                console.log(storage.groupCount);
                 storage.pageCount = 0;
                 this.disablePrevBtns();
                 this.activateNextBtns();
