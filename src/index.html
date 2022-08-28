@@ -338,7 +338,7 @@
           <h3>Спринт</h3>
           <p>Определяй, верен ли перевод слова, как можно быстрее.</p>
         </div>
-        <div class="games__card" id="audiogame-from-games">
+        <div class="games__card" id="audiocall-from-games">
           <img src="./assets/audiogame.png" alt="audio game image">
           <h3>Аудиовызов</h3>
           <p>Тренируй восприятие речи на слух.</p>
@@ -420,6 +420,71 @@
         <button class="results__play-btn">Играть ещё!</button>
       </div>
     </div>
+    </div>
+
+    <div class="audiocall__modal hidden">
+
+      <div class="audiocall__close-btn">
+        <span class="material-symbols-outlined close-btn">
+          close
+        </span>
+      </div>
+
+      <div class="audiocall__lvls hidden">
+        <h1>Аудиовызов</h1>
+        <h2>Выберите уровень сложности:</h2>
+        <div class="lvls__wrapper">
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="0">1</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="1">2</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="2">3</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="3">4</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="4">5</button>
+          <button class="audiocall-lvls__btn" type="button" data-call-lvl="5">6</button>
+        </div>
+      </div>
+
+      <div class="audiocall__game hidden">
+        <div class="audiocall__window">
+
+          <div class="window">
+
+            <div class="audiocall__img"></div>
+
+            <div class="audiocall__voice-wrapper">
+              <h1 class="audiocall__correct-word"></h1>
+              <span class="material-symbols-outlined audiocall__voice">
+                volume_up
+              </span>
+            </div>
+            
+
+            <div class="words__word">
+              <h3 class="audiocall__words"></h3>
+            </div>
+
+            <div class="audiocall__btns">
+              <button class="audiocall__next">Не знаю</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="audiocall__results hidden">
+        <h2 class="audiocall__results-title"></h2>
+        <br>
+        <div class="audiocall__results-wrapper">
+          <div class="audiocall__results-inner">
+            <h3 class="audiocall__results-wrong"></h3>
+            <div class="audiocall__wrong"></div>
+          </div>
+          <div class="audiocall__results-inner">
+            <h3 class="audiocall__results-correct"></h3>
+            <div class="audiocall__correct"></div>
+          </div>
+        </div>
+        
+        <button class="results__play-btn">Играть ещё!</button>
+      </div>
     </div>
 
   </main>
