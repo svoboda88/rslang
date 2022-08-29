@@ -16,6 +16,12 @@ interface Answers {
     translate: string;
 }
 
+export interface GetUserCards {
+    difficulty: string;
+    id: string;
+    wordId: string;
+}
+
 export const storage: Storage = {
     groupCount: 0,
     pageCount: 0,
