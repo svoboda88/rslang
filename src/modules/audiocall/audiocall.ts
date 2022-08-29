@@ -3,9 +3,13 @@ import { GetWords, getWordsResult } from '../textbook/request';
 
 export class Audiocall {
     mainPage: HTMLElement | null;
+    textbookPage: HTMLElement | null;
     modal: HTMLElement | null;
     modalCloseBtn: HTMLElement | null;
     audiocallLvls: HTMLElement | null;
+    audiocallLvlsWrapper: HTMLElement | null;
+    description: HTMLElement | null;
+    startBtn: HTMLElement | null;
     nextBtn: HTMLElement | null;
     voiceBtn: HTMLElement | null;
     audiocallWords: HTMLElement | null;
@@ -21,9 +25,13 @@ export class Audiocall {
 
     constructor() {
         this.mainPage = document.getElementById('audiocall-from-games');
+        this.textbookPage = document.getElementById('audiocall-from-textbook');
         this.modal = document.querySelector('.audiocall__modal');
         this.modalCloseBtn = document.querySelector('.audiocall__close-btn');
         this.audiocallLvls = document.querySelector('.audiocall__lvls');
+        this.audiocallLvlsWrapper = document.querySelector('.audiocall__lvls--wrapper');
+        this.description = document.querySelector('.audiocall__description');
+        this.startBtn = document.querySelector('.audiocall__start');
         this.nextBtn = document.querySelector('.audiocall__next');
         this.voiceBtn = document.querySelector('.audiocall__voice');
         this.audiocallWords = document.querySelector('.audiocall__words');
@@ -50,6 +58,21 @@ export class Audiocall {
                 document.body.style.overflow = 'hidden';
                 this.modal.classList.remove('hidden');
                 this.audiocallLvls.classList.remove('hidden');
+                this.audiocallLvlsWrapper?.classList.remove('hidden');
+                (this.description as HTMLDivElement).innerHTML = 'Выберите уровень сложности:';
+                (this.startBtn as HTMLButtonElement).style.pointerEvents = 'none';
+            }
+        });
+
+        this.textbookPage?.addEventListener('click', () => {
+            if (this.modal && this.audiocallLvls) {
+                document.body.style.overflow = 'hidden';
+                this.modal.classList.remove('hidden');
+                this.audiocallLvls.classList.remove('hidden');
+                this.audiocallLvlsWrapper?.classList.add('hidden');
+                (this.description as HTMLDivElement).innerHTML = 'Слов для игры берется с текущей страницы учебника';
+                (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
+                storage.isFromTextbook = true;
             }
         });
     }
@@ -59,6 +82,9 @@ export class Audiocall {
             if (this.modal) {
                 document.body.style.overflow = 'visible';
                 this.modal.classList.add('hidden');
+                Array.from(this.audiocallLvlsWrapper?.children as HTMLCollection).forEach((item) => {
+                    item.classList.remove('audiocall__lvls--btn-active');
+                });
 
                 if (!this.gameWindow?.classList.contains('hidden')) {
                     this.gameWindow?.classList.add('hidden');
@@ -79,9 +105,15 @@ export class Audiocall {
             this.audiocallLvls.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
                 const target = event.target as HTMLDivElement;
-                if (target.classList.contains('audiocall-lvls__btn')) {
+                if (target.classList.contains('audiocall__lvls--btn')) {
                     const groupCount = Number(target.dataset.callLvl);
-                    storage.groupCountAudiocall = groupCount;
+                    Array.from(this.audiocallLvlsWrapper?.children as HTMLCollection).forEach((item) => {
+                        item.classList.remove('audiocall__lvls--btn-active');
+                    });
+                    target.classList.add('audiocall__lvls--btn-active');
+                    (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
+                    storage.argumentsForAudiocall[0] = groupCount;
+                } else if (target.classList.contains('audiocall__start')) {
                     this.startGame();
                 }
 
@@ -94,8 +126,11 @@ export class Audiocall {
         if (this.audiocallLvls && this.gameWindow) {
             this.audiocallLvls.classList.add('hidden');
             this.gameWindow.classList.remove('hidden');
-            const pageCount = Math.floor(Math.random() * 20);
-            getWordsResult(storage.groupCountAudiocall, pageCount).then((result) => {
+            storage.argumentsForAudiocall[1] = Math.floor(Math.random() * 20);
+            if (storage.isFromTextbook) {
+                storage.argumentsForAudiocall = [storage.groupCount, storage.pageCount];
+            }
+            getWordsResult(storage.argumentsForAudiocall[0], storage.argumentsForAudiocall[1]).then((result) => {
                 const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
                 const sliced: GetWords[] = shuffled.slice(0, 5);
                 const index = Math.floor(Math.random() * 5);
@@ -309,7 +344,6 @@ export class Audiocall {
 
     showResult() {
         const answersSum = storage.correctAnswers.length + storage.wrongAnswers.length;
-        console.log(storage.correctAnswers, storage.wrongAnswers);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');

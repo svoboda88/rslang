@@ -3,7 +3,8 @@ import { GetWords } from '../textbook/request';
 interface Storage {
     groupCount: number;
     pageCount: number;
-    groupCountAudiocall: number;
+    argumentsForAudiocall: number[];
+    isFromTextbook: boolean;
     wordVariants: GetWords[];
     wordIndex: number;
     correctAnswers: Answers[];
@@ -25,7 +26,8 @@ export interface GetUserCards {
 export const storage: Storage = {
     groupCount: 0,
     pageCount: 0,
-    groupCountAudiocall: 0,
+    argumentsForAudiocall: [],
+    isFromTextbook: false,
     wordVariants: [],
     wordIndex: 0,
     correctAnswers: [],
