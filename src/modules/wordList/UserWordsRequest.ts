@@ -1,10 +1,9 @@
+import { Optional } from '../storage/storage';
+
 export const sendUserWord = async function (
     data: {
         difficulty: string;
-        sprintRight?: number;
-        sprintTries?: number;
-        audiocallRight?: number;
-        audiocallTries?: number;
+        optional?: Optional;
     },
     wordId: string
 ) {
@@ -28,10 +27,7 @@ export const sendUserWord = async function (
 export const updateUserWord = async function (
     data: {
         difficulty: string;
-        sprintRight?: number;
-        sprintTries?: number;
-        audiocallRight?: number;
-        audiocallTries?: number;
+        optional?: Optional;
     },
     wordId: string
 ) {

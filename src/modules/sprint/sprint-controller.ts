@@ -93,27 +93,20 @@ export class SprintController {
     }
 
     sendResults() {
-        console.log(this.model.game.c)
-        hardWords.getUserCards().then((res) => {
-            res.forEach((word: GetUserCards) => {
-                this.model.game.correctAnswers.forEach((answer) => {
-                    if (answer.id === word.wordId) {
-                        updateUserWord({ difficulty: 'easy' }, answer.id);
-                        console.log(`${answer.word} обновлено, easy`);
-                    } else {
-                        sendUserWord({ difficulty: 'easy' }, answer.id);
-                        console.log(`${answer.word} добавлено, easy`);
-                    }
-                });
-                this.model.game.wrongAnswers.forEach((answer) => {
-                    if (answer.id === word.wordId) {
-                        updateUserWord({ difficulty: 'hard' }, answer.id);
-                        console.log(`${answer.word} обновлено, hard`);
-                    } else {
-                        sendUserWord({ difficulty: 'hard' }, answer.id);
-                        console.log(`${answer.word} добавлено, hard`);
-                    }
-                });
+        hardWords.getUserCards().then((res: GetUserCards[]) => {
+            this.model.game.correctAnswers.forEach((answer) => {
+                if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
+                    updateUserWord({ difficulty: 'easy' }, answer.id);
+                } else {
+                    sendUserWord({ difficulty: 'easy', optional: { sprintTries: 1 } }, answer.id);
+                }
+            });
+            this.model.game.wrongAnswers.forEach((answer) => {
+                if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
+                    updateUserWord({ difficulty: 'hard' }, answer.id);
+                } else {
+                    sendUserWord({ difficulty: 'hard', optional: { sprintTries: 1 } }, answer.id);
+                }
             });
         });
     }

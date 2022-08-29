@@ -30,6 +30,13 @@ export interface GetUserCards {
     audiocallTries: number;
 }
 
+export interface Optional {
+    sprintRight?: number;
+    sprintTries?: number;
+    audiocallRight?: number;
+    audiocallTries?: number;
+}
+
 export const storage: Storage = {
     groupCount: 0,
     pageCount: 0,
