@@ -253,7 +253,7 @@ export class UI {
     }
 
     getWordCards(result: GetWords[]) {
-        return result.map((item, i) => {
+        return result.map((item) => {
             const card = document.createElement('div');
             card.classList.add('words__card');
             card.id = item.id;
@@ -265,7 +265,7 @@ export class UI {
                         <div class="word__title">
                             <div class="word__title--top">
                                 <h2>${item.word} ${item.transcription}</h2>
-                                <span class="material-symbols-outlined word__audio" data-volume=${i}>
+                                <span class="material-symbols-outlined word__audio" data-volume=${item.id}>
                                 volume_up
                                 </span>
                             </div>
@@ -281,7 +281,7 @@ export class UI {
 
                         </div>
 
-                        <div class="words__audio" data-audio=${i}>
+                        <div class="words__audio" data-audio=${item.id}>
                             <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
                             <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>
                             <audio src="https://react-learnwords-english.herokuapp.com/${item.audioExample}"></audio>

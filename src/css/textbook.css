@@ -162,7 +162,7 @@ align-items: center;
   display: flex;
   flex-direction: row;
   width: 48%;
-  min-height: 300px;
+  min-height: 400px;
   border-radius: 15px;
   background-color: #f3f4f8;
 }
@@ -263,7 +263,7 @@ align-items: center;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100vh - 245px);
+  padding-top: 50px;
 }
 
 .textbook-learned {
