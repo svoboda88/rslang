@@ -32,15 +32,13 @@ export class Authorize {
             };
             if (e.target === this.signInButton) {
                 this.sendData(userData)
-                    .then(() => this.getData())
+                    .then(this.getData)
                     .then(() => {
                         (this.usernameBtn as HTMLElement).textContent = JSON.parse(
                             window.localStorage.getItem('UserInfo') as string
                         ).name;
                     })
-                    .then(() => {
-                        this.UI.showAuthorizedSections();
-                    });
+                    .then(this.UI.showAuthorizedSections);
             }
         };
         window.addEventListener('click', listener);

@@ -1,3 +1,16 @@
+@import './css/header.css';
+@import './css/hero.css';
+@import './css/video.css';
+@import './css/benefits.css';
+@import './css/developers.css';
+@import './css/textbook.css';
+@import './css/modal.css';
+@import './css/footer.css';
+@import './css/games-cards.css';
+@import './css/games.css';
+@import './css/sprint.css';
+@import './css/audiocall.css';
+
 :root {
   --white: #ffffff;
   --black: #000000;
@@ -41,15 +54,3 @@ body {
 .material-symbols-outlined {
   font-size: 30px;
 }
-
-@import './css/header.css';
-@import './css/hero.css';
-@import './css/video.css';
-@import './css/benefits.css';
-@import './css/developers.css';
-@import './css/textbook.css';
-@import './css/modal.css';
-@import './css/footer.css';
-@import './css/games-cards.css';
-@import './css/games.css';
-@import './css/sprint.css';

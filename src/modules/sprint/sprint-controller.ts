@@ -1,5 +1,8 @@
 import { SprintModel } from './sprint-model';
 import { SprintView } from './sprint-view';
+import { hardWords } from '../wordList/userCards';
+import { GetUserCards } from '../storage/storage';
+import { sendUserWord, updateUserWord } from '../wordList/UserWordsRequest';
 
 export class SprintController {
     model: SprintModel;
@@ -86,6 +89,33 @@ export class SprintController {
 
     showResult() {
         this.view.showResult(this.model.game.correctAnswers, this.model.game.wrongAnswers);
+        this.sendResults();
+    }
+
+    sendResults() {
+        console.log(this.model.game.c)
+        hardWords.getUserCards().then((res) => {
+            res.forEach((word: GetUserCards) => {
+                this.model.game.correctAnswers.forEach((answer) => {
+                    if (answer.id === word.wordId) {
+                        updateUserWord({ difficulty: 'easy' }, answer.id);
+                        console.log(`${answer.word} обновлено, easy`);
+                    } else {
+                        sendUserWord({ difficulty: 'easy' }, answer.id);
+                        console.log(`${answer.word} добавлено, easy`);
+                    }
+                });
+                this.model.game.wrongAnswers.forEach((answer) => {
+                    if (answer.id === word.wordId) {
+                        updateUserWord({ difficulty: 'hard' }, answer.id);
+                        console.log(`${answer.word} обновлено, hard`);
+                    } else {
+                        sendUserWord({ difficulty: 'hard' }, answer.id);
+                        console.log(`${answer.word} добавлено, hard`);
+                    }
+                });
+            });
+        });
     }
 
     endGame() {
