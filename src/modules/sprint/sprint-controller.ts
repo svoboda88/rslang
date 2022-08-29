@@ -16,7 +16,6 @@ export class SprintController {
         this.view.listenCloseGame(this);
         this.view.listenLvlBtns(this);
         this.view.listenAnswerBtns(this);
-        this.view.listenKeyboard(this);
         this.view.listenPlayAgain(this);
         this.view.listenTryAgain(this);
     }
@@ -25,6 +24,7 @@ export class SprintController {
         this.view.showCountdown();
         setTimeout(this.view.renderGame, 3000, this.view);
         setTimeout(this.view.startTimer, 3000, this, this.view);
+        setTimeout(this.view.listenKeyboard, 3000, this);
         await this.model.getWordsForLvl(lvl);
         this.view.renderWord(this.model.getWord(0));
     }
@@ -33,6 +33,7 @@ export class SprintController {
         this.view.showCountdown();
         setTimeout(this.view.renderGame, 3000, this.view);
         setTimeout(this.view.startTimer, 3000, this, this.view);
+        setTimeout(this.view.listenKeyboard, 3000, this);
         await this.model.getWordsForTextbook();
         this.view.renderWord(this.model.getWord(0));
     }
@@ -45,11 +46,13 @@ export class SprintController {
             this.view.updateWordPriceContainer(this.model.game.wordPrice);
             this.view.updateDotsCount('correct');
             this.model.writeAnswer(this.model.game.wordIndex, 'correct');
+            this.view.playAudio('correct');
         } else {
             this.model.writeAnswer(this.model.game.wordIndex, 'error');
             this.view.updateDotsCount('error');
             this.model.game.wordPrice = 10;
             this.view.updateWordPriceContainer(10);
+            this.view.playAudio('wrong');
         }
         this.model.game.wordIndex++;
         if (this.model.game.wordIndex > 39) {
@@ -66,11 +69,13 @@ export class SprintController {
             this.view.updateWordPriceContainer(this.model.game.wordPrice);
             this.view.updateDotsCount('correct');
             this.model.writeAnswer(this.model.game.wordIndex, 'correct');
+            this.view.playAudio('correct');
         } else {
             this.model.writeAnswer(this.model.game.wordIndex, 'error');
             this.view.updateDotsCount('error');
             this.model.game.wordPrice = 10;
             this.view.updateWordPriceContainer(10);
+            this.view.playAudio('wrong');
         }
         this.model.game.wordIndex++;
         if (this.model.game.wordIndex > 39) {
@@ -92,5 +97,6 @@ export class SprintController {
     restartGame() {
         this.model.toInitState();
         this.view.restartGame();
+        setTimeout(this.view.listenKeyboard, 3000, this);
     }
 }

@@ -175,7 +175,8 @@
   width: 40px;
 }
 
-.results__play-btn {
+.results__play-btn,
+.results__try-again-btn {
   align-self: center;
   border: none;
   border-radius: 16px;
@@ -190,7 +191,8 @@
   transition: all 0.3s;
 }
 
-.results__play-btn:hover {
+.results__play-btn:hover,
+.results__try-again-btn:hover {
   background-color: var(--dark-magenta);
 }
 

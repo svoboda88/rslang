@@ -114,6 +114,7 @@ export class SprintView {
             this.modal.classList.add('hidden');
             this.restartGame();
         }
+        document.onkeyup = null;
     }
 
     listenLvlBtns(controller: SprintController) {
@@ -191,7 +192,7 @@ export class SprintView {
     }
 
     listenKeyboard(controller: SprintController) {
-        document.addEventListener('keyup', (event) => {
+        document.onkeyup = (event) => {
             if (event.code === 'ArrowLeft') {
                 event.preventDefault();
                 controller.checkIfRight();
@@ -199,7 +200,7 @@ export class SprintView {
                 event.preventDefault();
                 controller.checkIfWrong();
             }
-        });
+        };
     }
 
     updateResultContainer(points: number) {
@@ -344,6 +345,8 @@ export class SprintView {
                 this.resultsText.innerHTML = 'Отличный результат!';
             }
         }
+
+        document.onkeyup = null;
     }
 
     renderResultBar(percent: number) {
@@ -423,5 +426,12 @@ export class SprintView {
             countdownContainer.classList.add('hidden');
             this.timerContainer.classList.add('hidden');
         }
+    }
+
+    playAudio(sound: 'correct' | 'wrong') {
+        const url = `../../assets/${sound}.mp3`;
+        const audio = new Audio(url);
+
+        audio.play();
     }
 }
