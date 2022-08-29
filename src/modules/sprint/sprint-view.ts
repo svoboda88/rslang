@@ -21,6 +21,7 @@ export class SprintView {
     correctCount: HTMLElement | null;
     wrongCount: HTMLElement | null;
     playAgainBtn: HTMLElement | null;
+    tryAgainBtn: HTMLElement | null;
     interval: number;
 
     constructor() {
@@ -46,6 +47,7 @@ export class SprintView {
         this.correctCount = document.querySelector<HTMLElement>('.correct__count');
         this.wrongCount = document.querySelector<HTMLElement>('.wrong__count');
         this.playAgainBtn = document.querySelector<HTMLElement>('.results__play-btn');
+        this.tryAgainBtn = document.querySelector<HTMLElement>('.results__try-again-btn');
         this.interval = 0;
     }
 
@@ -54,22 +56,47 @@ export class SprintView {
 
         if (sprintCardGames) {
             sprintCardGames.addEventListener('click', () => {
-                if (
-                    this.modal &&
-                    this.gameResultsContainer &&
-                    this.gameContainer &&
-                    this.loadingScreen &&
-                    this.timerContainer
-                ) {
-                    document.body.style.overflow = 'hidden';
-                    this.modal.classList.remove('hidden');
-                    this.gameResultsContainer.classList.add('hidden');
-                    this.gameContainer.classList.add('hidden');
-                    this.loadingScreen.classList.remove('hidden');
-                    this.timerContainer.classList.add('hidden');
-                    this.updateTimer(0);
+                this.start();
+                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
+                    this.lvls.classList.remove('hidden');
+                    this.playAgainBtn.classList.remove('hidden');
+                    this.tryAgainBtn.classList.add('hidden');
                 }
             });
+        }
+    }
+
+    listenStartFromTextbook(controller: SprintController) {
+        const sprintCardTextbook = document.getElementById('sprint-from-textbook');
+
+        if (sprintCardTextbook) {
+            sprintCardTextbook.addEventListener('click', () => {
+                this.start();
+                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
+                    this.lvls.classList.add('hidden');
+                    this.playAgainBtn.classList.add('hidden');
+                    this.tryAgainBtn.classList.remove('hidden');
+                }
+                controller.startGameTextbook();
+            });
+        }
+    }
+
+    start() {
+        if (
+            this.modal &&
+            this.gameResultsContainer &&
+            this.gameContainer &&
+            this.loadingScreen &&
+            this.timerContainer
+        ) {
+            document.body.style.overflow = 'hidden';
+            this.modal.classList.remove('hidden');
+            this.gameResultsContainer.classList.add('hidden');
+            this.gameContainer.classList.add('hidden');
+            this.loadingScreen.classList.remove('hidden');
+            this.timerContainer.classList.add('hidden');
+            this.updateTimer(0);
         }
     }
 
@@ -343,8 +370,22 @@ export class SprintView {
         if (this.playAgainBtn) {
             this.playAgainBtn.addEventListener('click', () => {
                 controller.restartGame();
-                if (this.lvls && this.gameResultsContainer && this.gameContainer) {
+                if (this.gameResultsContainer && this.gameContainer && this.lvls) {
                     this.lvls.classList.remove('hidden');
+                    this.gameResultsContainer.classList.add('hidden');
+                    this.gameContainer.classList.add('hidden');
+                }
+            });
+        }
+    }
+
+    listenTryAgain(controller: SprintController) {
+        if (this.tryAgainBtn) {
+            this.tryAgainBtn.addEventListener('click', () => {
+                controller.restartGame();
+                controller.startGameTextbook();
+                if (this.lvls && this.gameResultsContainer && this.gameContainer) {
+                    this.lvls.classList.add('hidden');
                     this.gameResultsContainer.classList.add('hidden');
                     this.gameContainer.classList.add('hidden');
                 }

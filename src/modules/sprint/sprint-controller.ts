@@ -12,11 +12,13 @@ export class SprintController {
 
     init() {
         this.view.listenStartFromMain();
+        this.view.listenStartFromTextbook(this);
         this.view.listenCloseGame(this);
         this.view.listenLvlBtns(this);
         this.view.listenAnswerBtns(this);
         this.view.listenKeyboard(this);
         this.view.listenPlayAgain(this);
+        this.view.listenTryAgain(this);
     }
 
     async startGame(lvl: number) {
@@ -24,6 +26,14 @@ export class SprintController {
         setTimeout(this.view.renderGame, 3000, this.view);
         setTimeout(this.view.startTimer, 3000, this, this.view);
         await this.model.getWordsForLvl(lvl);
+        this.view.renderWord(this.model.getWord(0));
+    }
+
+    async startGameTextbook() {
+        this.view.showCountdown();
+        setTimeout(this.view.renderGame, 3000, this.view);
+        setTimeout(this.view.startTimer, 3000, this, this.view);
+        await this.model.getWordsForTextbook();
         this.view.renderWord(this.model.getWord(0));
     }
 
