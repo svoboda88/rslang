@@ -38,6 +38,8 @@ export class SprintController {
         } else {
             this.model.writeAnswer(this.model.game.wordIndex, 'error');
             this.view.updateDotsCount('error');
+            this.model.game.wordPrice = 10;
+            this.view.updateWordPriceContainer(10);
         }
         this.model.game.wordIndex++;
         if (this.model.game.wordIndex > 39) {
@@ -57,6 +59,8 @@ export class SprintController {
         } else {
             this.model.writeAnswer(this.model.game.wordIndex, 'error');
             this.view.updateDotsCount('error');
+            this.model.game.wordPrice = 10;
+            this.view.updateWordPriceContainer(10);
         }
         this.model.game.wordIndex++;
         if (this.model.game.wordIndex > 39) {

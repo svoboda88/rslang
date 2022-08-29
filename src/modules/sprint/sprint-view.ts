@@ -8,6 +8,7 @@ export class SprintView {
     lvls: HTMLElement | null;
     timerContainer: HTMLElement | null;
     ringFilled: SVGCircleElement | null;
+    resultsText: HTMLElement | null;
     resultCountContainer: HTMLElement | null;
     dotsContainer: HTMLElement | null;
     dotsCount: number;
@@ -19,7 +20,6 @@ export class SprintView {
     gameResultsWrong: HTMLElement | null;
     correctCount: HTMLElement | null;
     wrongCount: HTMLElement | null;
-    resultCount: HTMLElement | null;
     playAgainBtn: HTMLElement | null;
     interval: number;
 
@@ -30,6 +30,7 @@ export class SprintView {
         this.lvls = document.querySelector<HTMLElement>('.sprint__lvl');
         this.timerContainer = document.querySelector<HTMLElement>('.sprint__timer');
         this.ringFilled = document.querySelector('.ring__circle--filled');
+        this.resultsText = document.querySelector<HTMLElement>('.results__text');
 
         this.resultCountContainer = document.getElementById('sprint-result');
         this.dotsContainer = document.querySelector<HTMLElement>('.words__count');
@@ -44,7 +45,6 @@ export class SprintView {
         this.gameResultsWrong = document.querySelector<HTMLElement>('.results__wrong');
         this.correctCount = document.querySelector<HTMLElement>('.correct__count');
         this.wrongCount = document.querySelector<HTMLElement>('.wrong__count');
-        this.resultCount = document.querySelector<HTMLElement>('.results__result');
         this.playAgainBtn = document.querySelector<HTMLElement>('.results__play-btn');
         this.interval = 0;
     }
@@ -105,6 +105,11 @@ export class SprintView {
     }
 
     showCountdown() {
+        const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+        if (closeBtn) {
+            closeBtn.classList.add('hidden');
+        }
+
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
         let count = 3;
         if (countdownContainer) {
@@ -127,6 +132,10 @@ export class SprintView {
 
     renderGame(view: SprintView) {
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
+        const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+        if (closeBtn) {
+            closeBtn.classList.remove('hidden');
+        }
 
         if (view.timerContainer) {
             view.timerContainer.classList.remove('hidden');
@@ -209,12 +218,12 @@ export class SprintView {
         const thatController = controller;
         const thatView = view;
         thatView.updateTimer(0);
-        let count = 5;
+        let count = 30;
         let percent = 0;
         this.interval = setInterval(
             () => {
                 count--;
-                percent += 100 / 5;
+                percent += 100 / 30;
                 thatView.updateTimer(percent);
                 if (count === 0) {
                     percent = 100;
@@ -275,7 +284,8 @@ export class SprintView {
             this.gameResultsContainer &&
             this.correctCount &&
             this.wrongCount &&
-            this.timerContainer
+            this.timerContainer &&
+            this.resultsText
         ) {
             this.timerContainer.classList.add('hidden');
             this.gameContainer.classList.add('hidden');
@@ -296,11 +306,16 @@ export class SprintView {
                     </div>`;
                 }
             });
-            if (this.resultCount && this.resultCountContainer) {
-                this.resultCount.innerHTML = this.resultCountContainer.innerHTML;
-            }
             this.correctCount.innerHTML = String(correctAnswersSet.length);
             this.wrongCount.innerHTML = String(wrongAnswersSet.length);
+
+            if (percent < 0.3) {
+                this.resultsText.innerHTML = 'Ты можешь лучше! Мы верим в тебя!';
+            } else if (percent < 0.6) {
+                this.resultsText.innerHTML = 'Отличный результат! Но ты можешь лучше ;)';
+            } else {
+                this.resultsText.innerHTML = 'Отличный результат!';
+            }
         }
     }
 
@@ -316,7 +331,9 @@ export class SprintView {
             barFilled.style.strokeDashoffset = String(circumference);
 
             const offset = circumference - (percent / 100) * circumference;
-            barFilled.style.strokeDashoffset = String(offset);
+            setTimeout(function () {
+                barFilled.style.strokeDashoffset = String(offset);
+            }, 500);
 
             resultPercent.innerHTML = `${percent}%`;
         }
@@ -346,8 +363,7 @@ export class SprintView {
             this.gameResultsCorrect &&
             this.gameResultsWrong &&
             this.correctCount &&
-            this.wrongCount &&
-            this.resultCount
+            this.wrongCount
         ) {
             this.resultCountContainer.innerHTML = '0';
             this.wordPriceContainer.innerHTML = '10';
@@ -357,12 +373,10 @@ export class SprintView {
             this.gameResultsWrong.innerHTML = '';
             this.correctCount.innerHTML = '0';
             this.wrongCount.innerHTML = '0';
-            this.resultCount.innerHTML = '0';
         }
 
         if (this.gameContainer && this.lvls && this.loadingScreen && countdownContainer && this.timerContainer) {
             this.gameContainer.classList.remove('hidden');
-
             this.lvls.classList.remove('hidden');
             this.loadingScreen.classList.remove('hidden');
             countdownContainer.classList.add('hidden');

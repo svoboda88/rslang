@@ -6,8 +6,8 @@
   --light-gray: #f3f4f8;
   --gray: #e6e7eb;
   --dark-gray: #B6B6B6;
-  --green: #84ff53;
-  --red: #f02d2d;
+  --green: #a7ff84;
+  --red: #ff6464;
   --gradient: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
 }
 
@@ -24,8 +24,6 @@ html {
   background: var(--gradient);
   font-family: 'Roboto Mono', monospace;
 }
-
-
 
 body {
   margin: 0 auto;
