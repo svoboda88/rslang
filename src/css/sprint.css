@@ -5,11 +5,12 @@
   border-radius: 15px;
   gap: 20px;
   width: 40vw;
-  height: 40vh;
+  height: auto;
   justify-content: center;
   align-items: center;
   position: relative;
   z-index: 5;
+  padding: 20px;
 }
 
 .lvls__wrapper {
@@ -20,7 +21,6 @@
   gap: 10px;
   width: 70%;
 }
-
 
 .lvls__btn {
   background-color: var(--magenta);
@@ -41,6 +41,30 @@
 .lvls__btn:hover {
   background-color: var(--dark-magenta);
   transform: scale(1.1); 
+}
+
+.lvls__btn--active {
+  background-color: var(--dark-magenta);
+}
+
+.sprint__start {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  color: var(--white);
+  background-color: var(--magenta);
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  transition: all 0.2s;
+  width: 150px;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.sprint__start:hover {
+  background-color: var(--dark-magenta);
 }
 
 .window__result {
@@ -139,9 +163,16 @@
   flex-direction: row;
   justify-content: space-between;
   max-height: 35vh;
-  width: 90%;
+  width: calc(100% + 20px);
   overflow-y: scroll;
   padding: 10px;
+}
+
+.results__word {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding-bottom: 4px;
 }
 
 .results__words--wrong {

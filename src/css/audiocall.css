@@ -1,11 +1,22 @@
+.audiocall__game {
+  padding: 20px;
+  background-color: var(--white);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .audiocall__lvls {
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
+  background-color: var(--white);
   border-radius: 15px;
   gap: 20px;
   width: 40vw;
-  height: 40vh;
+  height: auto;
+  padding: 20px;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -23,7 +34,7 @@
 
 
 .audiocall__lvls--btn {
-  background-color: #a41268;
+  background-color: var(--magenta);
   border: none;  
   width: 50px;
   height: 50px;
@@ -35,16 +46,16 @@
   cursor: pointer;
   font-family: inherit;
   font-size: 30px;
-  color: #ffffff;
+  color: var(--white);
 }
 
 .audiocall__lvls--btn:hover {
-  background-color: #31073d;
+  background-color: var(--dark-magenta);
   transform: scale(1.1); 
 }
 
 .audiocall__lvls--btn-active {
-  background-color: #31073d;
+  background-color: var(--dark-magenta);
 }
 
 .window__result {
@@ -71,6 +82,7 @@
 .audiocall__voice-wrapper {
   display: flex;
   align-items: center;
+  text-align: center;
   gap: 10px;
 }
 
@@ -84,11 +96,12 @@
 
 .audiocall__voice {
   font-size: 100px !important;
+  color: var(--black);
   cursor: pointer;
 }
 
 .smaller {
-  font-size: 50px !important;
+  font-size: 36px !important;
 }
 
 .smallest {
@@ -96,6 +109,7 @@
 }
 
 .audiocall__correct-word {
+  color: var(--black);
   padding-bottom: 6px;
 }
 
@@ -106,25 +120,29 @@
 
 .audiocall__word-btn {
   padding: 5px 10px;
-  border: 1px solid #fff;
+  background-color: var(--light-gray);
+  color: var(--black);
+  font-family: inherit;
+  font-size: inherit;
   border-radius: 10px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .audiocall__word-btn:hover {
-  color: #000;
-  border: 1px solid #000;
+  background-color: var(--dark-gray);
 }
 
 .audiocall__next, .audiocall__start  {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
-  font: inherit;
   cursor: pointer;
-  color: #000;
-  background-color: #84ff53;
+  color: var(--white);
+  background-color: var(--magenta);
   outline: none;
+  font-family: inherit;
+  font-size: inherit;
   transition: all 0.2s;
   width: 150px;
   height: 40px;
@@ -132,9 +150,12 @@
 }
 
 .audiocall__start {
-  font-size: 20px;
-  font-weight: 700;
-  background-color: #efef06;
+  color: var(--white);
+  background-color: var(--magenta);
+}
+
+.audiocall__start:hover {
+  background-color: var(--dark-magenta);
 }
 
 
@@ -149,12 +170,18 @@
   width: 40vw;
   height: auto;
   border-radius: 15px;
+  align-items: center;
   padding: 20px;
 }
 
 .audiocall__results-wrapper {
   display: flex;
-  justify-content: space-around;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 10%;
+  width: 90%;
+  overflow-y: scroll;
+  padding: 10px;
 }
 
 .audiocall__results h2 {
@@ -190,13 +217,11 @@
 .audiocall__wrong {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .audiocall__correct {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .audiocall__list {
@@ -207,10 +232,6 @@
 
 .audiocall__word {
   padding-bottom: 4px;
-}
-
-.audiocall__word-primary {
-  font-weight: bold;
 }
 
 .results__play-btn {
@@ -230,4 +251,31 @@
 
 .results__play-btn:hover {
   background-color: #31073d;
+}
+
+.audiocall-result__bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 280px;
+  height: 280px;
+}
+
+.audiocall-bar {
+  width: 280px;
+  height: 280px;
+  position: absolute;
+}
+
+.audiocall-bar__circle {
+  z-index: 4;
+  box-shadow: 5px 5px 10px 2px rgba(0,0,0,.8);
+}
+
+.audiocall-bar__circle--filled {
+  z-index: 4;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  transition: all 1s;
 }

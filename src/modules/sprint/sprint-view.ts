@@ -6,6 +6,7 @@ export class SprintView {
     loadingScreen: HTMLElement | null;
     gameContainer: HTMLElement | null;
     lvls: HTMLElement | null;
+    lvlsDescription: HTMLElement | null;
     timerContainer: HTMLElement | null;
     ringFilled: SVGCircleElement | null;
     resultsText: HTMLElement | null;
@@ -29,6 +30,7 @@ export class SprintView {
         this.loadingScreen = document.querySelector<HTMLElement>('.sprint__load-screen');
         this.gameContainer = document.querySelector<HTMLElement>('.sprint__game');
         this.lvls = document.querySelector<HTMLElement>('.sprint__lvl');
+        this.lvlsDescription = document.querySelector<HTMLElement>('.lvls__description');
         this.timerContainer = document.querySelector<HTMLElement>('.sprint__timer');
         this.ringFilled = document.querySelector('.ring__circle--filled');
         this.resultsText = document.querySelector<HTMLElement>('.results__text');
@@ -121,11 +123,19 @@ export class SprintView {
         const lvlBtnsArray = document.querySelectorAll('.lvls__btn');
         if (lvlBtnsArray) {
             lvlBtnsArray.forEach((btn) => {
-                btn.addEventListener('click', async () => {
-                    if (btn instanceof HTMLElement && this.lvls && this.resultCountContainer) {
-                        this.lvls.classList.add('hidden');
-                        this.resultCountContainer.classList.remove('hidden');
-                        controller.startGame(Number(btn.dataset.lvl));
+                btn.addEventListener('click', () => {
+                    lvlBtnsArray.forEach((btn) => btn.classList.remove('lvls__btn--active'));
+                    btn.classList.add('lvls__btn--active');
+                    const sprintStart = document.querySelector<HTMLElement>('.sprint__start');
+                    if (sprintStart) {
+                        sprintStart.onclick = () => {
+                            if (btn instanceof HTMLElement && this.lvls && this.resultCountContainer) {
+                                btn.classList.remove('lvls__btn--active');
+                                this.lvls.classList.add('hidden');
+                                this.resultCountContainer.classList.remove('hidden');
+                                controller.startGame(Number(btn.dataset.lvl));
+                            }
+                        };
                     }
                 });
             });
@@ -322,7 +332,15 @@ export class SprintView {
                 if (this.gameResultsCorrect) {
                     this.gameResultsCorrect.innerHTML += `
                     <div class="results__word">
-                        <p><b>${word.word}</b> ${word.wordTranslate}</p>
+                        <span class="material-symbols-outlined sprint__word-audio smallest" data-sprintaudio=${word.audio}>
+                            volume_up
+                        </span>
+                        <span>
+                            <b>${word.word}</b>
+                        </span> -
+                        <span>
+                            ${word.wordTranslate}
+                        </span>
                     </div>`;
                 }
             });
@@ -330,10 +348,19 @@ export class SprintView {
                 if (this.gameResultsWrong) {
                     this.gameResultsWrong.innerHTML += `
                     <div class="results__word">
-                        <p><b>${word.word}</b> ${word.wordTranslate}</p>
+                        <span class="material-symbols-outlined sprint__word-audio smallest" data-sprintaudio=${word.audio}>
+                            volume_up
+                        </span>
+                        <span>
+                            <b>${word.word}</b>
+                        </span> -
+                        <span>
+                            ${word.wordTranslate}
+                        </span>
                     </div>`;
                 }
             });
+
             this.correctCount.innerHTML = String(correctAnswersSet.length);
             this.wrongCount.innerHTML = String(wrongAnswersSet.length);
 
@@ -344,6 +371,21 @@ export class SprintView {
             } else {
                 this.resultsText.innerHTML = 'Отличный результат!';
             }
+        }
+
+        const audioBts = document.querySelectorAll<HTMLElement>('.sprint__word-audio');
+        if (audioBts) {
+            audioBts.forEach((btn) => {
+                btn.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (target instanceof HTMLElement) {
+                        const currentWord = String(target.dataset.sprintaudio);
+                        console.log(currentWord);
+                        const wordAudio = new Audio(`https://react-learnwords-english.herokuapp.com/${currentWord}`);
+                        wordAudio.play();
+                    }
+                });
+            });
         }
 
         document.onkeyup = null;

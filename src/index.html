@@ -368,7 +368,7 @@
 
       <div class="sprint__lvl">
         <h1>Спринт</h1>
-        <h2>Выберите уровень сложности:</h2>
+        <h2 class="lvls__description">Выберите уровень сложности:</h2>
         <div class="lvls__wrapper">
           <button class="lvls__btn" type="button" data-lvl="0">1</button>
           <button class="lvls__btn" type="button" data-lvl="1">2</button>
@@ -377,6 +377,7 @@
           <button class="lvls__btn" type="button" data-lvl="4">5</button>
           <button class="lvls__btn" type="button" data-lvl="5">6</button>
         </div>
+        <button class="sprint__start">Начать</button>
       </div>
 
       <div class="sprint__game">
@@ -502,7 +503,18 @@
 
       <div class="audiocall__results hidden">
         <h2 class="audiocall__results-title"></h2>
-        <br>
+        <div class="audiocall-result__bar">
+          <svg class="audiocall-bar" viewBox="0 0 300 300">
+            <circle class="audiocall-bar__circle" stroke="#B6B6B6" stroke-opacity="0.3" fill="transparent"
+              stroke-width="30" cx="150" cy="150" r="90">
+            </circle>
+            <circle class="audiocall-bar__circle--filled" stroke="#a41268" stroke-opacity="1" fill="transparent"
+              stroke-width="30" cx="150" cy="150" r="90">
+            </circle>
+          </svg>
+          <h2 class="audiocall-result__percent"></h2>
+          <p>слов изучено</p>
+        </div>
         <div class="audiocall__results-wrapper">
           <div class="audiocall__results-inner">
             <h3 class="audiocall__results-wrong"></h3>

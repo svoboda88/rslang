@@ -122,7 +122,13 @@ export class SprintController {
                     const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
                     if (word.optional.sprintTries) {
                         updateUserWord(
-                            { difficulty: 'hard', optional: { sprintTries: word.optional.sprintTries + 1 } },
+                            {
+                                difficulty: 'hard',
+                                optional: {
+                                    sprintRight: word.optional.sprintRight,
+                                    sprintTries: word.optional.sprintTries + 1,
+                                },
+                            },
                             answer.id
                         );
                     }
@@ -130,6 +136,20 @@ export class SprintController {
                     sendUserWord({ difficulty: 'hard', optional: { sprintTries: 1 } }, answer.id);
                 }
             });
+        });
+
+        hardWords.getUserCards().then((res) => {
+            const easy: GetUserCards[] = [];
+            const hard: GetUserCards[] = [];
+            res.forEach((word: GetUserCards) => {
+                if (word.difficulty === 'hard') {
+                    hard.push(word);
+                } else if (word.difficulty === 'easy') {
+                    easy.push(word);
+                }
+            });
+            console.log(easy);
+            console.log(hard);
         });
     }
 

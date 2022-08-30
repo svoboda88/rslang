@@ -90,7 +90,7 @@ export class Audiocall {
                 this.modal.classList.remove('hidden');
                 this.audiocallLvls.classList.remove('hidden');
                 this.audiocallLvlsWrapper?.classList.add('hidden');
-                (this.description as HTMLDivElement).innerHTML = 'Слов для игры берется с текущей страницы учебника';
+                (this.description as HTMLDivElement).innerHTML = 'Слова для игры берутся с текущей страницы учебника';
                 (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
                 this.isFromTextbook = true;
             }
@@ -211,7 +211,7 @@ export class Audiocall {
             <img src="https://react-learnwords-english.herokuapp.com/${this.wordVariants[this.wordIndex].image}">
         `;
         (this.correctWord as HTMLDivElement).textContent = this.wordVariants[this.wordIndex].word;
-        (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
+        (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = '#a7ff84';
         this.voiceBtn?.classList.add('smaller');
         (this.audiocallWordsWrapper as HTMLDivElement).style.pointerEvents = 'none';
     }
@@ -351,7 +351,7 @@ export class Audiocall {
         Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
             (item as HTMLDivElement).style.backgroundColor = '';
         });
-        (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
+        (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = '#a7ff84';
         if (choosenWord === this.wordIndex) {
             this.correctAnswers.push({
                 audio: this.wordVariants[this.wordIndex].audio,
@@ -359,7 +359,7 @@ export class Audiocall {
                 translate: this.wordVariants[this.wordIndex].wordTranslate,
             });
         } else {
-            (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = 'red';
+            (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = '#ff6464';
             this.wrongAnswers.push({
                 audio: this.wordVariants[this.wordIndex].audio,
                 word: this.wordVariants[this.wordIndex].word,
@@ -413,6 +413,10 @@ export class Audiocall {
     resultTable() {
         const correctLength = this.correctAnswers.length as number;
         const wrongLength = this.wrongAnswers.length as number;
+
+        const percent = correctLength / (correctLength + wrongLength);
+        this.renderResultBar(Math.round(percent * 100));
+
         let wrongList = '';
         this.wrongAnswers.forEach((item, i) => {
             wrongList += `
@@ -421,8 +425,8 @@ export class Audiocall {
                         volume_up
                     </span>
                     <span class="audiocall__word audiocall__word-primary">
-                        ${item.word}
-                    </span> -
+                        <b>${item.word}</b>
+                    </span> 
                     <span class="audiocall__word">
                         ${item.translate}
                     </span>
@@ -437,7 +441,7 @@ export class Audiocall {
                         volume_up
                     </span>
                     <span class="audiocall__word audiocall__word-primary">
-                        ${item.word}
+                        <b> ${item.word} </b>
                     </span> -
                     <span class="audiocall__word">
                         ${item.translate}
@@ -446,9 +450,13 @@ export class Audiocall {
             `;
         });
 
-        (this.resultsTitle as HTMLHeadElement).innerHTML = `
-            Твой результат: <span class="results__result">${correctLength * 10}%</span>
-        `;
+        if (percent < 0.3) {
+            (this.resultsTitle as HTMLHeadElement).innerHTML = 'Ты можешь лучше! Мы верим в тебя!';
+        } else if (percent < 0.6) {
+            (this.resultsTitle as HTMLHeadElement).innerHTML = 'Отличный результат! Но ты можешь лучше ;)';
+        } else {
+            (this.resultsTitle as HTMLHeadElement).innerHTML = 'Отличный результат!';
+        }
 
         (this.resultsWrong as HTMLHeadElement).innerHTML = `
             Ошибки в словах <span class="wrong__count">${wrongLength}</span>
@@ -485,5 +493,25 @@ export class Audiocall {
                 }
             });
         });
+    }
+
+    renderResultBar(percent: number) {
+        const barFilled = document.querySelector<SVGCircleElement>('.audiocall-bar__circle--filled');
+        const resultPercent = document.querySelector<HTMLElement>('.audiocall-result__percent');
+
+        if (barFilled && resultPercent) {
+            const radius = barFilled.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+
+            barFilled.style.strokeDasharray = `${circumference}  ${circumference}`;
+            barFilled.style.strokeDashoffset = String(circumference);
+
+            const offset = circumference - (percent / 100) * circumference;
+            setTimeout(function () {
+                barFilled.style.strokeDashoffset = String(offset);
+            }, 500);
+
+            resultPercent.innerHTML = `${percent}%`;
+        }
     }
 }
