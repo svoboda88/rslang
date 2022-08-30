@@ -1,7 +1,11 @@
 import { storage } from '../storage/storage';
 import { GetWords, getWordsResult } from '../textbook/request';
+// import { UI } from '../ui/ui';
+// import { Textbook } from '../textbook/textbook';
 
 export class Audiocall {
+    // ui: UI;
+    // textbook: Textbook;
     mainPage: HTMLElement | null;
     textbookPage: HTMLElement | null;
     modal: HTMLElement | null;
@@ -24,6 +28,8 @@ export class Audiocall {
     correctContainer: HTMLElement | null;
 
     constructor() {
+        // this.ui = new UI();
+        // this.textbook = new Textbook(this.ui);
         this.mainPage = document.getElementById('audiocall-from-games');
         this.textbookPage = document.getElementById('audiocall-from-textbook');
         this.modal = document.querySelector('.audiocall__modal');
@@ -96,6 +102,7 @@ export class Audiocall {
 
                 storage.correctAnswers = [];
                 storage.wrongAnswers = [];
+                storage.isFromTextbook = false;
             }
         });
     }
@@ -126,37 +133,57 @@ export class Audiocall {
         if (this.audiocallLvls && this.gameWindow) {
             this.audiocallLvls.classList.add('hidden');
             this.gameWindow.classList.remove('hidden');
-            storage.argumentsForAudiocall[1] = Math.floor(Math.random() * 20);
-            if (storage.isFromTextbook) {
+            if (storage.isFromTextbook && localStorage.getItem('Logged')) {
                 storage.argumentsForAudiocall = [storage.groupCount, storage.pageCount];
+                getWordsResult(storage.argumentsForAudiocall[0], storage.argumentsForAudiocall[1]).then((result) => {
+                    // let temp: GetWords[] = [];
+                    // setTimeout(() => {
+                    //     this.textbook.sortByEasy().then((result) => {
+                    //         temp = result;
+                    //     });
+                    // }, 500);
+                    // console.log(temp);
+                    this.renderWords(result);
+                });
+            } else if (storage.isFromTextbook) {
+                storage.argumentsForAudiocall = [storage.groupCount, storage.pageCount];
+                getWordsResult(storage.argumentsForAudiocall[0], storage.argumentsForAudiocall[1]).then((result) => {
+                    this.renderWords(result);
+                });
+            } else {
+                storage.argumentsForAudiocall[1] = Math.floor(Math.random() * 20);
+                getWordsResult(storage.argumentsForAudiocall[0], storage.argumentsForAudiocall[1]).then((result) => {
+                    this.renderWords(result);
+                });
             }
-            getWordsResult(storage.argumentsForAudiocall[0], storage.argumentsForAudiocall[1]).then((result) => {
-                const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
-                const sliced: GetWords[] = shuffled.slice(0, 5);
-                const index = Math.floor(Math.random() * 5);
-                storage.wordVariants = [];
-                storage.wordVariants = [...sliced];
-                storage.wordIndex = index;
-                this.voiceBtn?.addEventListener('click', (event) => {
-                    event.stopImmediatePropagation();
-                    this.wordVoice();
-                });
-                this.wordVoice();
-                let resultWords = '';
-                storage.wordVariants.forEach((item, i) => {
-                    resultWords += `
-                        <div class="audiocall__word-btn" data-call-word=${i}>${item.wordTranslate}</div>
-                    `;
-                });
-                (this.audiocallWords as HTMLDivElement).innerHTML = resultWords;
-                this.mouseControl();
-                this.keyboardControl();
-                this.nextBtn?.addEventListener('click', (event) => {
-                    event.stopImmediatePropagation();
-                    this.nextWords();
-                });
-            });
         }
+    }
+
+    renderWords(result: GetWords[]) {
+        const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
+        const sliced: GetWords[] = shuffled.slice(0, 5);
+        const index = Math.floor(Math.random() * 5);
+        storage.wordVariants = [];
+        storage.wordVariants = [...sliced];
+        storage.wordIndex = index;
+        this.voiceBtn?.addEventListener('click', (event) => {
+            event.stopImmediatePropagation();
+            this.wordVoice();
+        });
+        this.wordVoice();
+        let resultWords = '';
+        storage.wordVariants.forEach((item, i) => {
+            resultWords += `
+                <div class="audiocall__word-btn" data-call-word=${i}>${item.wordTranslate}</div>
+            `;
+        });
+        (this.audiocallWords as HTMLDivElement).innerHTML = resultWords;
+        this.mouseControl();
+        this.keyboardControl();
+        this.nextBtn?.addEventListener('click', (event) => {
+            event.stopImmediatePropagation();
+            this.nextWords();
+        });
     }
 
     showCorrectWord() {
