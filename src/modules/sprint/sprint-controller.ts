@@ -96,14 +96,32 @@ export class SprintController {
         hardWords.getUserCards().then((res: GetUserCards[]) => {
             this.model.game.correctAnswers.forEach((answer: GetWords) => {
                 if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
-                    updateUserWord({ difficulty: 'easy' }, answer.id);
+                    const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
+                    if (word.optional.sprintTries && word.optional.sprintRight) {
+                        updateUserWord(
+                            {
+                                difficulty: 'easy',
+                                optional: {
+                                    sprintTries: word.optional.sprintTries + 1,
+                                    sprintRight: word.optional.sprintRight + 1,
+                                },
+                            },
+                            answer.id
+                        );
+                    }
                 } else {
-                    sendUserWord({ difficulty: 'easy', optional: { sprintTries: 1 } }, answer.id);
+                    sendUserWord({ difficulty: 'easy', optional: { sprintTries: 1, sprintRight: 1 } }, answer.id);
                 }
             });
             this.model.game.wrongAnswers.forEach((answer: GetWords) => {
                 if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
-                    updateUserWord({ difficulty: 'hard' }, answer.id);
+                    const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
+                    if (word.optional.sprintTries) {
+                        updateUserWord(
+                            { difficulty: 'hard', optional: { sprintTries: word.optional.sprintTries + 1 } },
+                            answer.id
+                        );
+                    }
                 } else {
                     sendUserWord({ difficulty: 'hard', optional: { sprintTries: 1 } }, answer.id);
                 }
