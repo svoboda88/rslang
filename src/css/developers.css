@@ -1,5 +1,5 @@
 .developers {
-  background-color: #fff;
+  background-color: var(--white);
   padding: 20px;
 }
 
@@ -18,7 +18,7 @@
 .developers__card {
   height: 120px;
   width: 50%;
-  background-color: #f3f4f8;
+  background-color: var(--light-gray);
   border-radius: 10px;
   display: flex;
   flex-direction: row;

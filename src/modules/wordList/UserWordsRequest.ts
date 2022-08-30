@@ -1,4 +1,12 @@
-export const sendUserWord = async function (data: { difficulty: string }, wordId: string) {
+import { Optional } from '../types/types';
+
+export const sendUserWord = async function (
+    data: {
+        difficulty: string;
+        optional?: Optional;
+    },
+    wordId: string
+) {
     const token = JSON.parse(window.localStorage.getItem('UserToken') as string).token;
     const userId = JSON.parse(window.localStorage.getItem('UserToken') as string).userId;
     const response = await fetch(`https://react-learnwords-english.herokuapp.com/users/${userId}/words/${wordId}`, {
@@ -16,7 +24,13 @@ export const sendUserWord = async function (data: { difficulty: string }, wordId
     }
 };
 
-export const updateUserWord = async function (data: { difficulty: string }, wordId: string) {
+export const updateUserWord = async function (
+    data: {
+        difficulty: string;
+        optional?: Optional;
+    },
+    wordId: string
+) {
     const token = JSON.parse(window.localStorage.getItem('UserToken') as string).token;
     const userId = JSON.parse(window.localStorage.getItem('UserToken') as string).userId;
     const response = await fetch(`https://react-learnwords-english.herokuapp.com/users/${userId}/words/${wordId}`, {

@@ -1,5 +1,5 @@
 .benefits {
-  color: #fff;
+  color: var(--white);
   margin: 30px auto;
   width: 70%;
   text-align: center;
@@ -17,8 +17,8 @@
 }
 
 .benefits__card {
-  background-color: #fff;
-  color: #000;
+  background-color: var(--white);
+  color: var(--black);
   border-radius: 15px;
   width: 20%;
   padding: 20px;

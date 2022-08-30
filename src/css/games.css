@@ -1,5 +1,5 @@
 .sprint__modal, .audiocall__modal {
-  background: linear-gradient(270deg, #f5ff00, #a41268, #020024);
+  background: var(--gradient);
   background-size: 600% 600%;
   z-index: 4;
   position: fixed;
@@ -15,13 +15,12 @@
   overflow: hidden;
 
   transition: opacity .2s;
-
 }
 
 @keyframes gradient {
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
+  0% {background-position: 0% 50%}
+  50%{background-position: 100% 50%}
+  100%{background-position: 0% 50%}
 }
 
 .sprint__load-screen, .audiocall__load-screen {
@@ -43,7 +42,7 @@
     width: 35px;
     height: 35px;
     border-radius: 100%;
-    background-color: #ffffff;
+    background-color: var(--white);
 }
 
 .bubble-2 {
@@ -52,8 +51,12 @@
 }
 
 .spinner {
-  animation: rotate 3s linear infinite;}
-.bubble-1, .bubble-2 {animation: bounce 3s ease-in-out infinite;}
+  animation: rotate 3s linear infinite;
+}
+.bubble-1, 
+.bubble-2 {
+  animation: bounce 3s ease-in-out infinite;
+}
 .bubble-2 {animation-delay: -1.0s;}
 
 @keyframes rotate {
@@ -66,7 +69,7 @@
 }
 
 .sprint__close-btn, .audiocall__close-btn {
-  background-color: #ffffff;
+  background-color: var(--white);
   width: 50px;
   height: 50px;
   border-radius: 50px;

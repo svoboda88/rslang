@@ -6,6 +6,9 @@ export class SprintView {
     loadingScreen: HTMLElement | null;
     gameContainer: HTMLElement | null;
     lvls: HTMLElement | null;
+    timerContainer: HTMLElement | null;
+    ringFilled: SVGCircleElement | null;
+    resultsText: HTMLElement | null;
     resultCountContainer: HTMLElement | null;
     dotsContainer: HTMLElement | null;
     dotsCount: number;
@@ -17,8 +20,8 @@ export class SprintView {
     gameResultsWrong: HTMLElement | null;
     correctCount: HTMLElement | null;
     wrongCount: HTMLElement | null;
-    resultCount: HTMLElement | null;
     playAgainBtn: HTMLElement | null;
+    tryAgainBtn: HTMLElement | null;
     interval: number;
 
     constructor() {
@@ -26,6 +29,9 @@ export class SprintView {
         this.loadingScreen = document.querySelector<HTMLElement>('.sprint__load-screen');
         this.gameContainer = document.querySelector<HTMLElement>('.sprint__game');
         this.lvls = document.querySelector<HTMLElement>('.sprint__lvl');
+        this.timerContainer = document.querySelector<HTMLElement>('.sprint__timer');
+        this.ringFilled = document.querySelector('.ring__circle--filled');
+        this.resultsText = document.querySelector<HTMLElement>('.results__text');
 
         this.resultCountContainer = document.getElementById('sprint-result');
         this.dotsContainer = document.querySelector<HTMLElement>('.words__count');
@@ -40,8 +46,8 @@ export class SprintView {
         this.gameResultsWrong = document.querySelector<HTMLElement>('.results__wrong');
         this.correctCount = document.querySelector<HTMLElement>('.correct__count');
         this.wrongCount = document.querySelector<HTMLElement>('.wrong__count');
-        this.resultCount = document.querySelector<HTMLElement>('.results__result');
         this.playAgainBtn = document.querySelector<HTMLElement>('.results__play-btn');
+        this.tryAgainBtn = document.querySelector<HTMLElement>('.results__try-again-btn');
         this.interval = 0;
     }
 
@@ -50,14 +56,47 @@ export class SprintView {
 
         if (sprintCardGames) {
             sprintCardGames.addEventListener('click', () => {
-                if (this.modal && this.gameResultsContainer && this.gameContainer && this.loadingScreen) {
-                    document.body.style.overflow = 'hidden';
-                    this.modal.classList.remove('hidden');
-                    this.gameResultsContainer.classList.add('hidden');
-                    this.gameContainer.classList.add('hidden');
-                    this.loadingScreen.classList.remove('hidden');
+                this.start();
+                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
+                    this.lvls.classList.remove('hidden');
+                    this.playAgainBtn.classList.remove('hidden');
+                    this.tryAgainBtn.classList.add('hidden');
                 }
             });
+        }
+    }
+
+    listenStartFromTextbook(controller: SprintController) {
+        const sprintCardTextbook = document.getElementById('sprint-from-textbook');
+
+        if (sprintCardTextbook) {
+            sprintCardTextbook.addEventListener('click', () => {
+                this.start();
+                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
+                    this.lvls.classList.add('hidden');
+                    this.playAgainBtn.classList.add('hidden');
+                    this.tryAgainBtn.classList.remove('hidden');
+                }
+                controller.startGameTextbook();
+            });
+        }
+    }
+
+    start() {
+        if (
+            this.modal &&
+            this.gameResultsContainer &&
+            this.gameContainer &&
+            this.loadingScreen &&
+            this.timerContainer
+        ) {
+            document.body.style.overflow = 'hidden';
+            this.modal.classList.remove('hidden');
+            this.gameResultsContainer.classList.add('hidden');
+            this.gameContainer.classList.add('hidden');
+            this.loadingScreen.classList.remove('hidden');
+            this.timerContainer.classList.add('hidden');
+            this.updateTimer(0);
         }
     }
 
@@ -75,6 +114,7 @@ export class SprintView {
             this.modal.classList.add('hidden');
             this.restartGame();
         }
+        document.onkeyup = null;
     }
 
     listenLvlBtns(controller: SprintController) {
@@ -92,9 +132,13 @@ export class SprintView {
         }
     }
 
-    showCountdown(controller: SprintController) {
-        const countdownContainer = document.querySelector<HTMLElement>('.countdown');
+    showCountdown() {
         const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+        if (closeBtn) {
+            closeBtn.classList.add('hidden');
+        }
+
+        const countdownContainer = document.querySelector<HTMLElement>('.countdown');
         let count = 3;
         if (countdownContainer) {
             countdownContainer.classList.remove('hidden');
@@ -111,24 +155,23 @@ export class SprintView {
                     }
                 }
             }, 1000);
-            if (closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    clearInterval(interval);
-                    controller.endGame();
-                });
-            }
         }
     }
 
-    renderGame() {
-        const gameContainer = document.querySelector<HTMLElement>('.sprint__game');
-        const loadingScreen = document.querySelector<HTMLElement>('.sprint__load-screen');
+    renderGame(view: SprintView) {
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
+        const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+        if (closeBtn) {
+            closeBtn.classList.remove('hidden');
+        }
 
-        if (gameContainer && loadingScreen && countdownContainer) {
-            loadingScreen.classList.add('hidden');
+        if (view.timerContainer) {
+            view.timerContainer.classList.remove('hidden');
+        }
+        if (view.gameContainer && view.loadingScreen && countdownContainer) {
+            view.loadingScreen.classList.add('hidden');
             countdownContainer.classList.add('hidden');
-            gameContainer.classList.remove('hidden');
+            view.gameContainer.classList.remove('hidden');
         }
     }
 
@@ -149,7 +192,7 @@ export class SprintView {
     }
 
     listenKeyboard(controller: SprintController) {
-        document.addEventListener('keydown', (event) => {
+        document.onkeyup = (event) => {
             if (event.code === 'ArrowLeft') {
                 event.preventDefault();
                 controller.checkIfRight();
@@ -157,7 +200,7 @@ export class SprintView {
                 event.preventDefault();
                 controller.checkIfWrong();
             }
-        });
+        };
     }
 
     updateResultContainer(points: number) {
@@ -198,26 +241,50 @@ export class SprintView {
         }
     }
 
-    startTimer(controller: SprintController) {
-        console.log('игра началась');
+    startTimer(controller: SprintController, view: SprintView) {
         const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
         const thatController = controller;
-        let count = 10;
+        const thatView = view;
+        thatView.updateTimer(0);
+        let count = 60;
+        let percent = 0;
         this.interval = setInterval(
             () => {
                 count--;
-                console.log(count);
+                percent += 100 / 60;
+                thatView.updateTimer(percent);
                 if (count === 0) {
-                    console.log('время вышло');
+                    percent = 100;
+                    thatView.updateTimer(percent);
                     clearInterval(this.interval);
                     thatController.showResult();
                 }
             },
             1000,
-            thatController
+            thatController,
+            thatView
         );
         if (closeBtn) {
-            closeBtn.addEventListener('click', () => clearInterval(this.interval));
+            closeBtn.addEventListener('click', () => {
+                clearInterval(this.interval);
+                thatView.updateTimer(0);
+                if (thatView.timerContainer) {
+                    thatView.timerContainer?.classList.add('hidden');
+                }
+            });
+        }
+    }
+
+    updateTimer(percent: number) {
+        if (this.ringFilled) {
+            const radius = this.ringFilled.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+
+            this.ringFilled.style.strokeDasharray = `${circumference}  ${circumference}`;
+            this.ringFilled.style.strokeDashoffset = String(circumference);
+
+            const offset = circumference - (percent / 100) * circumference;
+            this.ringFilled.style.strokeDashoffset = String(offset);
         }
     }
 
@@ -226,10 +293,32 @@ export class SprintView {
     }
 
     showResult(correctAnswers: GetWords[], wrongAnswers: GetWords[]) {
-        if (this.gameContainer && this.gameResultsContainer && this.correctCount && this.wrongCount) {
+        const correctAnswersSet = [...new Set(correctAnswers)];
+        const wrongAnswersSet = [...new Set(wrongAnswers)];
+
+        wrongAnswersSet.forEach((wrongAnswer) => {
+            correctAnswersSet.forEach((correctAnswer, index) => {
+                if (correctAnswer.word === wrongAnswer.word) {
+                    correctAnswersSet.splice(index, 1);
+                }
+            });
+        });
+
+        const percent = correctAnswersSet.length / (correctAnswersSet.length + wrongAnswersSet.length);
+        this.renderResultBar(Math.round(percent * 100));
+
+        if (
+            this.gameContainer &&
+            this.gameResultsContainer &&
+            this.correctCount &&
+            this.wrongCount &&
+            this.timerContainer &&
+            this.resultsText
+        ) {
+            this.timerContainer.classList.add('hidden');
             this.gameContainer.classList.add('hidden');
             this.gameResultsContainer.classList.remove('hidden');
-            correctAnswers.forEach((word) => {
+            correctAnswersSet.forEach((word) => {
                 if (this.gameResultsCorrect) {
                     this.gameResultsCorrect.innerHTML += `
                     <div class="results__word">
@@ -237,7 +326,7 @@ export class SprintView {
                     </div>`;
                 }
             });
-            wrongAnswers.forEach((word) => {
+            wrongAnswersSet.forEach((word) => {
                 if (this.gameResultsWrong) {
                     this.gameResultsWrong.innerHTML += `
                     <div class="results__word">
@@ -245,11 +334,38 @@ export class SprintView {
                     </div>`;
                 }
             });
-            if (this.resultCount && this.resultCountContainer) {
-                this.resultCount.innerHTML = this.resultCountContainer.innerHTML;
+            this.correctCount.innerHTML = String(correctAnswersSet.length);
+            this.wrongCount.innerHTML = String(wrongAnswersSet.length);
+
+            if (percent < 0.3) {
+                this.resultsText.innerHTML = 'Ты можешь лучше! Мы верим в тебя!';
+            } else if (percent < 0.6) {
+                this.resultsText.innerHTML = 'Отличный результат! Но ты можешь лучше ;)';
+            } else {
+                this.resultsText.innerHTML = 'Отличный результат!';
             }
-            this.correctCount.innerHTML = String(correctAnswers.length);
-            this.wrongCount.innerHTML = String(wrongAnswers.length);
+        }
+
+        document.onkeyup = null;
+    }
+
+    renderResultBar(percent: number) {
+        const barFilled = document.querySelector<SVGCircleElement>('.bar__circle--filled');
+        const resultPercent = document.querySelector<HTMLElement>('.result__percent');
+
+        if (barFilled && resultPercent) {
+            const radius = barFilled.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+
+            barFilled.style.strokeDasharray = `${circumference}  ${circumference}`;
+            barFilled.style.strokeDashoffset = String(circumference);
+
+            const offset = circumference - (percent / 100) * circumference;
+            setTimeout(function () {
+                barFilled.style.strokeDashoffset = String(offset);
+            }, 500);
+
+            resultPercent.innerHTML = `${percent}%`;
         }
     }
 
@@ -257,8 +373,22 @@ export class SprintView {
         if (this.playAgainBtn) {
             this.playAgainBtn.addEventListener('click', () => {
                 controller.restartGame();
-                if (this.lvls && this.gameResultsContainer && this.gameContainer) {
+                if (this.gameResultsContainer && this.gameContainer && this.lvls) {
                     this.lvls.classList.remove('hidden');
+                    this.gameResultsContainer.classList.add('hidden');
+                    this.gameContainer.classList.add('hidden');
+                }
+            });
+        }
+    }
+
+    listenTryAgain(controller: SprintController) {
+        if (this.tryAgainBtn) {
+            this.tryAgainBtn.addEventListener('click', () => {
+                controller.restartGame();
+                controller.startGameTextbook();
+                if (this.lvls && this.gameResultsContainer && this.gameContainer) {
+                    this.lvls.classList.add('hidden');
                     this.gameResultsContainer.classList.add('hidden');
                     this.gameContainer.classList.add('hidden');
                 }
@@ -270,8 +400,6 @@ export class SprintView {
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
 
         if (
-            this.gameContainer &&
-            this.loadingScreen &&
             this.resultCountContainer &&
             this.wordPriceContainer &&
             this.dotsContainer &&
@@ -279,10 +407,8 @@ export class SprintView {
             this.gameResultsCorrect &&
             this.gameResultsWrong &&
             this.correctCount &&
-            this.wrongCount &&
-            this.resultCount
+            this.wrongCount
         ) {
-            this.gameContainer.classList.remove('hidden');
             this.resultCountContainer.innerHTML = '0';
             this.wordPriceContainer.innerHTML = '10';
             this.dotsContainer.innerHTML = `<img src="./assets/sprint0.png" alt="word count">`;
@@ -291,13 +417,21 @@ export class SprintView {
             this.gameResultsWrong.innerHTML = '';
             this.correctCount.innerHTML = '0';
             this.wrongCount.innerHTML = '0';
-            this.resultCount.innerHTML = '0';
         }
 
-        if (this.lvls && this.loadingScreen && countdownContainer) {
+        if (this.gameContainer && this.lvls && this.loadingScreen && countdownContainer && this.timerContainer) {
+            this.gameContainer.classList.remove('hidden');
             this.lvls.classList.remove('hidden');
             this.loadingScreen.classList.remove('hidden');
             countdownContainer.classList.add('hidden');
+            this.timerContainer.classList.add('hidden');
         }
+    }
+
+    playAudio(sound: 'correct' | 'wrong') {
+        const url = `../../assets/${sound}.mp3`;
+        const audio = new Audio(url);
+
+        audio.play();
     }
 }

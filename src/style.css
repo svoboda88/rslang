@@ -11,6 +11,19 @@
 @import './css/sprint.css';
 @import './css/audiocall.css';
 
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --magenta: #a41268;
+  --dark-magenta: #31073d;
+  --light-gray: #f3f4f8;
+  --gray: #e6e7eb;
+  --dark-gray: #B6B6B6;
+  --green: #a7ff84;
+  --red: #ff6464;
+  --gradient: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -21,18 +34,16 @@ html {
   scroll-behavior: smooth;
   overflow-x: hidden;
   background: rgb(2,0,36);
-  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(164,18,104,1) 57%, rgba(245,255,0,1) 100%);
+  background: var(--gradient);
   font-family: 'Roboto Mono', monospace;
 }
-
-
 
 body {
   margin: 0 auto;
 }
 
 .stats {
-  background-color: #ffffff;
+  background-color: var(--white);
   height: calc(100vh - 160px);
 }
 

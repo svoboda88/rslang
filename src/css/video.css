@@ -1,6 +1,6 @@
 .video {
   padding: 20px 30px;
-  background-color: #fff;
+  background-color: var(--white);
 }
 
 .video__text {
