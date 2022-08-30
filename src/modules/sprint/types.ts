@@ -1,4 +1,4 @@
-import { GetWords } from '../textbook/request';
+import { GetWords } from '../types/types';
 
 export interface Game {
     wordsToPlay: GetWords[];

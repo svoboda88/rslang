@@ -1,8 +1,8 @@
-import { getWordsResult, getWordResult, GetWords } from './request';
+import { getWordsResult, getWordResult } from './request';
 import { UI } from '../ui/ui';
 import { hardWords, GetCards } from '../wordList/userCards';
 import { checkUserWords } from '../wordList/checkUserWords';
-import { GetUserCards } from '../storage/storage';
+import { GetWords, GetUserCards } from '../types/types';
 
 export class Textbook {
     UI: UI;
