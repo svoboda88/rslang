@@ -1,5 +1,6 @@
-import { GetWords, Answers } from '../types/types';
+import { GetWords, Answers, GetUserCards } from '../types/types';
 import { getWordsResult } from '../textbook/request';
+import { hardWords } from '../wordList/userCards';
 // import { UI } from '../ui/ui';
 // import { Textbook } from '../textbook/textbook';
 
@@ -354,6 +355,7 @@ export class Audiocall {
         (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
         if (choosenWord === this.wordIndex) {
             this.correctAnswers.push({
+                id: this.wordVariants[this.wordIndex].id,
                 audio: this.wordVariants[this.wordIndex].audio,
                 word: this.wordVariants[this.wordIndex].word,
                 translate: this.wordVariants[this.wordIndex].wordTranslate,
@@ -361,6 +363,7 @@ export class Audiocall {
         } else {
             (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = 'red';
             this.wrongAnswers.push({
+                id: this.wordVariants[this.wordIndex].id,
                 audio: this.wordVariants[this.wordIndex].audio,
                 word: this.wordVariants[this.wordIndex].word,
                 translate: this.wordVariants[this.wordIndex].wordTranslate,
@@ -374,6 +377,7 @@ export class Audiocall {
         if ((this.nextBtn as HTMLDivElement).textContent === 'Не знаю') {
             this.showCorrectWord();
             this.wrongAnswers.push({
+                id: this.wordVariants[this.wordIndex].id,
                 audio: this.wordVariants[this.wordIndex].audio,
                 word: this.wordVariants[this.wordIndex].word,
                 translate: this.wordVariants[this.wordIndex].wordTranslate,
@@ -389,7 +393,6 @@ export class Audiocall {
 
     showResult() {
         const answersSum = this.correctAnswers.length + this.wrongAnswers.length;
-        console.log(this.correctAnswers, this.wrongAnswers);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
@@ -408,6 +411,8 @@ export class Audiocall {
                 return;
             });
         }
+        console.log(this.correctAnswers, this.wrongAnswers);
+        this.sendResults();
     }
 
     resultTable() {
@@ -482,6 +487,19 @@ export class Audiocall {
                     `;
                     const wordAudio = new Audio(audioSrc);
                     wordAudio.play();
+                }
+            });
+        });
+    }
+
+    sendResults() {
+        hardWords.getUserCards().then((result: GetUserCards[]) => {
+            // console.log(result);
+            this.correctAnswers.forEach((item: Answers) => {
+                // console.log(item);
+                if (result.filter((word: GetUserCards) => word.wordId === item.id).length) {
+                    const word = result.filter((word: GetUserCards) => word.wordId === item.id)[0];
+                    console.log(word);
                 }
             });
         });

@@ -16,6 +16,7 @@ export interface GetWords {
 }
 
 export interface Answers {
+    id: string;
     audio: string;
     word: string;
     translate: string;
