@@ -58,10 +58,12 @@ export class SprintController {
             this.view.playAudio('wrong');
         }
         this.model.game.wordIndex++;
-        if (this.model.game.wordIndex > 39) {
-            this.model.game.wordIndex = 0;
+        console.log(this.model.game.wordIndex);
+        if (this.model.game.wordIndex === 40) {
+            this.showResult();
+        } else {
+            this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
         }
-        this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
     }
 
     checkIfWrong() {
@@ -81,10 +83,12 @@ export class SprintController {
             this.view.playAudio('wrong');
         }
         this.model.game.wordIndex++;
-        if (this.model.game.wordIndex > 39) {
-            this.model.game.wordIndex = 0;
+        console.log(this.model.game.wordIndex);
+        if (this.model.game.wordIndex === 40) {
+            this.showResult();
+        } else {
+            this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
         }
-        this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
     }
 
     showResult() {

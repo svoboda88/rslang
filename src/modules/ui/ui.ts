@@ -252,7 +252,7 @@ export class UI {
         }
     }
 
-    getWordCards(result: GetWords[], page?: 'easy' | 'hard') {
+    getWordCards(result: GetWords[]) {
         return result.map((item) => {
             const card = document.createElement('div');
             card.classList.add('words__card');
@@ -273,9 +273,7 @@ export class UI {
                         </div>
                         <br>
 
-                        <div class="${localStorage.getItem('Logged') === 'logged' && page !== 'easy' && page !== 'hard'
-                    ? 'word__btns'
-                    : 'word__btns hidden'
+                        <div class="${localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
                 }">
                             <button class="word__btns--learned" data-id="${item.id}">Изученное</button>
 

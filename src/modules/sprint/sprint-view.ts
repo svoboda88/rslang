@@ -246,12 +246,12 @@ export class SprintView {
         const thatController = controller;
         const thatView = view;
         thatView.updateTimer(0);
-        let count = 5;
+        let count = 60;
         let percent = 0;
         this.interval = setInterval(
             () => {
                 count--;
-                percent += 100 / 5;
+                percent += 100 / 60;
                 thatView.updateTimer(percent);
                 if (count === 0) {
                     percent = 100;

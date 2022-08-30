@@ -127,7 +127,7 @@ export class Textbook {
                 this.sortByEasy().then((result) => {
                     setTimeout(() => {
                         (this.learnedWords as HTMLDivElement).innerHTML = '';
-                        (this.learnedWords as HTMLDivElement).append(...this.UI.getWordCards(result, 'easy'));
+                        (this.learnedWords as HTMLDivElement).append(...this.UI.getWordCards(result));
                     }, 700);
                 });
 
@@ -211,7 +211,7 @@ export class Textbook {
                     this.textbookWords.innerHTML = '';
                     this.sortByHard().then((result) => {
                         setTimeout(() => {
-                            (this.textbookWords as HTMLDivElement).append(...this.UI.getWordCards(result, 'hard'));
+                            (this.textbookWords as HTMLDivElement).append(...this.UI.getWordCards(result));
                         }, 700);
                     });
                 } else if (this.paginationList) {
