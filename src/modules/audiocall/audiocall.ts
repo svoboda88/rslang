@@ -1,13 +1,22 @@
-import { storage } from '../storage/storage';
-import { GetWords, getWordsResult } from '../textbook/request';
+import { GetWords, Answers } from '../types/types';
+import { getWordsResult } from '../textbook/request';
+// import { UI } from '../ui/ui';
+// import { Textbook } from '../textbook/textbook';
 
 export class Audiocall {
+    // ui: UI;
+    // textbook: Textbook;
     mainPage: HTMLElement | null;
+    textbookPage: HTMLElement | null;
     modal: HTMLElement | null;
     modalCloseBtn: HTMLElement | null;
     audiocallLvls: HTMLElement | null;
+    audiocallLvlsWrapper: HTMLElement | null;
+    description: HTMLElement | null;
+    startBtn: HTMLElement | null;
     nextBtn: HTMLElement | null;
     voiceBtn: HTMLElement | null;
+    audiocallWordsWrapper: HTMLElement | null;
     audiocallWords: HTMLElement | null;
     gameWindow: HTMLElement | null;
     gameResults: HTMLElement | null;
@@ -18,14 +27,27 @@ export class Audiocall {
     resultsCorrect: HTMLElement | null;
     wrongContainer: HTMLElement | null;
     correctContainer: HTMLElement | null;
+    argumentsForAudiocall: number[];
+    wordVariants: GetWords[];
+    wordIndex: number;
+    correctAnswers: Answers[];
+    wrongAnswers: Answers[];
+    isFromTextbook: boolean;
 
     constructor() {
+        // this.ui = new UI();
+        // this.textbook = new Textbook(this.ui);
         this.mainPage = document.getElementById('audiocall-from-games');
+        this.textbookPage = document.getElementById('audiocall-from-textbook');
         this.modal = document.querySelector('.audiocall__modal');
         this.modalCloseBtn = document.querySelector('.audiocall__close-btn');
         this.audiocallLvls = document.querySelector('.audiocall__lvls');
+        this.audiocallLvlsWrapper = document.querySelector('.audiocall__lvls--wrapper');
+        this.description = document.querySelector('.audiocall__description');
+        this.startBtn = document.querySelector('.audiocall__start');
         this.nextBtn = document.querySelector('.audiocall__next');
         this.voiceBtn = document.querySelector('.audiocall__voice');
+        this.audiocallWordsWrapper = document.querySelector('.audiocall__words--wrapper');
         this.audiocallWords = document.querySelector('.audiocall__words');
         this.gameWindow = document.querySelector('.audiocall__game');
         this.gameResults = document.querySelector('.audiocall__results');
@@ -36,6 +58,12 @@ export class Audiocall {
         this.resultsCorrect = document.querySelector('.audiocall__results-correct');
         this.wrongContainer = document.querySelector('.audiocall__wrong');
         this.correctContainer = document.querySelector('.audiocall__correct');
+        this.argumentsForAudiocall = [];
+        this.wordVariants = [];
+        this.wordIndex = 0;
+        this.correctAnswers = [];
+        this.wrongAnswers = [];
+        this.isFromTextbook = false;
     }
 
     init() {
@@ -50,6 +78,21 @@ export class Audiocall {
                 document.body.style.overflow = 'hidden';
                 this.modal.classList.remove('hidden');
                 this.audiocallLvls.classList.remove('hidden');
+                this.audiocallLvlsWrapper?.classList.remove('hidden');
+                (this.description as HTMLDivElement).innerHTML = 'Выберите уровень сложности:';
+                (this.startBtn as HTMLButtonElement).style.pointerEvents = 'none';
+            }
+        });
+
+        this.textbookPage?.addEventListener('click', () => {
+            if (this.modal && this.audiocallLvls) {
+                document.body.style.overflow = 'hidden';
+                this.modal.classList.remove('hidden');
+                this.audiocallLvls.classList.remove('hidden');
+                this.audiocallLvlsWrapper?.classList.add('hidden');
+                (this.description as HTMLDivElement).innerHTML = 'Слов для игры берется с текущей страницы учебника';
+                (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
+                this.isFromTextbook = true;
             }
         });
     }
@@ -59,6 +102,9 @@ export class Audiocall {
             if (this.modal) {
                 document.body.style.overflow = 'visible';
                 this.modal.classList.add('hidden');
+                Array.from(this.audiocallLvlsWrapper?.children as HTMLCollection).forEach((item) => {
+                    item.classList.remove('audiocall__lvls--btn-active');
+                });
 
                 if (!this.gameWindow?.classList.contains('hidden')) {
                     this.gameWindow?.classList.add('hidden');
@@ -68,8 +114,9 @@ export class Audiocall {
                     this.gameResults?.classList.add('hidden');
                 }
 
-                storage.correctAnswers = [];
-                storage.wrongAnswers = [];
+                this.correctAnswers = [];
+                this.wrongAnswers = [];
+                this.isFromTextbook = false;
             }
         });
     }
@@ -79,9 +126,15 @@ export class Audiocall {
             this.audiocallLvls.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
                 const target = event.target as HTMLDivElement;
-                if (target.classList.contains('audiocall-lvls__btn')) {
+                if (target.classList.contains('audiocall__lvls--btn')) {
                     const groupCount = Number(target.dataset.callLvl);
-                    storage.groupCountAudiocall = groupCount;
+                    Array.from(this.audiocallLvlsWrapper?.children as HTMLCollection).forEach((item) => {
+                        item.classList.remove('audiocall__lvls--btn-active');
+                    });
+                    target.classList.add('audiocall__lvls--btn-active');
+                    (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
+                    this.argumentsForAudiocall[0] = groupCount;
+                } else if (target.classList.contains('audiocall__start')) {
                     this.startGame();
                 }
 
@@ -94,44 +147,73 @@ export class Audiocall {
         if (this.audiocallLvls && this.gameWindow) {
             this.audiocallLvls.classList.add('hidden');
             this.gameWindow.classList.remove('hidden');
-            const pageCount = Math.floor(Math.random() * 20);
-            getWordsResult(storage.groupCountAudiocall, pageCount).then((result) => {
-                const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
-                const sliced: GetWords[] = shuffled.slice(0, 5);
-                const index = Math.floor(Math.random() * 5);
-                storage.wordVariants = [];
-                storage.wordVariants = [...sliced];
-                storage.wordIndex = index;
-                this.voiceBtn?.addEventListener('click', (event) => {
-                    event.stopImmediatePropagation();
-                    this.wordVoice();
+            if (this.isFromTextbook && localStorage.getItem('Logged')) {
+                this.argumentsForAudiocall = [
+                    Number(localStorage.getItem('groupCount')),
+                    Number(localStorage.getItem('pageCount')),
+                ];
+                getWordsResult(this.argumentsForAudiocall[0], this.argumentsForAudiocall[1]).then((result) => {
+                    // let temp: GetWords[] = [];
+                    // setTimeout(() => {
+                    //     this.textbook.sortByEasy().then((result) => {
+                    //         temp = result;
+                    //     });
+                    // }, 500);
+                    // console.log(temp);
+                    this.renderWords(result);
                 });
-                this.wordVoice();
-                let resultWords = '';
-                storage.wordVariants.forEach((item, i) => {
-                    resultWords += `
-                        <div class="audiocall__word-btn" data-call-word=${i}>${item.wordTranslate}</div>
-                    `;
+            } else if (this.isFromTextbook) {
+                this.argumentsForAudiocall = [
+                    Number(localStorage.getItem('groupCount')),
+                    Number(localStorage.getItem('pageCount')),
+                ];
+                getWordsResult(this.argumentsForAudiocall[0], this.argumentsForAudiocall[1]).then((result) => {
+                    this.renderWords(result);
                 });
-                (this.audiocallWords as HTMLDivElement).innerHTML = resultWords;
-                this.mouseControl();
-                this.keyboardControl();
-                this.nextBtn?.addEventListener('click', (event) => {
-                    event.stopImmediatePropagation();
-                    this.nextWords();
+            } else {
+                this.argumentsForAudiocall[1] = Math.floor(Math.random() * 20);
+                getWordsResult(this.argumentsForAudiocall[0], this.argumentsForAudiocall[1]).then((result) => {
+                    this.renderWords(result);
                 });
-            });
+            }
         }
+    }
+
+    renderWords(result: GetWords[]) {
+        const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
+        const sliced: GetWords[] = shuffled.slice(0, 5);
+        const index = Math.floor(Math.random() * 5);
+        this.wordVariants = [...sliced];
+        this.wordIndex = index;
+        this.voiceBtn?.addEventListener('click', (event) => {
+            event.stopImmediatePropagation();
+            this.wordVoice();
+        });
+        this.wordVoice();
+        let resultWords = '';
+        this.wordVariants.forEach((item, i) => {
+            resultWords += `
+                <div class="audiocall__word-btn" data-call-word=${i}>${item.wordTranslate}</div>
+            `;
+        });
+        (this.audiocallWords as HTMLDivElement).innerHTML = resultWords;
+        this.mouseControl();
+        this.keyboardControl();
+        this.nextBtn?.addEventListener('click', (event) => {
+            event.stopImmediatePropagation();
+            this.nextWords();
+        });
     }
 
     showCorrectWord() {
         (this.nextBtn as HTMLDivElement).textContent = 'Дальше';
         (this.wordImg as HTMLDivElement).innerHTML = `
-            <img src="https://react-learnwords-english.herokuapp.com/${storage.wordVariants[storage.wordIndex].image}">
+            <img src="https://react-learnwords-english.herokuapp.com/${this.wordVariants[this.wordIndex].image}">
         `;
-        (this.correctWord as HTMLDivElement).textContent = storage.wordVariants[storage.wordIndex].word;
-        (this.audiocallWords?.children[storage.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
+        (this.correctWord as HTMLDivElement).textContent = this.wordVariants[this.wordIndex].word;
+        (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
         this.voiceBtn?.classList.add('smaller');
+        (this.audiocallWordsWrapper as HTMLDivElement).style.pointerEvents = 'none';
     }
 
     hideCorrectWord() {
@@ -139,11 +221,12 @@ export class Audiocall {
         (this.wordImg as HTMLDivElement).innerHTML = '';
         (this.correctWord as HTMLDivElement).textContent = '';
         this.voiceBtn?.classList.remove('smaller');
+        (this.audiocallWordsWrapper as HTMLDivElement).style.pointerEvents = 'auto';
     }
 
     wordVoice() {
         const audioSource = `
-            https://react-learnwords-english.herokuapp.com/${storage.wordVariants[storage.wordIndex].audio}
+            https://react-learnwords-english.herokuapp.com/${this.wordVariants[this.wordIndex].audio}
         `;
         const audio = new Audio(audioSource);
         audio.play();
@@ -268,39 +351,36 @@ export class Audiocall {
         Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
             (item as HTMLDivElement).style.backgroundColor = '';
         });
-        (this.audiocallWords?.children[storage.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
-        if (choosenWord === storage.wordIndex) {
-            storage.correctAnswers.push({
-                audio: storage.wordVariants[storage.wordIndex].audio,
-                word: storage.wordVariants[storage.wordIndex].word,
-                translate: storage.wordVariants[storage.wordIndex].wordTranslate,
+        (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = 'green';
+        if (choosenWord === this.wordIndex) {
+            this.correctAnswers.push({
+                audio: this.wordVariants[this.wordIndex].audio,
+                word: this.wordVariants[this.wordIndex].word,
+                translate: this.wordVariants[this.wordIndex].wordTranslate,
             });
         } else {
             (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = 'red';
-            storage.wrongAnswers.push({
-                audio: storage.wordVariants[storage.wordIndex].audio,
-                word: storage.wordVariants[storage.wordIndex].word,
-                translate: storage.wordVariants[storage.wordIndex].wordTranslate,
+            this.wrongAnswers.push({
+                audio: this.wordVariants[this.wordIndex].audio,
+                word: this.wordVariants[this.wordIndex].word,
+                translate: this.wordVariants[this.wordIndex].wordTranslate,
             });
         }
 
-        Array.from(this.audiocallWords?.children as HTMLCollection).forEach((item: Element) => {
-            (item as HTMLDivElement).style.pointerEvents = 'none';
-        });
         this.showCorrectWord();
     }
 
     nextWords() {
         if ((this.nextBtn as HTMLDivElement).textContent === 'Не знаю') {
             this.showCorrectWord();
-            storage.wrongAnswers.push({
-                audio: storage.wordVariants[storage.wordIndex].audio,
-                word: storage.wordVariants[storage.wordIndex].word,
-                translate: storage.wordVariants[storage.wordIndex].wordTranslate,
+            this.wrongAnswers.push({
+                audio: this.wordVariants[this.wordIndex].audio,
+                word: this.wordVariants[this.wordIndex].word,
+                translate: this.wordVariants[this.wordIndex].wordTranslate,
             });
         } else {
             this.hideCorrectWord();
-            if (storage.correctAnswers.length + storage.wrongAnswers.length <= 9) {
+            if (this.correctAnswers.length + this.wrongAnswers.length <= 9) {
                 this.startGame();
             }
             this.showResult();
@@ -308,8 +388,8 @@ export class Audiocall {
     }
 
     showResult() {
-        const answersSum = storage.correctAnswers.length + storage.wrongAnswers.length;
-        console.log(storage.correctAnswers, storage.wrongAnswers);
+        const answersSum = this.correctAnswers.length + this.wrongAnswers.length;
+        console.log(this.correctAnswers, this.wrongAnswers);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
@@ -320,8 +400,8 @@ export class Audiocall {
                 if (target.classList.contains('results__play-btn')) {
                     this.gameResults?.classList.add('hidden');
                     this.audiocallLvls?.classList.remove('hidden');
-                    storage.correctAnswers = [];
-                    storage.wrongAnswers = [];
+                    this.correctAnswers = [];
+                    this.wrongAnswers = [];
                     this.hideCorrectWord();
                 }
 
@@ -331,10 +411,10 @@ export class Audiocall {
     }
 
     resultTable() {
-        const correctLength = storage.correctAnswers.length as number;
-        const wrongLength = storage.wrongAnswers.length as number;
+        const correctLength = this.correctAnswers.length as number;
+        const wrongLength = this.wrongAnswers.length as number;
         let wrongList = '';
-        storage.wrongAnswers.forEach((item, i) => {
+        this.wrongAnswers.forEach((item, i) => {
             wrongList += `
                 <div class="audiocall__list">
                     <span class="material-symbols-outlined smallest" data-audiocall-wrong=${i}>
@@ -350,7 +430,7 @@ export class Audiocall {
             `;
         });
         let correctlist = '';
-        storage.correctAnswers.forEach((item, i) => {
+        this.correctAnswers.forEach((item, i) => {
             correctlist += `
                 <div class="audiocall__list">
                     <span class="material-symbols-outlined smallest" data-audiocall-correct=${i}>
@@ -377,7 +457,7 @@ export class Audiocall {
         this.gameResults?.addEventListener('click', (event) => {
             const target = event.target as HTMLElement;
             const current = target.dataset;
-            storage.wrongAnswers.forEach((item, i) => {
+            this.wrongAnswers.forEach((item, i) => {
                 if (Number(current.audiocallWrong) === i) {
                     const audioSrc = `
                         https://react-learnwords-english.herokuapp.com/${item.audio}
@@ -395,7 +475,7 @@ export class Audiocall {
         this.gameResults?.addEventListener('click', (event) => {
             const target = event.target as HTMLElement;
             const current = target.dataset;
-            storage.correctAnswers.forEach((item, i) => {
+            this.correctAnswers.forEach((item, i) => {
                 if (Number(current.audiocallCorrect) === i) {
                     const audioSrc = `
                         https://react-learnwords-english.herokuapp.com/${item.audio}

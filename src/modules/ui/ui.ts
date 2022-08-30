@@ -1,4 +1,4 @@
-import { GetWords } from '../textbook/request';
+import { GetWords } from '../types/types';
 import { sendWordsListener } from '../wordList/userWordsListeners';
 
 export class UI {
