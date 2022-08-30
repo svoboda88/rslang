@@ -1,7 +1,7 @@
 import { SprintModel } from './sprint-model';
 import { SprintView } from './sprint-view';
 import { hardWords } from '../wordList/userCards';
-import { GetUserCards } from '../storage/storage';
+import { GetUserCards, GetWords } from '../types/types';
 import { sendUserWord, updateUserWord } from '../wordList/UserWordsRequest';
 
 export class SprintController {
@@ -94,14 +94,14 @@ export class SprintController {
 
     sendResults() {
         hardWords.getUserCards().then((res: GetUserCards[]) => {
-            this.model.game.correctAnswers.forEach((answer) => {
+            this.model.game.correctAnswers.forEach((answer: GetWords) => {
                 if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                     updateUserWord({ difficulty: 'easy' }, answer.id);
                 } else {
                     sendUserWord({ difficulty: 'easy', optional: { sprintTries: 1 } }, answer.id);
                 }
             });
-            this.model.game.wrongAnswers.forEach((answer) => {
+            this.model.game.wrongAnswers.forEach((answer: GetWords) => {
                 if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                     updateUserWord({ difficulty: 'hard' }, answer.id);
                 } else {

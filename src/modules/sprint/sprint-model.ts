@@ -1,6 +1,6 @@
-import { storage } from '../storage/storage';
-import { GetWords, getWordsResult } from '../textbook/request';
-import { Game } from './types';
+// import { storage } from '../storage/storage';
+import { getWordsResult } from '../textbook/request';
+import { Game, GetWords } from '../types/types';
 
 export class SprintModel {
     game: Game;
@@ -31,8 +31,14 @@ export class SprintModel {
     }
 
     async getWordsForTextbook() {
-        const wordsArray = await getWordsResult(storage.groupCount, storage.pageCount);
-        const pageHarder = await getWordsResult(storage.groupCount, storage.pageCount + 1);
+        const wordsArray = await getWordsResult(
+            Number(localStorage.getItem('groupCount')),
+            Number(localStorage.getItem('pageCount'))
+        );
+        const pageHarder = await getWordsResult(
+            Number(localStorage.getItem('groupCount')),
+            Number(localStorage.getItem('pageCount')) + 1
+        );
 
         this.game.wordsToPlay = [...wordsArray, ...pageHarder];
     }

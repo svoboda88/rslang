@@ -1,9 +1,8 @@
-import { getWordsResult, getWordResult, GetWords } from './request';
-import { storage } from '../storage/storage';
+import { getWordsResult, getWordResult } from './request';
 import { UI } from '../ui/ui';
 import { hardWords, GetCards } from '../wordList/userCards';
 import { checkUserWords } from '../wordList/checkUserWords';
-import { GetUserCards } from '../storage/storage';
+import { GetWords, GetUserCards } from '../types/types';
 
 export class Textbook {
     UI: UI;
@@ -49,7 +48,10 @@ export class Textbook {
     }
 
     async init() {
-        await getWordsResult(storage.groupCount, storage.pageCount).then((result) => {
+        await getWordsResult(
+            Number(localStorage.getItem('groupCount')) || 0,
+            Number(localStorage.getItem('pageCount')) || 0
+        ).then((result) => {
             if (this.textbookWords) {
                 this.textbookWords.innerHTML = '';
                 this.textbookWords.append(...this.UI.getWordCards(result));
@@ -61,7 +63,13 @@ export class Textbook {
         this.renderEasyWords();
         this.toGroup();
         this.listenPaginationBtns();
-        (this.textbookPage as Element).innerHTML = ` ${Number(storage.pageCount) + 1} / 30 `;
+        let localPageCount = Number(localStorage.getItem('pageCount')) + 1;
+        if (localPageCount < 2) {
+            localPageCount = 1;
+        } else if (localPageCount > 29) {
+            localPageCount = 30;
+        }
+        (this.textbookPage as Element).innerHTML = ` ${localPageCount} / 30 `;
     }
 
     async sortByEasy() {
@@ -119,7 +127,7 @@ export class Textbook {
                 this.sortByEasy().then((result) => {
                     setTimeout(() => {
                         (this.learnedWords as HTMLDivElement).innerHTML = '';
-                        (this.learnedWords as HTMLDivElement).append(...this.UI.getWordCards(result));
+                        (this.learnedWords as HTMLDivElement).append(...this.UI.getWordCards(result, 'easy'));
                     }, 700);
                 });
 
@@ -173,6 +181,8 @@ export class Textbook {
     toGroup() {
         if (this.textbookLvls) {
             const arrayGroup = Array.from((this.textbookLvls as HTMLElement).children);
+            arrayGroup.forEach((item) => item.classList.remove('picked'));
+            arrayGroup[Number(localStorage.getItem('groupCount'))].classList.add('picked');
 
             this.textbookLvls.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
@@ -181,33 +191,27 @@ export class Textbook {
                 const grandParent = parent.parentNode as HTMLDivElement;
 
                 if (grandParent.classList.contains('lvl__card')) {
-                    arrayGroup.forEach((item) => item.classList.remove('picked'));
-                    grandParent.classList.add('picked');
                     const count = arrayGroup.indexOf(grandParent) as number;
-                    storage.groupCount = count;
+                    localStorage.setItem('groupCount', count.toString());
                 } else if (parent.classList.contains('lvl__card')) {
-                    arrayGroup.forEach((item) => item.classList.remove('picked'));
-                    parent.classList.add('picked');
                     const count = arrayGroup.indexOf(parent) as number;
-                    storage.groupCount = count;
+                    localStorage.setItem('groupCount', count.toString());
                 } else if (target.classList.contains('lvl__card')) {
-                    arrayGroup.forEach((item) => item.classList.remove('picked'));
-                    target.classList.add('picked');
                     const count = arrayGroup.indexOf(target) as number;
-                    storage.groupCount = count;
+                    localStorage.setItem('groupCount', count.toString());
                 }
-                storage.pageCount = 0;
+                localStorage.setItem('pageCount', String(0));
                 this.disablePrevBtns();
                 this.activateNextBtns();
                 this.init().then(hardWords.getWordCards).then(checkUserWords);
 
-                if (storage.groupCount === 6 && this.paginationList && this.textbookWords) {
+                if (Number(localStorage.getItem('groupCount')) === 6 && this.paginationList && this.textbookWords) {
                     this.paginationList.classList.add('hidden');
                     this.gamesSection?.classList.add('hidden');
                     this.textbookWords.innerHTML = '';
                     this.sortByHard().then((result) => {
                         setTimeout(() => {
-                            (this.textbookWords as HTMLDivElement).append(...this.UI.getWordCards(result));
+                            (this.textbookWords as HTMLDivElement).append(...this.UI.getWordCards(result, 'hard'));
                         }, 700);
                     });
                 } else if (this.paginationList) {
@@ -262,36 +266,40 @@ export class Textbook {
                 const parent = target.parentNode as Element;
 
                 if (parent.id === 'textbook-next') {
-                    storage.pageCount++;
+                    const count = Number(localStorage.getItem('pageCount')) + 1;
+                    localStorage.setItem('pageCount', count.toString());
 
-                    if (storage.pageCount === 29) {
+                    if (Number(localStorage.getItem('pageCount')) === 29) {
                         this.disableNextBtns();
-                    } else if (storage.pageCount !== 0) {
+                    } else if (Number(localStorage.getItem('pageCount')) !== 0) {
                         this.activatePrevBtns();
                     }
                     this.init().then(hardWords.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-prev') {
-                    storage.pageCount--;
+                    const count = Number(localStorage.getItem('pageCount')) - 1;
+                    localStorage.setItem('pageCount', count.toString());
 
-                    if (storage.pageCount === 0) {
+                    if (Number(localStorage.getItem('pageCount')) === 0) {
                         this.disablePrevBtns();
-                    } else if (storage.pageCount !== 0) {
+                    } else if (Number(localStorage.getItem('pageCount')) !== 0) {
                         this.activateNextBtns();
                     }
                     this.init().then(hardWords.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-last') {
-                    storage.pageCount = 29;
+                    const count = 29;
+                    localStorage.setItem('pageCount', count.toString());
                     this.disableNextBtns();
                     this.activatePrevBtns();
                     this.init().then(hardWords.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-first') {
-                    storage.pageCount = 0;
+                    const count = 0;
+                    localStorage.setItem('pageCount', count.toString());
                     this.disablePrevBtns();
                     this.activateNextBtns();
                     this.init().then(hardWords.getWordCards).then(checkUserWords);

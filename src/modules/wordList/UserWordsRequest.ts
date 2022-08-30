@@ -1,4 +1,4 @@
-import { Optional } from '../storage/storage';
+import { Optional } from '../types/types';
 
 export const sendUserWord = async function (
     data: {
