@@ -148,7 +148,7 @@
   background-color: var(--gray);
 }
 
-.textbook__words, .learned__words {
+.textbook__words, .learned__words, .textbook__hard-words {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

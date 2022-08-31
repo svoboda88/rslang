@@ -36,7 +36,7 @@ const sprintController = new SprintController(sprintModel, sprintView);
 
 sprintController.init();
 
-hardWords.getUserCards().then((res) => {
+getCards.getUserCards().then((res) => {
     const easy: GetUserCards[] = [];
     const hard: GetUserCards[] = [];
     res.forEach((word: GetUserCards) => {
