@@ -10,6 +10,7 @@
 @import './css/games.css';
 @import './css/sprint.css';
 @import './css/audiocall.css';
+@import './css/statistics.css';
 
 :root {
   --white: #ffffff;
@@ -40,11 +41,6 @@ html {
 
 body {
   margin: 0 auto;
-}
-
-.stats {
-  background-color: var(--white);
-  height: calc(100vh - 160px);
 }
 
 .hidden {
