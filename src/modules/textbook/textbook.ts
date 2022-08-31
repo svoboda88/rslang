@@ -64,6 +64,10 @@ export class Textbook {
                         this.sortByDifficulty('hard')
                             .then((result) => {
                                 this.loadScreen?.classList.add('hidden');
+                                if (result.length === 0 && this.textbookHardWords) {
+                                    this.textbookHardWords.innerHTML = `
+                                    <h2>Ни одно слово не отмечено сложным. Пока что...</h2>`;
+                                }
                                 (this.textbookHardWords as HTMLDivElement).append(...this.getHardEasyCards(result));
                             })
                             .then(removeCardsFromEasyHard);
@@ -151,6 +155,10 @@ export class Textbook {
                 this.sortByDifficulty('easy')
                     .then((result) => {
                         (this.learnedWords as HTMLDivElement).innerHTML = '';
+                        if (result.length === 0 && this.learnedWords) {
+                            this.learnedWords.innerHTML = `
+                            <h2>Здесь пока что пусто.</h2>`;
+                        }
                         (this.learnedWords as HTMLDivElement).append(...this.getHardEasyCards(result as GetWords[]));
                         this.loadScreen?.classList.add('hidden');
                     })
@@ -246,6 +254,10 @@ export class Textbook {
                     (this.textbookHardWords as HTMLDivElement).innerHTML = '';
                     this.sortByDifficulty('hard')
                         .then((result) => {
+                            if (result.length === 0 && this.textbookHardWords) {
+                                this.textbookHardWords.innerHTML = `
+                                <h2>Ни одно слово не отмечено сложным. Пока что...</h2>`;
+                            }
                             (this.textbookHardWords as HTMLDivElement).append(...this.getHardEasyCards(result));
                             if (this.loadScreen) {
                                 this.loadScreen.classList.add('hidden');
