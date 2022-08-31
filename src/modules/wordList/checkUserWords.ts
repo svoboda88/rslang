@@ -34,7 +34,9 @@ export const checkUserWords = async function () {
             activeEasyBtns.forEach((el: Element) => el.classList.add('word__btns--checked'));
             if (
                 activeEasyBtns.length + activeHardBtns.length === 20 ||
-                (activeEasyBtns.length / 2 + activeHardBtns.length === 20 && activeEasyBtns.length > 0)
+                (activeEasyBtns.length / 2 + activeHardBtns.length === 20 && activeEasyBtns.length > 0) ||
+                (activeEasyBtns.length + activeHardBtns.length / 2 === 20 && activeEasyBtns.length > 0) ||
+                (activeEasyBtns.length / 2 + activeHardBtns.length / 2 === 20 && activeEasyBtns.length > 0)
             ) {
                 textbook?.classList.add('textbook-learned');
             } else {
@@ -45,7 +47,6 @@ export const checkUserWords = async function () {
 
 export const TextbookSwitchListener = function () {
     const textbookButton = document.querySelector('#section-textbook');
-    console.log('123');
     window.addEventListener('click', (e) => {
         if (e.target === textbookButton) {
             checkUserWords();

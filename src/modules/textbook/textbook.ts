@@ -40,6 +40,7 @@ export class Textbook {
         this.textbookPageBtn = document.getElementById('textbook-btn');
         this.loadScreen = document.querySelector('.textbook__load-screen');
         this.listenTextbookPageBtn();
+        this.listenTextbookSections();
     }
 
     listenTextbookPageBtn() {
@@ -104,7 +105,6 @@ export class Textbook {
     }
 
     async init() {
-        this.listenTextbookSections();
         await getWordsResult(
             Number(localStorage.getItem('groupCount')) || 0,
             Number(localStorage.getItem('pageCount')) || 0
@@ -148,27 +148,24 @@ export class Textbook {
     }
 
     renderEasyWords() {
-        const learnedSectionButton = document.querySelectorAll('.textbook__section');
-        window.addEventListener('click', (e) => {
-            if (e.target === learnedSectionButton[1] && this.loadScreen) {
-                this.loadScreen.classList.remove('hidden');
-                this.sortByDifficulty('easy')
-                    .then((result) => {
-                        (this.learnedWords as HTMLDivElement).innerHTML = '';
-                        if (result.length === 0 && this.learnedWords) {
-                            this.learnedWords.innerHTML = `
-                            <h2>Здесь пока что пусто.</h2>`;
-                        }
-                        (this.learnedWords as HTMLDivElement).append(...this.getHardEasyCards(result as GetWords[]));
-                        this.loadScreen?.classList.add('hidden');
-                    })
-                    .then(removeCardsFromEasyHard);
+        if (this.loadScreen) {
+            this.loadScreen.classList.remove('hidden');
+            this.sortByDifficulty('easy')
+                .then((result) => {
+                    (this.learnedWords as HTMLDivElement).innerHTML = '';
+                    if (result.length === 0 && this.learnedWords) {
+                        this.learnedWords.innerHTML = `
+                                <h2>Здесь пока что пусто.</h2>`;
+                    }
+                    (this.learnedWords as HTMLDivElement).append(...this.getHardEasyCards(result as GetWords[]));
+                    this.loadScreen?.classList.add('hidden');
+                })
+                .then(removeCardsFromEasyHard);
 
-                const scrollBtn = document.querySelector('.scroll-btn') as HTMLButtonElement;
-                scrollBtn.classList.remove('hidden');
-                this.playWordAudio(this.learnedWords as HTMLDivElement);
-            }
-        });
+            const scrollBtn = document.querySelector('.scroll-btn') as HTMLButtonElement;
+            scrollBtn.classList.remove('hidden');
+            this.playWordAudio(this.learnedWords as HTMLDivElement);
+        }
     }
 
     playWordAudio(section: HTMLDivElement) {
@@ -236,7 +233,11 @@ export class Textbook {
                 localStorage.setItem('pageCount', String(0));
                 this.disablePrevBtns();
                 this.activateNextBtns();
-                this.init().then(getCards.getWordCards).then(checkUserWords);
+                if (Number(localStorage.getItem('groupCount')) === 6) {
+                    this.init().then(getCards.getWordCards);
+                } else {
+                    this.init().then(getCards.getWordCards).then(checkUserWords);
+                }
 
                 if (
                     Number(localStorage.getItem('groupCount')) === 6 &&
@@ -408,6 +409,7 @@ export class Textbook {
                 } else {
                     gamesBtns.classList.remove('hidden');
                 }
+                this.init();
             });
 
             learnedBtn.addEventListener('click', () => {

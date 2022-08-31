@@ -6,7 +6,7 @@ import { Textbook } from './modules/textbook/textbook';
 import { Audiocall } from './modules/audiocall/audiocall';
 import './style.css';
 import { getCards } from './modules/wordList/userCards';
-import { checkUserWords } from './modules/wordList/checkUserWords';
+import { checkUserWords, TextbookSwitchListener } from './modules/wordList/checkUserWords';
 import { SprintController } from './modules/sprint/sprint-controller';
 import { SprintView } from './modules/sprint/sprint-view';
 import { SprintModel } from './modules/sprint/sprint-model';
@@ -36,6 +36,7 @@ const sprintController = new SprintController(sprintModel, sprintView);
 
 sprintController.init();
 
+TextbookSwitchListener();
 getCards.getUserCards().then((res) => {
     const easy: GetUserCards[] = [];
     const hard: GetUserCards[] = [];
