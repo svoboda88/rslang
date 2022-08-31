@@ -138,7 +138,7 @@ export class SprintController {
             });
         });
 
-        hardWords.getUserCards().then((res) => {
+        getCards.getUserCards().then((res) => {
             const easy: GetUserCards[] = [];
             const hard: GetUserCards[] = [];
             res.forEach((word: GetUserCards) => {
