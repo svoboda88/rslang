@@ -21,6 +21,7 @@ export class Textbook {
     gamesSection: HTMLElement | null;
     learnedWords: HTMLElement | null;
     textbookPageBtn: HTMLElement | null;
+    loadScreen: HTMLElement | null;
 
     constructor(UI: UI) {
         this.UI = UI;
@@ -37,6 +38,7 @@ export class Textbook {
         this.gamesSection = document.querySelector('.textbook__games');
         this.learnedWords = document.querySelector('.learned__words');
         this.textbookPageBtn = document.getElementById('textbook-btn');
+        this.loadScreen = document.querySelector('.textbook__load-screen');
         this.listenTextbookPageBtn();
     }
 
@@ -54,10 +56,14 @@ export class Textbook {
                         textbookWords &&
                         textbookHardWords &&
                         paginationList &&
-                        gamesSection
+                        gamesSection &&
+                        this.loadScreen
                     ) {
+                        this.loadScreen.classList.remove('hidden');
+                        (this.textbookHardWords as HTMLDivElement).innerHTML = '';
                         this.sortByDifficulty('hard')
                             .then((result) => {
+                                this.loadScreen?.classList.add('hidden');
                                 (this.textbookHardWords as HTMLDivElement).append(...this.getHardEasyCards(result));
                             })
                             .then(removeCardsFromEasyHard);
@@ -65,11 +71,20 @@ export class Textbook {
                         textbookWords.classList.add('hidden');
                         gamesSection.classList.add('hidden');
                         paginationList.classList.add('hidden');
-                    } else if (textbookWords && textbookHardWords && paginationList && gamesSection) {
+                    } else if (
+                        textbookWords &&
+                        textbookHardWords &&
+                        paginationList &&
+                        gamesSection &&
+                        this.learnedWords?.classList.contains('hidden')
+                    ) {
                         textbookHardWords.classList.add('hidden');
                         textbookWords.classList.remove('hidden');
                         gamesSection.classList.remove('hidden');
                         paginationList.classList.remove('hidden');
+                    }
+                    if (this.learnedWords && this.learnedWords.classList.contains('hidden')) {
+                        this.gamesSection?.classList.remove('hidden');
                     }
                     this.UI.showPage(this.textbookPage, this.textbookPageBtn);
                 }
@@ -91,7 +106,6 @@ export class Textbook {
             this.playWordAudio(this.textbookWords as HTMLDivElement);
         });
 
-        this.renderEasyWords();
         this.toGroup();
         this.listenPaginationBtns();
         let localPageCount = Number(localStorage.getItem('pageCount')) + 1;
@@ -125,11 +139,13 @@ export class Textbook {
     renderEasyWords() {
         const learnedSectionButton = document.querySelectorAll('.textbook__section');
         window.addEventListener('click', (e) => {
-            if (e.target === learnedSectionButton[1]) {
+            if (e.target === learnedSectionButton[1] && this.loadScreen) {
+                this.loadScreen.classList.remove('hidden');
                 this.sortByDifficulty('easy')
                     .then((result) => {
                         (this.learnedWords as HTMLDivElement).innerHTML = '';
                         (this.learnedWords as HTMLDivElement).append(...this.getHardEasyCards(result as GetWords[]));
+                        this.loadScreen?.classList.add('hidden');
                     })
                     .then(removeCardsFromEasyHard);
 
@@ -212,20 +228,28 @@ export class Textbook {
                     this.paginationList &&
                     this.textbookWords &&
                     this.gamesSection &&
-                    this.textbookHardWords
+                    this.textbookHardWords &&
+                    this.loadScreen
                 ) {
                     this.paginationList.classList.add('hidden');
                     this.gamesSection.classList.add('hidden');
                     this.textbookWords.classList.add('hidden');
                     this.textbookHardWords.classList.remove('hidden');
+                    this.loadScreen.classList.remove('hidden');
+                    (this.textbookHardWords as HTMLDivElement).innerHTML = '';
                     this.sortByDifficulty('hard')
                         .then((result) => {
                             (this.textbookHardWords as HTMLDivElement).append(...this.getHardEasyCards(result));
+                            if (this.loadScreen) {
+                                this.loadScreen.classList.add('hidden');
+                            }
                         })
                         .then(removeCardsFromEasyHard);
                 } else if (this.paginationList && this.textbookWords && this.gamesSection && this.textbookHardWords) {
                     this.paginationList.classList.remove('hidden');
-                    this.gamesSection.classList.remove('hidden');
+                    if (localStorage.getItem('Logged') === 'logged') {
+                        this.gamesSection.classList.remove('hidden');
+                    }
                     this.textbookWords.classList.remove('hidden');
                     this.textbookHardWords.classList.add('hidden');
                 }
@@ -374,6 +398,8 @@ export class Textbook {
                 learnedSection.classList.remove('hidden');
                 scrollBtn.classList.add('hidden');
                 gamesBtns.classList.add('hidden');
+                (this.learnedWords as HTMLDivElement).innerHTML = '';
+                this.renderEasyWords();
             });
         }
     }

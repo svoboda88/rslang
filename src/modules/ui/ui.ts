@@ -50,6 +50,7 @@ export class UI {
     }
 
     init() {
+        this.checkIfLogged();
         this.listenLogo();
         this.listenMainPageBtn();
         this.listenGamesBtn();
@@ -57,13 +58,14 @@ export class UI {
         this.listenLogin();
         this.listenSignup();
         this.listenModalClosure();
-        this.checkIfLogged();
     }
 
     checkIfLogged() {
         const isLogged = localStorage.getItem('Logged');
-        if (isLogged !== 'logged' && this.textbookSections) {
-            this.textbookSections.classList.add('hidden');
+        if (isLogged !== 'logged') {
+            this.hideAuthorizedSections();
+        } else {
+            this.showAuthorizedSections();
         }
     }
 
@@ -71,11 +73,15 @@ export class UI {
         const textbookSections = document.querySelector<HTMLElement>('.textbook__sections');
         const wordBtns = document.querySelectorAll('.word__btns');
         const wordGames = document.querySelectorAll('.word__games');
+        const hardLvlBtn = document.getElementById('hard-lvl');
+        const gamesBtns = document.querySelector('.textbook__games');
 
-        if (textbookSections && wordBtns && wordGames) {
+        if (textbookSections && wordBtns && wordGames && hardLvlBtn && gamesBtns) {
             textbookSections.classList.remove('hidden');
             wordBtns.forEach((card) => card.classList.remove('hidden'));
             wordGames.forEach((card) => card.classList.remove('hidden'));
+            hardLvlBtn.classList.remove('hidden');
+            gamesBtns.classList.remove('hidden');
         }
     }
 
@@ -83,11 +89,15 @@ export class UI {
         const textbookSections = document.querySelector<HTMLElement>('.textbook__sections');
         const wordBtns = document.querySelectorAll('.word__btns');
         const wordGames = document.querySelectorAll('.word__games');
+        const hardLvlBtn = document.getElementById('hard-lvl');
+        const gamesBtns = document.querySelector('.textbook__games');
 
-        if (textbookSections && wordBtns && wordGames) {
+        if (textbookSections && wordBtns && wordGames && hardLvlBtn && gamesBtns) {
             textbookSections.classList.add('hidden');
             wordBtns.forEach((card) => card.classList.add('hidden'));
             wordGames.forEach((card) => card.classList.add('hidden'));
+            hardLvlBtn.classList.add('hidden');
+            gamesBtns.classList.add('hidden');
         }
     }
 
@@ -155,9 +165,7 @@ export class UI {
         });
         page.classList.remove('hidden');
         pageBtn.classList.add('nav__btn--active');
-        console.log(page);
         if (page === this.textbookPage) {
-            console.log('page showed');
             this.listenScrollBtn();
             this.listenTextbookScroll();
         }

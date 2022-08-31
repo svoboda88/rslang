@@ -156,7 +156,11 @@
   gap: 20px 20px;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 330px);
+  min-height: calc(100vh - 380px);
+}
+
+.learned__words {
+  min-height: calc(100vh - 300px);
 }
 
 .words__card {
@@ -277,4 +281,51 @@
 .words__card--disabled, 
 .word__btns-remove-disabled {
   display: none;
+}
+
+.textbook__load-screen {
+  z-index: 4;
+  position: fixed;
+  top: 45%;
+  left: 50%;
+}
+
+.textbook__spinner {
+  position: relative;
+  width: 80px;
+  height: 90px;
+  margin: 0 auto;
+}
+
+.textbook__bubble-1,
+.textbook__bubble-2 {
+    position: absolute;
+    top: 0;
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background-color: var(--magenta);
+}
+
+.textbook__bubble-2 {
+    top: auto;
+    bottom: 0;
+}
+
+.textbook__spinner {
+  animation: rotate 3s linear infinite;
+}
+.textbook__bubble-1, 
+.textbook__bubble-2 {
+  animation: bounce 3s ease-in-out infinite;
+}
+.textbook__bubble-2 {animation-delay: -1.0s;}
+
+@keyframes rotate {
+  100% {transform: rotate(360deg);}
+}
+
+@keyframes bounce  {
+  0%, 100% {transform: scale(0.0);}
+  50% {transform: scale(1.0);}
 }
