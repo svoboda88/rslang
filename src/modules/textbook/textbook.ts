@@ -409,7 +409,7 @@ export class Textbook {
                 } else {
                     gamesBtns.classList.remove('hidden');
                 }
-                this.init();
+                this.init().then(checkUserWords);
             });
 
             learnedBtn.addEventListener('click', () => {
