@@ -231,7 +231,8 @@
 
 .word__btns--learned,
 .word__btns--hard,
-.word__btns--delete {
+.word__btns--delete,
+.word__btns-remove {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
@@ -246,7 +247,8 @@
 
 .word__btns--learned:hover,
 .word__btns--hard:hover,
-.word__btns--delete:hover {
+.word__btns--delete:hover,
+.word__btns-remove:hover {
   background-color: var(--dark-gray);
 }
 
@@ -269,4 +271,10 @@
 
 .textbook-learned {
   opacity: 30%;
+}
+
+.button-disabled,
+.words__card--disabled, 
+.word__btns-remove-disabled {
+  display: none;
 }

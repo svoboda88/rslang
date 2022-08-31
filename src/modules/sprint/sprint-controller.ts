@@ -1,6 +1,6 @@
 import { SprintModel } from './sprint-model';
 import { SprintView } from './sprint-view';
-import { hardWords } from '../wordList/userCards';
+import { getCards } from '../wordList/userCards';
 import { GetUserCards, GetWords } from '../types/types';
 import { sendUserWord, updateUserWord } from '../wordList/UserWordsRequest';
 
@@ -97,7 +97,7 @@ export class SprintController {
     }
 
     sendResults() {
-        hardWords.getUserCards().then((res: GetUserCards[]) => {
+        getCards.getUserCards().then((res: GetUserCards[]) => {
             this.model.game.correctAnswers.forEach((answer: GetWords) => {
                 if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                     const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];

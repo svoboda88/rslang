@@ -1,8 +1,8 @@
-import { hardWords } from './userCards';
+import { getCards } from './userCards';
 
 export const checkUserWords = async function () {
     const cardsOnPage = JSON.parse(window.localStorage.getItem('CardsOnPage') as string);
-    await hardWords
+    await getCards
         .getUserCards()
         .then((res) => {
             return cardsOnPage

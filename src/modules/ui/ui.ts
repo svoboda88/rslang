@@ -273,8 +273,9 @@ export class UI {
                         </div>
                         <br>
 
-                        <div class="${localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
-                }">
+                        <div class="${
+                            localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
+                        }">
                             <button class="word__btns--learned" data-id="${item.id}">Изученное</button>
 
                             <button class="word__btns--hard" data-id="${item.id}">Сложное</button> 
