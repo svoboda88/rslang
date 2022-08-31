@@ -32,12 +32,14 @@ export const checkUserWords = async function () {
                 })
                 .flat();
             activeEasyBtns.forEach((el: Element) => el.classList.add('word__btns--checked'));
-            if (
-                activeEasyBtns.length + activeHardBtns.length === 20 ||
-                (activeEasyBtns.length / 2 + activeHardBtns.length === 20 && activeEasyBtns.length > 0) ||
-                (activeEasyBtns.length + activeHardBtns.length / 2 === 20 && activeEasyBtns.length > 0) ||
-                (activeEasyBtns.length / 2 + activeHardBtns.length / 2 === 20 && activeEasyBtns.length > 0)
-            ) {
+            const activeBtns = document.querySelectorAll('.word__btns--checked');
+            const activeHardBtnsArray = [];
+            activeBtns.forEach((el) => {
+                if (el.classList.contains('word__btns--hard')) {
+                    activeHardBtnsArray.push(el);
+                }
+            });
+            if (activeBtns.length === 20 && activeHardBtnsArray.length !== 20) {
                 textbook?.classList.add('textbook-learned');
             } else {
                 textbook?.classList.remove('textbook-learned');
