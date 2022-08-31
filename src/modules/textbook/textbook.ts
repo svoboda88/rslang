@@ -86,6 +86,13 @@ export class Textbook {
                     if (this.learnedWords && this.learnedWords.classList.contains('hidden')) {
                         this.gamesSection?.classList.remove('hidden');
                     }
+                    if (Number(localStorage.getItem('pageCount')) !== 0) {
+                        this.activatePrevBtns();
+                    }
+                    if (Number(localStorage.getItem('pageCount')) === 29) {
+                        this.activatePrevBtns();
+                        this.disableNextBtns();
+                    }
                     this.UI.showPage(this.textbookPage, this.textbookPageBtn);
                 }
             });
