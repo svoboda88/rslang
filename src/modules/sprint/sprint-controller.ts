@@ -58,7 +58,6 @@ export class SprintController {
             this.view.playAudio('wrong');
         }
         this.model.game.wordIndex++;
-        console.log(this.model.game.wordIndex);
         if (this.model.game.wordIndex === 40) {
             this.showResult();
         } else {
@@ -83,7 +82,6 @@ export class SprintController {
             this.view.playAudio('wrong');
         }
         this.model.game.wordIndex++;
-        console.log(this.model.game.wordIndex);
         if (this.model.game.wordIndex === 40) {
             this.showResult();
         } else {

@@ -1,6 +1,3 @@
-import { GetWords } from '../types/types';
-import { sendWordsListener } from '../wordList/userWordsListeners';
-
 export class UI {
     mainPage: HTMLElement | null;
 
@@ -15,8 +12,6 @@ export class UI {
     logo: HTMLElement | null;
 
     mainPageBtn: HTMLElement | null;
-
-    textbookPageBtn: HTMLElement | null;
 
     dictPageBtn: HTMLElement | null;
 
@@ -44,7 +39,6 @@ export class UI {
 
         this.logo = document.querySelector('.header__logo');
         this.mainPageBtn = document.getElementById('main-btn');
-        this.textbookPageBtn = document.getElementById('textbook-btn');
         this.dictPageBtn = document.getElementById('dictionary-btn');
         this.gamesPageBtn = document.getElementById('games-btn');
         this.statsPageBtn = document.getElementById('stats-btn');
@@ -56,23 +50,22 @@ export class UI {
     }
 
     init() {
+        this.checkIfLogged();
         this.listenLogo();
         this.listenMainPageBtn();
-        this.listenTextbookPageBtn();
-        this.listenDictionaryBtn();
         this.listenGamesBtn();
         this.listenStatsBtn();
         this.listenLogin();
         this.listenSignup();
         this.listenModalClosure();
-        this.listenTextbookSections();
-        this.checkIfLogged();
     }
 
     checkIfLogged() {
         const isLogged = localStorage.getItem('Logged');
-        if (isLogged !== 'logged' && this.textbookSections) {
-            this.textbookSections.classList.add('hidden');
+        if (isLogged !== 'logged') {
+            this.hideAuthorizedSections();
+        } else {
+            this.showAuthorizedSections();
         }
     }
 
@@ -80,11 +73,15 @@ export class UI {
         const textbookSections = document.querySelector<HTMLElement>('.textbook__sections');
         const wordBtns = document.querySelectorAll('.word__btns');
         const wordGames = document.querySelectorAll('.word__games');
+        const hardLvlBtn = document.getElementById('hard-lvl');
+        const gamesBtns = document.querySelector('.textbook__games');
 
-        if (textbookSections && wordBtns && wordGames) {
+        if (textbookSections && wordBtns && wordGames && hardLvlBtn && gamesBtns) {
             textbookSections.classList.remove('hidden');
             wordBtns.forEach((card) => card.classList.remove('hidden'));
             wordGames.forEach((card) => card.classList.remove('hidden'));
+            hardLvlBtn.classList.remove('hidden');
+            gamesBtns.classList.remove('hidden');
         }
     }
 
@@ -92,11 +89,15 @@ export class UI {
         const textbookSections = document.querySelector<HTMLElement>('.textbook__sections');
         const wordBtns = document.querySelectorAll('.word__btns');
         const wordGames = document.querySelectorAll('.word__games');
+        const hardLvlBtn = document.getElementById('hard-lvl');
+        const gamesBtns = document.querySelector('.textbook__games');
 
-        if (textbookSections && wordBtns && wordGames) {
+        if (textbookSections && wordBtns && wordGames && hardLvlBtn && gamesBtns) {
             textbookSections.classList.add('hidden');
             wordBtns.forEach((card) => card.classList.add('hidden'));
             wordGames.forEach((card) => card.classList.add('hidden'));
+            hardLvlBtn.classList.add('hidden');
+            gamesBtns.classList.add('hidden');
         }
     }
 
@@ -115,26 +116,6 @@ export class UI {
             this.mainPageBtn.addEventListener('click', () => {
                 if (this.mainPage && this.mainPageBtn) {
                     this.showPage(this.mainPage, this.mainPageBtn);
-                }
-            });
-        }
-    }
-
-    listenTextbookPageBtn() {
-        if (this.textbookPageBtn) {
-            this.textbookPageBtn.addEventListener('click', () => {
-                if (this.textbookPage && this.textbookPageBtn) {
-                    this.showPage(this.textbookPage, this.textbookPageBtn);
-                }
-            });
-        }
-    }
-
-    listenDictionaryBtn() {
-        if (this.dictPageBtn) {
-            this.dictPageBtn.addEventListener('click', () => {
-                if (this.dictPage && this.dictPageBtn) {
-                    this.showPage(this.dictPage, this.dictPageBtn);
                 }
             });
         }
@@ -184,7 +165,6 @@ export class UI {
         });
         page.classList.remove('hidden');
         pageBtn.classList.add('nav__btn--active');
-
         if (page === this.textbookPage) {
             this.listenScrollBtn();
             this.listenTextbookScroll();
@@ -252,117 +232,6 @@ export class UI {
         }
     }
 
-    getWordCards(result: GetWords[]) {
-        return result.map((item) => {
-            const card = document.createElement('div');
-            card.classList.add('words__card');
-            card.id = item.id;
-
-            card.innerHTML = `
-                    <img class="word__img"
-                    src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
-                    <div class="word__text">
-                        <div class="word__title">
-                            <div class="word__title--top">
-                                <h2>${item.word} ${item.transcription}</h2>
-                                <span class="material-symbols-outlined word__audio" data-volume=${item.id}>
-                                volume_up
-                                </span>
-                            </div>
-                            <p class="word__translate">${item.wordTranslate}</p>
-                        </div>
-                        <br>
-
-                        <div class="${
-                            localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
-                        }">
-                            <button class="word__btns--learned" data-id="${item.id}">Изученное</button>
-
-                            <button class="word__btns--hard" data-id="${item.id}">Сложное</button> 
-
-                        </div>
-
-                        <div class="words__audio" data-audio=${item.id}>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audioExample}"></audio>
-                        </div>
-
-                        <br>
-                        <div class=
-                        "${localStorage.getItem('Logged') === 'logged' ? 'word__games' : 'word__games hidden'}">
-                            <h3>Ответы в играх:</h3>
-                            <p>Спринт - 0 из 0</p>
-                            <p>Аудиовызов - 0 из 0</p>
-                        </div>
-
-                        <br>
-
-                        <p>${item.textMeaning}</p>
-                        <p class="word__translate">${item.textMeaningTranslate}</p>
-                        <p>${item.textExample}</p>
-                        <p class="word__translate">${item.textExampleTranslate}</p>
-                    </div>
-            `;
-
-            card.addEventListener('click', sendWordsListener);
-            return card;
-        });
-    }
-
-    getHardEasyCards(result: GetWords[]) {
-        return result.map((item) => {
-            const card = document.createElement('div');
-            card.classList.add('words__card');
-            card.id = item.id;
-
-            card.innerHTML = `
-                    <img class="word__img"
-                    src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
-                    <div class="word__text">
-                        <div class="word__title">
-                            <div class="word__title--top">
-                                <h2>${item.word} ${item.transcription}</h2>
-                                <span class="material-symbols-outlined word__audio" data-volume=${item.id}>
-                                volume_up
-                                </span>
-                            </div>
-                            <p class="word__translate">${item.wordTranslate}</p>
-                        </div>
-                        <br>
-
-                        <div class="${
-                            localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
-                        }">
-                            <button class="word__btns-remove data-id="${item.id}">Восстановить<button>
-                        </div>
-
-                        <div class="words__audio" data-audio=${item.id}>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>
-                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audioExample}"></audio>
-                        </div>
-
-                        <br>
-                        <div class=
-                        "${localStorage.getItem('Logged') === 'logged' ? 'word__games' : 'word__games hidden'}">
-                            <h3>Ответы в играх:</h3>
-                            <p>Спринт - 0 из 0</p>
-                            <p>Аудиовызов - 0 из 0</p>
-                        </div>
-
-                        <br>
-
-                        <p>${item.textMeaning}</p>
-                        <p class="word__translate">${item.textMeaningTranslate}</p>
-                        <p>${item.textExample}</p>
-                        <p class="word__translate">${item.textExampleTranslate}</p>
-                    </div>
-            `;
-            return card;
-        });
-    }
-
     listenScrollBtn() {
         const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
         if (scrollBtn) {
@@ -400,37 +269,5 @@ export class UI {
               `;
             }
         };
-    }
-
-    listenTextbookSections() {
-        const textbookBtn = document.getElementById('section-textbook');
-        const learnedBtn = document.getElementById('section-learned');
-
-        const textbookSection = document.querySelector<HTMLElement>('.textbook__wrapper');
-        const learnedSection = document.querySelector<HTMLElement>('.learned__wrapper');
-
-        const scrollBtn = document.querySelector<HTMLElement>('.scroll-btn');
-
-        const gamesBtns = document.querySelector<HTMLElement>('.textbook__games');
-
-        if (textbookBtn && learnedBtn && textbookSection && learnedSection && scrollBtn && gamesBtns) {
-            textbookBtn.addEventListener('click', () => {
-                textbookBtn.classList.add('section--active');
-                learnedBtn.classList.remove('section--active');
-                textbookSection.classList.remove('hidden');
-                learnedSection.classList.add('hidden');
-                scrollBtn.classList.remove('hidden');
-                gamesBtns.classList.remove('hidden');
-            });
-
-            learnedBtn.addEventListener('click', () => {
-                learnedBtn.classList.add('section--active');
-                textbookBtn.classList.remove('section--active');
-                textbookSection.classList.add('hidden');
-                learnedSection.classList.remove('hidden');
-                scrollBtn.classList.add('hidden');
-                gamesBtns.classList.add('hidden');
-            });
-        }
     }
 }
