@@ -21,7 +21,6 @@ textbook.init().then(hardWords.getWordCards).then(checkUserWords);
 
 audiocall.init();
 
-
 const authorization = new Register();
 authorization.createUser();
 
