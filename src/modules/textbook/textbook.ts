@@ -3,7 +3,7 @@ import { UI } from '../ui/ui';
 import { getCards } from '../wordList/userCards';
 import { checkUserWords } from '../wordList/checkUserWords';
 import { GetWords, GetUserCards } from '../types/types';
-import { disableButtons } from './showQuitButtons';
+import { removeCardsFromEasyHard } from './removeEasyHardButtons';
 
 export class Textbook {
     UI: UI;
@@ -89,14 +89,13 @@ export class Textbook {
     renderEasyWords() {
         const learnedSectionButton = document.querySelectorAll('.textbook__section');
         window.addEventListener('click', (e) => {
-            console.log(learnedSectionButton);
             if (e.target === learnedSectionButton[1]) {
                 this.sortByDifficulty('easy')
                     .then((result) => {
                         (this.learnedWords as HTMLDivElement).innerHTML = '';
-                        (this.learnedWords as HTMLDivElement).append(...this.UI.getWordCards(result as GetWords[]));
+                        (this.learnedWords as HTMLDivElement).append(...this.UI.getHardEasyCards(result as GetWords[]));
                     })
-                    .then(disableButtons);
+                    .then(removeCardsFromEasyHard);
 
                 const scrollBtn = document.querySelector('.scroll-btn') as HTMLButtonElement;
                 scrollBtn.classList.remove('hidden');
@@ -178,9 +177,9 @@ export class Textbook {
                     this.textbookWords.innerHTML = '';
                     this.sortByDifficulty('hard')
                         .then((result) => {
-                            (this.textbookWords as HTMLDivElement).append(...this.UI.getWordCards(result));
+                            (this.textbookWords as HTMLDivElement).append(...this.UI.getHardEasyCards(result));
                         })
-                        .then(disableButtons);
+                        .then(removeCardsFromEasyHard);
                 } else if (this.paginationList) {
                     this.paginationList.classList.remove('hidden');
                     this.gamesSection?.classList.remove('hidden');
