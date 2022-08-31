@@ -28,4 +28,4 @@ export class GetCards {
     }
 }
 
-export const hardWords = new GetCards();
+export const getCards = new GetCards();

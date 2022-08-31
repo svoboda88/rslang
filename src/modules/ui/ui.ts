@@ -273,8 +273,9 @@ export class UI {
                         </div>
                         <br>
 
-                        <div class="${localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
-                }">
+                        <div class="${
+                            localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
+                        }">
                             <button class="word__btns--learned" data-id="${item.id}">Изученное</button>
 
                             <button class="word__btns--hard" data-id="${item.id}">Сложное</button> 
@@ -305,6 +306,59 @@ export class UI {
             `;
 
             card.addEventListener('click', sendWordsListener);
+            return card;
+        });
+    }
+
+    getHardEasyCards(result: GetWords[]) {
+        return result.map((item) => {
+            const card = document.createElement('div');
+            card.classList.add('words__card');
+            card.id = item.id;
+
+            card.innerHTML = `
+                    <img class="word__img"
+                    src="https://react-learnwords-english.herokuapp.com/${item.image}" alt="word image">
+                    <div class="word__text">
+                        <div class="word__title">
+                            <div class="word__title--top">
+                                <h2>${item.word} ${item.transcription}</h2>
+                                <span class="material-symbols-outlined word__audio" data-volume=${item.id}>
+                                volume_up
+                                </span>
+                            </div>
+                            <p class="word__translate">${item.wordTranslate}</p>
+                        </div>
+                        <br>
+
+                        <div class="${
+                            localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
+                        }">
+                            <button class="word__btns-remove data-id="${item.id}">Восстановить<button>
+                        </div>
+
+                        <div class="words__audio" data-audio=${item.id}>
+                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audio}"></audio>
+                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audioMeaning}"></audio>
+                            <audio src="https://react-learnwords-english.herokuapp.com/${item.audioExample}"></audio>
+                        </div>
+
+                        <br>
+                        <div class=
+                        "${localStorage.getItem('Logged') === 'logged' ? 'word__games' : 'word__games hidden'}">
+                            <h3>Ответы в играх:</h3>
+                            <p>Спринт - 0 из 0</p>
+                            <p>Аудиовызов - 0 из 0</p>
+                        </div>
+
+                        <br>
+
+                        <p>${item.textMeaning}</p>
+                        <p class="word__translate">${item.textMeaningTranslate}</p>
+                        <p>${item.textExample}</p>
+                        <p class="word__translate">${item.textExampleTranslate}</p>
+                    </div>
+            `;
             return card;
         });
     }

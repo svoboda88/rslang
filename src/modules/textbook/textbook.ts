@@ -1,13 +1,12 @@
 import { getWordsResult, getWordResult } from './request';
 import { UI } from '../ui/ui';
-import { hardWords, GetCards } from '../wordList/userCards';
+import { getCards } from '../wordList/userCards';
 import { checkUserWords } from '../wordList/checkUserWords';
 import { GetWords, GetUserCards } from '../types/types';
+import { removeCardsFromEasyHard } from './removeEasyHardButtons';
 
 export class Textbook {
     UI: UI;
-
-    getCards: GetCards;
 
     textbookWords: Element | null;
 
@@ -27,13 +26,10 @@ export class Textbook {
 
     gamesSection: HTMLElement | null;
 
-    textbookSections: HTMLElement | null;
-
     learnedWords: HTMLElement | null;
 
     constructor(UI: UI) {
         this.UI = UI;
-        this.getCards = new GetCards();
         this.textbookWords = document.querySelector('.textbook__words');
         this.textbookLvls = document.querySelector('.textbook__lvls');
         this.paginationList = document.querySelector('.pagination__list');
@@ -43,7 +39,6 @@ export class Textbook {
         this.nextBtn = document.getElementById('textbook-next');
         this.lastBtn = document.getElementById('textbook-last');
         this.gamesSection = document.querySelector('.textbook__games');
-        this.textbookSections = document.querySelector('.textbook__sections');
         this.learnedWords = document.querySelector('.learned__words');
     }
 
@@ -72,70 +67,41 @@ export class Textbook {
         (this.textbookPage as Element).innerHTML = ` ${localPageCount} / 30 `;
     }
 
-    async sortByEasy() {
-        const sorted: GetWords[] = await this.getCards.getUserCards().then((result: GetUserCards[]) => {
-            const easyWords: GetUserCards[] = [];
-            result.forEach((item) => {
-                if (item.difficulty === 'easy') {
-                    easyWords.push(item);
-                }
-
-                return;
+    async sortByDifficulty(difficulty: string) {
+        const sorted: GetWords[] = await getCards
+            .getUserCards()
+            .then((res) => {
+                return res.filter((el: GetUserCards) => el.difficulty === `${difficulty}`);
+            })
+            .then((res) => {
+                return res.map((el: GetUserCards) => el.wordId);
+            })
+            .then((res) => {
+                return Promise.all(
+                    res.map((el: string) => {
+                        return getWordResult(el).then((res) => res);
+                    })
+                );
             });
-
-            const easyWordsFull: GetWords[] = [];
-            easyWords.forEach((item) => {
-                getWordResult(item.wordId).then((result) => {
-                    easyWordsFull.push(result);
-                });
-            });
-
-            return easyWordsFull;
-        });
-
-        return sorted;
-    }
-
-    async sortByHard() {
-        const sorted: GetWords[] = await this.getCards.getUserCards().then((result: GetUserCards[]) => {
-            const hardWords: GetUserCards[] = [];
-            result.forEach((item) => {
-                if (item.difficulty === 'hard') {
-                    hardWords.push(item);
-                }
-
-                return;
-            });
-
-            const hardWordsFull: GetWords[] = [];
-            hardWords.forEach((item) => {
-                getWordResult(item.wordId).then((result) => {
-                    hardWordsFull.push(result);
-                });
-            });
-
-            return hardWordsFull;
-        });
-
         return sorted;
     }
 
     renderEasyWords() {
-        if (this.textbookSections) {
-            this.textbookSections.addEventListener('click', (event) => {
-                event.stopImmediatePropagation();
-                this.sortByEasy().then((result) => {
-                    setTimeout(() => {
+        const learnedSectionButton = document.querySelectorAll('.textbook__section');
+        window.addEventListener('click', (e) => {
+            if (e.target === learnedSectionButton[1]) {
+                this.sortByDifficulty('easy')
+                    .then((result) => {
                         (this.learnedWords as HTMLDivElement).innerHTML = '';
-                        (this.learnedWords as HTMLDivElement).append(...this.UI.getWordCards(result));
-                    }, 700);
-                });
+                        (this.learnedWords as HTMLDivElement).append(...this.UI.getHardEasyCards(result as GetWords[]));
+                    })
+                    .then(removeCardsFromEasyHard);
 
                 const scrollBtn = document.querySelector('.scroll-btn') as HTMLButtonElement;
                 scrollBtn.classList.remove('hidden');
                 this.playWordAudio(this.learnedWords as HTMLDivElement);
-            });
-        }
+            }
+        });
     }
 
     playWordAudio(section: HTMLDivElement) {
@@ -203,17 +169,17 @@ export class Textbook {
                 localStorage.setItem('pageCount', String(0));
                 this.disablePrevBtns();
                 this.activateNextBtns();
-                this.init().then(hardWords.getWordCards).then(checkUserWords);
+                this.init().then(getCards.getWordCards).then(checkUserWords);
 
                 if (Number(localStorage.getItem('groupCount')) === 6 && this.paginationList && this.textbookWords) {
                     this.paginationList.classList.add('hidden');
                     this.gamesSection?.classList.add('hidden');
                     this.textbookWords.innerHTML = '';
-                    this.sortByHard().then((result) => {
-                        setTimeout(() => {
-                            (this.textbookWords as HTMLDivElement).append(...this.UI.getWordCards(result));
-                        }, 700);
-                    });
+                    this.sortByDifficulty('hard')
+                        .then((result) => {
+                            (this.textbookWords as HTMLDivElement).append(...this.UI.getHardEasyCards(result));
+                        })
+                        .then(removeCardsFromEasyHard);
                 } else if (this.paginationList) {
                     this.paginationList.classList.remove('hidden');
                     this.gamesSection?.classList.remove('hidden');
@@ -274,7 +240,7 @@ export class Textbook {
                     } else if (Number(localStorage.getItem('pageCount')) !== 0) {
                         this.activatePrevBtns();
                     }
-                    this.init().then(hardWords.getWordCards).then(checkUserWords);
+                    this.init().then(getCards.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-prev') {
@@ -286,7 +252,7 @@ export class Textbook {
                     } else if (Number(localStorage.getItem('pageCount')) !== 0) {
                         this.activateNextBtns();
                     }
-                    this.init().then(hardWords.getWordCards).then(checkUserWords);
+                    this.init().then(getCards.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-last') {
@@ -294,7 +260,7 @@ export class Textbook {
                     localStorage.setItem('pageCount', count.toString());
                     this.disableNextBtns();
                     this.activatePrevBtns();
-                    this.init().then(hardWords.getWordCards).then(checkUserWords);
+                    this.init().then(getCards.getWordCards).then(checkUserWords);
                 }
 
                 if (parent.id === 'textbook-first') {
@@ -302,7 +268,7 @@ export class Textbook {
                     localStorage.setItem('pageCount', count.toString());
                     this.disablePrevBtns();
                     this.activateNextBtns();
-                    this.init().then(hardWords.getWordCards).then(checkUserWords);
+                    this.init().then(getCards.getWordCards).then(checkUserWords);
                 }
             });
         }
