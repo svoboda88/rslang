@@ -39,8 +39,6 @@ export const checkUserWords = async function () {
                     activeHardBtnsArray.push(el);
                 }
             });
-            console.log(activeBtns.length);
-            console.log(activeHardBtnsArray.length);
             if (activeBtns.length === 20 && activeHardBtnsArray.length !== 20) {
                 textbook?.classList.add('textbook-learned');
             } else {
