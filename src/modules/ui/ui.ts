@@ -76,13 +76,15 @@ export class UI {
         const wordGames = document.querySelectorAll('.word__games');
         const hardLvlBtn = document.getElementById('hard-lvl');
         const gamesBtns = document.querySelector('.textbook__games');
+        const statisticsBtn = document.getElementById('stats-btn');
 
-        if (textbookSections && wordBtns && wordGames && hardLvlBtn && gamesBtns) {
+        if (textbookSections && wordBtns && wordGames && hardLvlBtn && gamesBtns && statisticsBtn) {
             textbookSections.classList.remove('hidden');
             wordBtns.forEach((card) => card.classList.remove('hidden'));
             wordGames.forEach((card) => card.classList.remove('hidden'));
             hardLvlBtn.classList.remove('hidden');
             gamesBtns.classList.remove('hidden');
+            statisticsBtn.classList.remove('hidden');
         }
     }
 
@@ -92,13 +94,17 @@ export class UI {
         const wordGames = document.querySelectorAll('.word__games');
         const hardLvlBtn = document.getElementById('hard-lvl');
         const gamesBtns = document.querySelector('.textbook__games');
+        const textbookWords = document.querySelector('.textbook__words');
+        const statisticsBtn = document.getElementById('stats-btn');
 
-        if (textbookSections && wordBtns && wordGames && hardLvlBtn && gamesBtns) {
+        if (textbookSections && wordBtns && wordGames && hardLvlBtn && gamesBtns && textbookWords && statisticsBtn) {
             textbookSections.classList.add('hidden');
             wordBtns.forEach((card) => card.classList.add('hidden'));
             wordGames.forEach((card) => card.classList.add('hidden'));
             hardLvlBtn.classList.add('hidden');
             gamesBtns.classList.add('hidden');
+            textbookWords.classList.remove('textbook-learned');
+            statisticsBtn.classList.add('hidden');
         }
     }
 

@@ -1,4 +1,5 @@
 import { UI } from '../ui/ui';
+import { checkUserWords } from '../wordList/checkUserWords';
 
 export class Authorize {
     UI: UI;
@@ -38,10 +39,8 @@ export class Authorize {
                             window.localStorage.getItem('UserInfo') as string
                         ).name;
                     })
-                    .then(() => {
-                        window.localStorage.removeItem('modal');
-                        this.UI.showAuthorizedSections();
-                    });
+                    .then(this.UI.showAuthorizedSections)
+                    .then(checkUserWords);
             }
         };
         window.addEventListener('click', listener);
