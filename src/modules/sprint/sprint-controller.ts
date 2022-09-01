@@ -102,45 +102,56 @@ export class SprintController {
                 this.model.game.correctAnswers.forEach((answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                        if (
-                            (word.optional.sprintTries || word.optional.sprintTries === 0) &&
-                            (word.optional.sprintRight || word.optional.sprintRight === 0)
-                        ) {
-                            updateUserWord(
-                                {
-                                    difficulty: 'easy',
-                                    optional: {
-                                        sprintTries: word.optional.sprintTries + 1,
-                                        sprintRight: word.optional.sprintRight + 1,
-                                    },
+                        updateUserWord(
+                            {
+                                difficulty: 'easy',
+                                optional: {
+                                    sprintTries: word.optional.sprintTries + 1,
+                                    sprintRight: word.optional.sprintRight + 1,
+                                    audiocallRight: word.optional.audiocallRight,
+                                    audiocallTries: word.optional.audiocallTries,
                                 },
-                                answer.id
-                            );
-                        }
+                            },
+                            answer.id
+                        );
                     } else {
-                        sendUserWord({ difficulty: 'easy', optional: { sprintTries: 1, sprintRight: 1 } }, answer.id);
+                        sendUserWord(
+                            {
+                                difficulty: 'easy',
+                                optional: {
+                                    sprintTries: 1,
+                                    sprintRight: 1,
+                                    audiocallRight: 0,
+                                    audiocallTries: 0,
+                                },
+                            },
+                            answer.id
+                        );
                     }
                 });
                 this.model.game.wrongAnswers.forEach((answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                        if (
-                            (word.optional.sprintTries || word.optional.sprintTries === 0) &&
-                            (word.optional.sprintRight || word.optional.sprintRight === 0)
-                        ) {
-                            updateUserWord(
-                                {
-                                    difficulty: 'hard',
-                                    optional: {
-                                        sprintRight: word.optional.sprintRight,
-                                        sprintTries: word.optional.sprintTries + 1,
-                                    },
+                        updateUserWord(
+                            {
+                                difficulty: 'hard',
+                                optional: {
+                                    sprintRight: word.optional.sprintRight,
+                                    sprintTries: word.optional.sprintTries + 1,
+                                    audiocallRight: word.optional.audiocallRight,
+                                    audiocallTries: word.optional.audiocallTries,
                                 },
-                                answer.id
-                            );
-                        }
+                            },
+                            answer.id
+                        );
                     } else {
-                        sendUserWord({ difficulty: 'hard', optional: { sprintRight: 0, sprintTries: 1 } }, answer.id);
+                        sendUserWord(
+                            {
+                                difficulty: 'hard',
+                                optional: { sprintRight: 0, sprintTries: 1, audiocallRight: 0, audiocallTries: 0 },
+                            },
+                            answer.id
+                        );
                     }
                 });
             })
