@@ -10,7 +10,7 @@ import { checkUserWords } from './modules/wordList/checkUserWords';
 import { SprintController } from './modules/sprint/sprint-controller';
 import { SprintView } from './modules/sprint/sprint-view';
 import { SprintModel } from './modules/sprint/sprint-model';
-import { GetUserCards } from './modules/types/types';
+import { listenPages } from './modules/pagelistener/pageListener';
 
 const ui = new UI();
 const textbook = new Textbook(ui);
@@ -36,16 +36,4 @@ const sprintController = new SprintController(sprintModel, sprintView);
 
 sprintController.init();
 
-getCards.getUserCards().then((res) => {
-    const easy: GetUserCards[] = [];
-    const hard: GetUserCards[] = [];
-    res.forEach((word: GetUserCards) => {
-        if (word.difficulty === 'hard') {
-            hard.push(word);
-        } else if (word.difficulty === 'easy') {
-            easy.push(word);
-        }
-    });
-    console.log(easy);
-    console.log(hard);
-});
+listenPages.listen();

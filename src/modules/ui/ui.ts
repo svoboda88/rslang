@@ -58,6 +58,7 @@ export class UI {
         this.listenLogin();
         this.listenSignup();
         this.listenModalClosure();
+        this.listenCurrentPage();
     }
 
     checkIfLogged() {
@@ -143,17 +144,25 @@ export class UI {
 
     listenLogin() {
         if (this.loginBtn) {
-            this.loginBtn.addEventListener('click', () => this.showModal('login'));
+            this.loginBtn.addEventListener('click', () => {
+                window.localStorage.removeItem('modal');
+                window.localStorage.setItem('modal', 'login');
+                this.showModal('login');
+            });
         }
     }
 
     listenSignup() {
         if (this.signupBtn) {
-            this.signupBtn.addEventListener('click', () => this.showModal('signup'));
+            this.signupBtn.addEventListener('click', () => {
+                window.localStorage.removeItem('modal');
+                window.localStorage.setItem('modal', 'signup');
+                this.showModal('signup');
+            });
         }
     }
 
-    showPage(page: HTMLElement, pageBtn: HTMLElement) {
+    showPage(page: HTMLElement, pageBtn?: HTMLElement) {
         const pagesArray = document.querySelectorAll('.page');
         const navBtsArray = document.querySelectorAll('.nav__btn');
 
@@ -164,7 +173,7 @@ export class UI {
             }
         });
         page.classList.remove('hidden');
-        pageBtn.classList.add('nav__btn--active');
+        pageBtn?.classList.add('nav__btn--active');
         if (page === this.textbookPage) {
             this.listenScrollBtn();
             this.listenTextbookScroll();
@@ -206,6 +215,7 @@ export class UI {
         const modal = document.getElementById('modal');
         if (modal) {
             modal.classList.add('hidden');
+            window.localStorage.removeItem('modal');
         }
     }
 
@@ -269,5 +279,31 @@ export class UI {
               `;
             }
         };
+    }
+    listenCurrentPage() {
+        window.addEventListener('load', () => {
+            if (window.localStorage.getItem('CurrentPage') === 'textbook') {
+                this.showPage(this.textbookPage as HTMLElement, this.dictPageBtn as HTMLElement);
+                document.querySelector('#textbook-btn')?.classList.add('nav__btn--active');
+            }
+            if (window.localStorage.getItem('CurrentPage') === 'games') {
+                this.showPage(this.gamesPage as HTMLElement, this.gamesPageBtn as HTMLElement);
+                document.querySelector('#games-btn')?.classList.add('nav__btn--active');
+            }
+            if (window.localStorage.getItem('CurrentPage') === 'statistics') {
+                this.showPage(this.statsPage as HTMLElement, this.statsPageBtn as HTMLElement);
+                document.querySelector('#stats-btn')?.classList.add('nav__btn--active');
+            }
+            if (window.localStorage.getItem('CurrentPage') === 'main') {
+                this.showPage(this.mainPage as HTMLElement, this.mainPageBtn as HTMLElement);
+                document.querySelector('#main-btn')?.classList.add('nav__btn--active');
+            }
+            if (window.localStorage.getItem('modal') === 'login') {
+                this.showModal('login');
+            }
+            if (window.localStorage.getItem('modal') === 'signup') {
+                this.showModal('signup');
+            }
+        });
     }
 }

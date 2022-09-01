@@ -262,6 +262,7 @@ export class Textbook {
                             (this.textbookHardWords as HTMLDivElement).append(...this.getHardEasyCards(result));
                             if (this.loadScreen) {
                                 this.loadScreen.classList.add('hidden');
+                                window.localStorage.setItem('hard', 'hardWords');
                             }
                         })
                         .then(removeCardsFromEasyHard);
@@ -298,8 +299,9 @@ export class Textbook {
                         </div>
                         <br>
 
-                        <div class="${localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
-                }">
+                        <div class="${
+                            localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
+                        }">
                             <button class="word__btns--learned" data-id="${item.id}">Изученное</button>
 
                             <button class="word__btns--hard" data-id="${item.id}">Сложное</button> 
@@ -355,8 +357,9 @@ export class Textbook {
                         </div>
                         <br>
 
-                        <div class="${localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
-                }">
+                        <div class="${
+                            localStorage.getItem('Logged') === 'logged' ? 'word__btns' : 'word__btns hidden'
+                        }">
                             <button class="word__btns-remove data-id="${item.id}">Восстановить<button>
                         </div>
 
@@ -412,15 +415,40 @@ export class Textbook {
                 this.init().then(checkUserWords);
             });
 
-            learnedBtn.addEventListener('click', () => {
-                learnedBtn.classList.add('section--active');
-                textbookBtn.classList.remove('section--active');
-                textbookSection.classList.add('hidden');
-                learnedSection.classList.remove('hidden');
-                scrollBtn.classList.add('hidden');
-                gamesBtns.classList.add('hidden');
-                (this.learnedWords as HTMLDivElement).innerHTML = '';
-                this.renderEasyWords();
+            window.addEventListener('click', (e) => {
+                if (e.target === learnedBtn) {
+                    learnedBtn.classList.add('section--active');
+                    textbookBtn.classList.remove('section--active');
+                    textbookSection.classList.add('hidden');
+                    learnedSection.classList.remove('hidden');
+                    scrollBtn.classList.add('hidden');
+                    gamesBtns.classList.add('hidden');
+                    (this.learnedWords as HTMLDivElement).innerHTML = '';
+                    this.renderEasyWords();
+                    window.localStorage.setItem('easy', 'easyWords');
+                } else if (e.target === textbookBtn) {
+                    window.localStorage.removeItem('easy');
+                }
+            });
+            window.addEventListener('load', () => {
+                if (window.localStorage.getItem('easy') === 'easyWords') {
+                    learnedBtn.classList.add('section--active');
+                    textbookBtn.classList.remove('section--active');
+                    textbookSection.classList.add('hidden');
+                    learnedSection.classList.remove('hidden');
+                    scrollBtn.classList.add('hidden');
+                    gamesBtns.classList.add('hidden');
+                    (this.learnedWords as HTMLDivElement).innerHTML = '';
+                    this.renderEasyWords();
+                }
+            });
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    if (window.localStorage.getItem('groupCount') === '6') {
+                        const button = document.querySelector('#hard-lvl');
+                        (button as HTMLDivElement).click();
+                    }
+                }, 200);
             });
         }
     }

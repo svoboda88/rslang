@@ -38,7 +38,10 @@ export class Authorize {
                             window.localStorage.getItem('UserInfo') as string
                         ).name;
                     })
-                    .then(this.UI.showAuthorizedSections);
+                    .then(() => {
+                        window.localStorage.removeItem('modal');
+                        this.UI.showAuthorizedSections();
+                    });
             }
         };
         window.addEventListener('click', listener);

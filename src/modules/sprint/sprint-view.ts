@@ -64,8 +64,19 @@ export class SprintView {
                     this.playAgainBtn.classList.remove('hidden');
                     this.tryAgainBtn.classList.add('hidden');
                 }
+                window.localStorage.setItem('game', 'sprintFromGames');
             });
         }
+        window.addEventListener('load', () => {
+            if (window.localStorage.getItem('game') === 'sprintFromGames') {
+                this.start();
+                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
+                    this.lvls.classList.remove('hidden');
+                    this.playAgainBtn.classList.remove('hidden');
+                    this.tryAgainBtn.classList.add('hidden');
+                }
+            }
+        });
     }
 
     listenStartFromTextbook(controller: SprintController) {
@@ -80,8 +91,20 @@ export class SprintView {
                     this.tryAgainBtn.classList.remove('hidden');
                 }
                 controller.startGameTextbook();
+                window.localStorage.setItem('game', 'sprintFromTextBook');
             });
         }
+        window.addEventListener('load', () => {
+            if (window.localStorage.getItem('game') === 'sprintFromTextBook') {
+                this.start();
+                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
+                    this.lvls.classList.add('hidden');
+                    this.playAgainBtn.classList.add('hidden');
+                    this.tryAgainBtn.classList.remove('hidden');
+                }
+                controller.startGameTextbook();
+            }
+        });
     }
 
     start() {
@@ -106,7 +129,10 @@ export class SprintView {
         const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
 
         if (closeBtn) {
-            closeBtn.addEventListener('click', () => controller.endGame());
+            closeBtn.addEventListener('click', () => {
+                window.localStorage.removeItem('game');
+                controller.endGame();
+            });
         }
     }
 
