@@ -3,6 +3,7 @@ import { SprintView } from './sprint-view';
 import { getCards } from '../wordList/userCards';
 import { GetUserCards, GetWords } from '../types/types';
 import { sendUserWord, updateUserWord } from '../wordList/UserWordsRequest';
+import { checkUserWords } from '../wordList/checkUserWords';
 
 export class SprintController {
     model: SprintModel;
@@ -95,60 +96,54 @@ export class SprintController {
     }
 
     sendResults() {
-        getCards.getUserCards().then((res: GetUserCards[]) => {
-            this.model.game.correctAnswers.forEach((answer: GetWords) => {
-                if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
-                    const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                    if (word.optional.sprintTries && word.optional.sprintRight) {
-                        updateUserWord(
-                            {
-                                difficulty: 'easy',
-                                optional: {
-                                    sprintTries: word.optional.sprintTries + 1,
-                                    sprintRight: word.optional.sprintRight + 1,
+        getCards
+            .getUserCards()
+            .then((res: GetUserCards[]) => {
+                this.model.game.correctAnswers.forEach((answer: GetWords) => {
+                    if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
+                        const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
+                        if (word.optional.sprintTries && word.optional.sprintRight) {
+                            updateUserWord(
+                                {
+                                    difficulty: 'easy',
+                                    optional: {
+                                        sprintTries: word.optional.sprintTries + 1,
+                                        sprintRight: word.optional.sprintRight + 1,
+                                    },
                                 },
-                            },
-                            answer.id
-                        );
+                                answer.id
+                            );
+                        }
+                    } else {
+                        sendUserWord({ difficulty: 'easy', optional: { sprintTries: 1, sprintRight: 1 } }, answer.id);
                     }
-                } else {
-                    sendUserWord({ difficulty: 'easy', optional: { sprintTries: 1, sprintRight: 1 } }, answer.id);
-                }
-            });
-            this.model.game.wrongAnswers.forEach((answer: GetWords) => {
-                if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
-                    const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                    if (word.optional.sprintTries) {
-                        updateUserWord(
-                            {
-                                difficulty: 'hard',
-                                optional: {
-                                    sprintRight: word.optional.sprintRight,
-                                    sprintTries: word.optional.sprintTries + 1,
+                });
+                this.model.game.wrongAnswers.forEach((answer: GetWords) => {
+                    if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
+                        const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
+                        if (word.optional.sprintTries) {
+                            updateUserWord(
+                                {
+                                    difficulty: 'hard',
+                                    optional: {
+                                        sprintRight: word.optional.sprintRight,
+                                        sprintTries: word.optional.sprintTries + 1,
+                                    },
                                 },
-                            },
-                            answer.id
-                        );
+                                answer.id
+                            );
+                        }
+                    } else {
+                        sendUserWord({ difficulty: 'hard', optional: { sprintTries: 1 } }, answer.id);
                     }
-                } else {
-                    sendUserWord({ difficulty: 'hard', optional: { sprintTries: 1 } }, answer.id);
+                });
+            })
+            .then(() => {
+                const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', checkUserWords);
                 }
             });
-        });
-
-        getCards.getUserCards().then((res) => {
-            const easy: GetUserCards[] = [];
-            const hard: GetUserCards[] = [];
-            res.forEach((word: GetUserCards) => {
-                if (word.difficulty === 'hard') {
-                    hard.push(word);
-                } else if (word.difficulty === 'easy') {
-                    easy.push(word);
-                }
-            });
-            console.log(easy);
-            console.log(hard);
-        });
     }
 
     endGame() {
