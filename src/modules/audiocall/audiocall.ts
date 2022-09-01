@@ -81,6 +81,7 @@ export class Audiocall {
                 this.audiocallLvlsWrapper?.classList.remove('hidden');
                 (this.description as HTMLDivElement).innerHTML = 'Выберите уровень сложности:';
                 (this.startBtn as HTMLButtonElement).style.pointerEvents = 'none';
+                window.localStorage.setItem('game', 'audiocallFromGames');
             }
         });
 
@@ -93,6 +94,35 @@ export class Audiocall {
                 (this.description as HTMLDivElement).innerHTML = 'Слова для игры берутся с текущей страницы учебника';
                 (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
                 this.isFromTextbook = true;
+                window.localStorage.setItem('game', 'audiocallFromTextBook');
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (window.localStorage.getItem('game') === 'audiocallFromGames') {
+                if (this.modal && this.audiocallLvls) {
+                    document.body.style.overflow = 'hidden';
+                    this.modal.classList.remove('hidden');
+                    this.audiocallLvls.classList.remove('hidden');
+                    this.audiocallLvlsWrapper?.classList.remove('hidden');
+                    (this.description as HTMLDivElement).innerHTML = 'Выберите уровень сложности:';
+                    (this.startBtn as HTMLButtonElement).style.pointerEvents = 'none';
+                }
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (window.localStorage.getItem('game') === 'audiocallFromTextBook') {
+                if (this.modal && this.audiocallLvls) {
+                    document.body.style.overflow = 'hidden';
+                    this.modal.classList.remove('hidden');
+                    this.audiocallLvls.classList.remove('hidden');
+                    this.audiocallLvlsWrapper?.classList.add('hidden');
+                    (this.description as HTMLDivElement).innerHTML =
+                        'Слова для игры берутся с текущей страницы учебника';
+                    (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
+                    this.isFromTextbook = true;
+                }
             }
         });
     }
@@ -117,6 +147,7 @@ export class Audiocall {
                 this.correctAnswers = [];
                 this.wrongAnswers = [];
                 this.isFromTextbook = false;
+                window.localStorage.removeItem('game');
             }
         });
     }
