@@ -45,19 +45,27 @@ export class SprintController {
     checkIfRight() {
         if (this.model.game.isWordCorrect) {
             this.model.game.resultCount += this.model.game.wordPrice;
-            this.view.updateResultContainer(this.model.game.resultCount);
             this.model.updateWordPrice(this.view.dotsCount);
+            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
+            this.model.game.series += 1;
+
+            this.view.updateResultContainer(this.model.game.resultCount);
             this.view.updateWordPriceContainer(this.model.game.wordPrice);
             this.view.updateDotsCount('correct');
-            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
             this.view.playAudio('correct');
         } else {
             this.model.writeAnswer(this.model.game.wordIndex, 'error');
-            this.view.updateDotsCount('error');
             this.model.game.wordPrice = 10;
+            if (this.model.game.series !== 0) {
+                this.model.game.correctAnswersSeries.push(this.model.game.series);
+            }
+            this.model.game.series = 0;
+
+            this.view.updateDotsCount('error');
             this.view.updateWordPriceContainer(10);
             this.view.playAudio('wrong');
         }
+
         this.model.game.wordIndex++;
         if (this.model.game.wordIndex === this.model.game.wordsToPlay.length) {
             this.showResult();
@@ -69,19 +77,27 @@ export class SprintController {
     checkIfWrong() {
         if (!this.model.game.isWordCorrect) {
             this.model.game.resultCount += this.model.game.wordPrice;
-            this.view.updateResultContainer(this.model.game.resultCount);
             this.model.updateWordPrice(this.view.dotsCount);
+            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
+            this.model.game.series += 1;
+
+            this.view.updateResultContainer(this.model.game.resultCount);
             this.view.updateWordPriceContainer(this.model.game.wordPrice);
             this.view.updateDotsCount('correct');
-            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
             this.view.playAudio('correct');
         } else {
             this.model.writeAnswer(this.model.game.wordIndex, 'error');
-            this.view.updateDotsCount('error');
             this.model.game.wordPrice = 10;
+            if (this.model.game.series !== 0) {
+                this.model.game.correctAnswersSeries.push(this.model.game.series);
+            }
+            this.model.game.series = 0;
+
+            this.view.updateDotsCount('error');
             this.view.updateWordPriceContainer(10);
             this.view.playAudio('wrong');
         }
+
         this.model.game.wordIndex++;
         if (this.model.game.wordIndex === this.model.game.wordsToPlay.length) {
             this.showResult();

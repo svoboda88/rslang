@@ -13,6 +13,8 @@ export class SprintModel {
             wordIndex: 0,
             wordPrice: 10,
             resultCount: 0,
+            series: 0,
+            correctAnswersSeries: [],
             correctAnswers: [],
             wrongAnswers: [],
         };

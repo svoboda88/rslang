@@ -34,6 +34,8 @@ export interface Game {
     wordIndex: number;
     wordPrice: number;
     resultCount: number;
+    series: number;
+    correctAnswersSeries: number[];
     correctAnswers: GetWords[];
     wrongAnswers: GetWords[];
 }
