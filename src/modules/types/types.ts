@@ -39,8 +39,8 @@ export interface Game {
 }
 
 export interface Optional {
-    sprintRight?: number;
-    sprintTries?: number;
-    audiocallRight?: number;
-    audiocallTries?: number;
+    sprintRight: number;
+    sprintTries: number;
+    audiocallRight: number;
+    audiocallTries: number;
 }

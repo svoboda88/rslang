@@ -3,7 +3,7 @@ import { Optional } from '../types/types';
 export const sendUserWord = async function (
     data: {
         difficulty: string;
-        optional?: Optional;
+        optional: Optional;
     },
     wordId: string
 ) {
@@ -27,7 +27,7 @@ export const sendUserWord = async function (
 export const updateUserWord = async function (
     data: {
         difficulty: string;
-        optional?: Optional;
+        optional: Optional;
     },
     wordId: string
 ) {

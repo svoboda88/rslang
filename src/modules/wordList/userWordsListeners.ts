@@ -13,7 +13,13 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.contains('word__btns--hard') &&
             !el.parentNode?.children[0].classList.contains('word__btns--checked')
         ) {
-            sendUserWord({ difficulty: 'hard' }, el.getAttribute('data-id') as string);
+            sendUserWord(
+                {
+                    difficulty: 'hard',
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0 },
+                },
+                el.getAttribute('data-id') as string
+            );
             el.classList.add('word__btns--checked');
         } else if (
             e.target === el &&
@@ -29,7 +35,13 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.contains('word__btns--hard') &&
             el.parentNode?.children[0].classList.contains('word__btns--checked')
         ) {
-            updateUserWord({ difficulty: 'hard' }, el.getAttribute('data-id') as string);
+            updateUserWord(
+                {
+                    difficulty: 'hard',
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0 },
+                },
+                el.getAttribute('data-id') as string
+            );
             el.classList.add('word__btns--checked');
             el.parentNode?.children[0].classList.remove('word__btns--checked');
         }
@@ -40,7 +52,13 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.contains('word__btns--learned') &&
             !el.parentNode?.children[1].classList.contains('word__btns--checked')
         ) {
-            sendUserWord({ difficulty: 'easy' }, el.getAttribute('data-id') as string);
+            sendUserWord(
+                {
+                    difficulty: 'easy',
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0 },
+                },
+                el.getAttribute('data-id') as string
+            );
             el.classList.add('word__btns--checked');
         } else if (
             e.target === el &&
@@ -56,7 +74,13 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.contains('word__btns--learned') &&
             el.parentNode?.children[1].classList.contains('word__btns--checked')
         ) {
-            updateUserWord({ difficulty: 'easy' }, el.getAttribute('data-id') as string);
+            updateUserWord(
+                {
+                    difficulty: 'easy',
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0 },
+                },
+                el.getAttribute('data-id') as string
+            );
             el.classList.add('word__btns--checked');
             el.parentNode?.children[1].classList.remove('word__btns--checked');
         }
