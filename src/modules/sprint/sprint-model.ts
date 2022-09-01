@@ -1,6 +1,7 @@
 // import { storage } from '../storage/storage';
 import { getWordsResult } from '../textbook/request';
-import { Game, GetWords } from '../types/types';
+import { Game, GetUserCards, GetWords } from '../types/types';
+import { getCards } from '../wordList/userCards';
 
 export class SprintModel {
     game: Game;
@@ -19,15 +20,12 @@ export class SprintModel {
 
     async getWordsForLvl(lvl: number) {
         const randomPageNumber = Math.floor(Math.random() * 30);
-        let pageHarder: GetWords[];
-        const wordsArray = await getWordsResult(lvl, randomPageNumber);
-        if (randomPageNumber === 29) {
-            pageHarder = await getWordsResult(lvl, randomPageNumber - 1);
-        } else {
-            pageHarder = await getWordsResult(lvl, randomPageNumber + 1);
-        }
+        const randomPageNumberExtra = randomPageNumber === 0 ? 1 : randomPageNumber - 1;
 
-        this.game.wordsToPlay = [...wordsArray, ...pageHarder];
+        const wordsArray = await getWordsResult(lvl, randomPageNumber);
+        const wordsArrayExtraPage = await getWordsResult(lvl, randomPageNumberExtra);
+        this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...wordsArrayExtraPage]);
+        this.game.wordsToPlay = this.game.wordsToPlay.concat(await this.checkIfEnoughWords(lvl, randomPageNumber));
     }
 
     async getWordsForTextbook() {
@@ -40,7 +38,40 @@ export class SprintModel {
             Number(localStorage.getItem('pageCount')) + 1
         );
 
-        this.game.wordsToPlay = [...wordsArray, ...pageHarder];
+        this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...pageHarder]);
+        this.game.wordsToPlay = this.game.wordsToPlay.concat(
+            await this.checkIfEnoughWords(
+                Number(localStorage.getItem('groupCount')),
+                Number(localStorage.getItem('pageCount'))
+            )
+        );
+    }
+
+    async filterEasyWords(wordsToPlay: GetWords[]): Promise<GetWords[]> {
+        let easyUserWordsSet: Set<string>;
+        const filteredArrayPromise: Promise<GetWords[]> = getCards
+            .getUserCards()
+            .then((res: GetUserCards[]) => {
+                easyUserWordsSet = new Set(
+                    res.filter((word: GetUserCards) => word.difficulty === 'easy').map((word) => word.wordId)
+                );
+            })
+            .then(() => {
+                const filteredArray = wordsToPlay.filter((word) => {
+                    return !easyUserWordsSet.has(word.id);
+                });
+                return filteredArray;
+            });
+        return filteredArrayPromise;
+    }
+
+    async checkIfEnoughWords(lvl: number, page: number): Promise<GetWords[]> {
+        let extraWordsToConcat: GetWords[] = [];
+        if (this.game.wordsToPlay.length < 40) {
+            const extraWords = await getWordsResult(lvl + 1, page);
+            extraWordsToConcat = await this.filterEasyWords(extraWords);
+        }
+        return extraWordsToConcat;
     }
 
     getWord(index: number): string[] {
@@ -51,9 +82,9 @@ export class SprintModel {
         if (this.game.isWordCorrect) {
             translate = this.game.wordsToPlay[index].wordTranslate;
         } else {
-            let randomIndex = Math.floor(Math.random() * 38);
+            let randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
             if (index === randomIndex) {
-                randomIndex = Math.floor(Math.random() * 38);
+                randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
             }
             translate = this.game.wordsToPlay[randomIndex].wordTranslate;
         }

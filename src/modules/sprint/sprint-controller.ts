@@ -26,18 +26,18 @@ export class SprintController {
 
     async startGame(lvl: number) {
         this.view.showCountdown();
-        setTimeout(this.view.renderGame, 3000, this.view);
-        setTimeout(this.view.startTimer, 3000, this, this.view);
-        setTimeout(this.view.listenKeyboard, 3000, this);
+        setTimeout(this.view.renderGame, 5000, this.view);
+        setTimeout(this.view.startTimer, 5000, this, this.view);
+        setTimeout(this.view.listenKeyboard, 5000, this);
         await this.model.getWordsForLvl(lvl);
         this.view.renderWord(this.model.getWord(0));
     }
 
     async startGameTextbook() {
         this.view.showCountdown();
-        setTimeout(this.view.renderGame, 3000, this.view);
-        setTimeout(this.view.startTimer, 3000, this, this.view);
-        setTimeout(this.view.listenKeyboard, 3000, this);
+        setTimeout(this.view.renderGame, 5000, this.view);
+        setTimeout(this.view.startTimer, 5000, this, this.view);
+        setTimeout(this.view.listenKeyboard, 5000, this);
         await this.model.getWordsForTextbook();
         this.view.renderWord(this.model.getWord(0));
     }
@@ -59,7 +59,7 @@ export class SprintController {
             this.view.playAudio('wrong');
         }
         this.model.game.wordIndex++;
-        if (this.model.game.wordIndex === 40) {
+        if (this.model.game.wordIndex === this.model.game.wordsToPlay.length) {
             this.showResult();
         } else {
             this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
@@ -83,7 +83,7 @@ export class SprintController {
             this.view.playAudio('wrong');
         }
         this.model.game.wordIndex++;
-        if (this.model.game.wordIndex === 40) {
+        if (this.model.game.wordIndex === this.model.game.wordsToPlay.length) {
             this.showResult();
         } else {
             this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
@@ -102,7 +102,10 @@ export class SprintController {
                 this.model.game.correctAnswers.forEach((answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                        if (word.optional.sprintTries && word.optional.sprintRight) {
+                        if (
+                            (word.optional.sprintTries || word.optional.sprintTries === 0) &&
+                            (word.optional.sprintRight || word.optional.sprintRight === 0)
+                        ) {
                             updateUserWord(
                                 {
                                     difficulty: 'easy',
@@ -121,7 +124,10 @@ export class SprintController {
                 this.model.game.wrongAnswers.forEach((answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                        if (word.optional.sprintTries) {
+                        if (
+                            (word.optional.sprintTries || word.optional.sprintTries === 0) &&
+                            (word.optional.sprintRight || word.optional.sprintRight === 0)
+                        ) {
                             updateUserWord(
                                 {
                                     difficulty: 'hard',
@@ -134,7 +140,7 @@ export class SprintController {
                             );
                         }
                     } else {
-                        sendUserWord({ difficulty: 'hard', optional: { sprintTries: 1 } }, answer.id);
+                        sendUserWord({ difficulty: 'hard', optional: { sprintRight: 0, sprintTries: 1 } }, answer.id);
                     }
                 });
             })
@@ -147,7 +153,6 @@ export class SprintController {
     }
 
     endGame() {
-        this.view.stopTimer();
         this.model.toInitState();
         this.view.closeGame();
     }
