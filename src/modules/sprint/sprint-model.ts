@@ -68,7 +68,7 @@ export class SprintModel {
     async checkIfEnoughWords(lvl: number, page: number): Promise<GetWords[]> {
         let extraWordsToConcat: GetWords[] = [];
         if (this.game.wordsToPlay.length < 40) {
-            const extraWords = await getWordsResult(lvl + 1, page);
+            const extraWords = await getWordsResult(lvl === 5 ? lvl - 1 : lvl + 1, page);
             extraWordsToConcat = await this.filterEasyWords(extraWords);
         }
         return extraWordsToConcat;
