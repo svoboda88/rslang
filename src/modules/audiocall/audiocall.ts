@@ -1,5 +1,7 @@
-import { GetWords, Answers } from '../types/types';
+import { GetWords, Answers, GetUserCards } from '../types/types';
 import { getWordsResult } from '../textbook/request';
+import { getCards } from '../wordList/userCards';
+import { updateUserWord, sendUserWord } from '../wordList/UserWordsRequest';
 // import { UI } from '../ui/ui';
 // import { Textbook } from '../textbook/textbook';
 
@@ -81,7 +83,6 @@ export class Audiocall {
                 this.audiocallLvlsWrapper?.classList.remove('hidden');
                 (this.description as HTMLDivElement).innerHTML = 'Выберите уровень сложности:';
                 (this.startBtn as HTMLButtonElement).style.pointerEvents = 'none';
-                window.localStorage.setItem('game', 'audiocallFromGames');
             }
         });
 
@@ -94,35 +95,6 @@ export class Audiocall {
                 (this.description as HTMLDivElement).innerHTML = 'Слова для игры берутся с текущей страницы учебника';
                 (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
                 this.isFromTextbook = true;
-                window.localStorage.setItem('game', 'audiocallFromTextBook');
-            }
-        });
-
-        window.addEventListener('load', () => {
-            if (window.localStorage.getItem('game') === 'audiocallFromGames') {
-                if (this.modal && this.audiocallLvls) {
-                    document.body.style.overflow = 'hidden';
-                    this.modal.classList.remove('hidden');
-                    this.audiocallLvls.classList.remove('hidden');
-                    this.audiocallLvlsWrapper?.classList.remove('hidden');
-                    (this.description as HTMLDivElement).innerHTML = 'Выберите уровень сложности:';
-                    (this.startBtn as HTMLButtonElement).style.pointerEvents = 'none';
-                }
-            }
-        });
-
-        window.addEventListener('load', () => {
-            if (window.localStorage.getItem('game') === 'audiocallFromTextBook') {
-                if (this.modal && this.audiocallLvls) {
-                    document.body.style.overflow = 'hidden';
-                    this.modal.classList.remove('hidden');
-                    this.audiocallLvls.classList.remove('hidden');
-                    this.audiocallLvlsWrapper?.classList.add('hidden');
-                    (this.description as HTMLDivElement).innerHTML =
-                        'Слова для игры берутся с текущей страницы учебника';
-                    (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
-                    this.isFromTextbook = true;
-                }
             }
         });
     }
@@ -147,7 +119,6 @@ export class Audiocall {
                 this.correctAnswers = [];
                 this.wrongAnswers = [];
                 this.isFromTextbook = false;
-                window.localStorage.removeItem('game');
             }
         });
     }
@@ -385,6 +356,7 @@ export class Audiocall {
         (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = '#a7ff84';
         if (choosenWord === this.wordIndex) {
             this.correctAnswers.push({
+                id: this.wordVariants[this.wordIndex].id,
                 audio: this.wordVariants[this.wordIndex].audio,
                 word: this.wordVariants[this.wordIndex].word,
                 translate: this.wordVariants[this.wordIndex].wordTranslate,
@@ -392,6 +364,7 @@ export class Audiocall {
         } else {
             (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = '#ff6464';
             this.wrongAnswers.push({
+                id: this.wordVariants[this.wordIndex].id,
                 audio: this.wordVariants[this.wordIndex].audio,
                 word: this.wordVariants[this.wordIndex].word,
                 translate: this.wordVariants[this.wordIndex].wordTranslate,
@@ -405,6 +378,7 @@ export class Audiocall {
         if ((this.nextBtn as HTMLDivElement).textContent === 'Не знаю') {
             this.showCorrectWord();
             this.wrongAnswers.push({
+                id: this.wordVariants[this.wordIndex].id,
                 audio: this.wordVariants[this.wordIndex].audio,
                 word: this.wordVariants[this.wordIndex].word,
                 translate: this.wordVariants[this.wordIndex].wordTranslate,
@@ -425,6 +399,7 @@ export class Audiocall {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
             this.resultTable();
+            this.sendResults();
             this.gameResults?.addEventListener('click', (event) => {
                 event.stopImmediatePropagation();
                 const target = event.target as HTMLElement;
@@ -544,5 +519,48 @@ export class Audiocall {
 
             resultPercent.innerHTML = `${percent}%`;
         }
+    }
+
+    sendResults() {
+        getCards.getUserCards().then((res: GetUserCards[]) => {
+            this.correctAnswers.forEach((answer: Answers) => {
+                if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
+                    const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
+                    if (word.optional.audiocallTries && word.optional.audiocallRight) {
+                        updateUserWord(
+                            {
+                                difficulty: 'easy',
+                                optional: {
+                                    audiocallTries: word.optional.audiocallTries + 1,
+                                    audiocallRight: word.optional.audiocallRight + 1,
+                                },
+                            },
+                            answer.id
+                        );
+                    }
+                } else {
+                    sendUserWord({ difficulty: 'easy', optional: { audiocallTries: 1, audiocallRight: 1 } }, answer.id);
+                }
+            });
+            this.wrongAnswers.forEach((answer: Answers) => {
+                if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
+                    const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
+                    if (word.optional.audiocallTries) {
+                        updateUserWord(
+                            {
+                                difficulty: 'hard',
+                                optional: {
+                                    audiocallRight: word.optional.audiocallRight,
+                                    audiocallTries: word.optional.audiocallTries + 1,
+                                },
+                            },
+                            answer.id
+                        );
+                    }
+                } else {
+                    sendUserWord({ difficulty: 'hard', optional: { audiocallTries: 1 } }, answer.id);
+                }
+            });
+        });
     }
 }
