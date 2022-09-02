@@ -175,7 +175,7 @@ export class SprintView {
         }
 
         const countdownContainer = document.querySelector<HTMLElement>('.countdown');
-        let count = 3;
+        let count = 5;
         if (countdownContainer) {
             countdownContainer.classList.remove('hidden');
             countdownContainer.innerHTML = `<h3 class="countdown">${count}</h3>`;
@@ -281,19 +281,24 @@ export class SprintView {
         const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
         const thatController = controller;
         const thatView = view;
+        const thatResults = document.querySelector<HTMLElement>('.sprint__results');
         thatView.updateTimer(0);
         let count = 60;
         let percent = 0;
         this.interval = setInterval(
             () => {
-                count--;
-                percent += 100 / 60;
-                thatView.updateTimer(percent);
-                if (count === 0) {
-                    percent = 100;
+                if (thatResults?.classList.contains('hidden')) {
+                    count--;
+                    percent += 100 / 60;
                     thatView.updateTimer(percent);
+                    if (count === 0) {
+                        percent = 100;
+                        thatView.updateTimer(percent);
+                        clearInterval(this.interval);
+                        thatController.showResult();
+                    }
+                } else {
                     clearInterval(this.interval);
-                    thatController.showResult();
                 }
             },
             1000,
@@ -322,10 +327,6 @@ export class SprintView {
             const offset = circumference - (percent / 100) * circumference;
             this.ringFilled.style.strokeDashoffset = String(offset);
         }
-    }
-
-    stopTimer() {
-        clearInterval(this.interval);
     }
 
     showResult(correctAnswers: GetWords[], wrongAnswers: GetWords[]) {

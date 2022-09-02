@@ -34,13 +34,15 @@ export interface Game {
     wordIndex: number;
     wordPrice: number;
     resultCount: number;
+    series: number;
+    correctAnswersSeries: number[];
     correctAnswers: GetWords[];
     wrongAnswers: GetWords[];
 }
 
 export interface Optional {
-    sprintRight?: number;
-    sprintTries?: number;
-    audiocallRight?: number;
-    audiocallTries?: number;
+    sprintRight: number;
+    sprintTries: number;
+    audiocallRight: number;
+    audiocallTries: number;
 }
