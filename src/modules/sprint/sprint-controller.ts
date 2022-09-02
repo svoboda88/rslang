@@ -118,27 +118,94 @@ export class SprintController {
                 this.model.game.correctAnswers.forEach((answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                        updateUserWord(
-                            {
-                                difficulty: 'easy',
-                                optional: {
-                                    sprintTries: word.optional.sprintTries + 1,
-                                    sprintRight: word.optional.sprintRight + 1,
-                                    audiocallRight: word.optional.audiocallRight,
-                                    audiocallTries: word.optional.audiocallTries,
-                                },
-                            },
-                            answer.id
-                        );
+                        if (word.difficulty === 'none') {
+                            if (word.optional.sprintRight + word.optional.audiocallRight + 1 === 3) {
+                                updateUserWord(
+                                    {
+                                        difficulty: 'easy',
+                                        optional: {
+                                            sprintTries: word.optional.sprintTries + 1,
+                                            sprintRight: word.optional.sprintRight + 1,
+                                            audiocallRight: word.optional.audiocallRight,
+                                            audiocallTries: word.optional.audiocallTries,
+                                            mistakeAt: -1,
+                                        },
+                                    },
+                                    answer.id
+                                );
+                            } else {
+                                updateUserWord(
+                                    {
+                                        difficulty: 'none',
+                                        optional: {
+                                            sprintTries: word.optional.sprintTries + 1,
+                                            sprintRight: word.optional.sprintRight + 1,
+                                            audiocallRight: word.optional.audiocallRight,
+                                            audiocallTries: word.optional.audiocallTries,
+                                            mistakeAt: -1,
+                                        },
+                                    },
+                                    answer.id
+                                );
+                            }
+                        } else if (word.difficulty === 'hard') {
+                            if (
+                                (word.optional.mistakeAt || word.optional.mistakeAt === 0) &&
+                                word.optional.sprintRight + word.optional.audiocallRight - word.optional.mistakeAt === 5
+                            ) {
+                                updateUserWord(
+                                    {
+                                        difficulty: 'easy',
+                                        optional: {
+                                            sprintTries: word.optional.sprintTries + 1,
+                                            sprintRight: word.optional.sprintRight + 1,
+                                            audiocallRight: word.optional.audiocallRight,
+                                            audiocallTries: word.optional.audiocallTries,
+                                            mistakeAt: -1,
+                                        },
+                                    },
+                                    answer.id
+                                );
+                            } else if (word.optional.mistakeAt || word.optional.mistakeAt === 0) {
+                                updateUserWord(
+                                    {
+                                        difficulty: 'hard',
+                                        optional: {
+                                            sprintTries: word.optional.sprintTries + 1,
+                                            sprintRight: word.optional.sprintRight + 1,
+                                            audiocallRight: word.optional.audiocallRight,
+                                            audiocallTries: word.optional.audiocallTries,
+                                            mistakeAt: word.optional.mistakeAt,
+                                        },
+                                    },
+                                    answer.id
+                                );
+                            } else {
+                                updateUserWord(
+                                    {
+                                        difficulty: 'hard',
+                                        optional: {
+                                            sprintTries: word.optional.sprintTries + 1,
+                                            sprintRight: word.optional.sprintRight + 1,
+                                            audiocallRight: word.optional.audiocallRight,
+                                            audiocallTries: word.optional.audiocallTries,
+                                            mistakeAt: -1,
+                                        },
+                                    },
+                                    answer.id
+                                );
+                            }
+                        }
                     } else {
                         sendUserWord(
                             {
-                                difficulty: 'easy',
+                                difficulty: 'none',
                                 optional: {
                                     sprintTries: 1,
                                     sprintRight: 1,
                                     audiocallRight: 0,
                                     audiocallTries: 0,
+                                    mistakeAt: -1,
                                 },
                             },
                             answer.id
@@ -156,6 +223,7 @@ export class SprintController {
                                     sprintTries: word.optional.sprintTries + 1,
                                     audiocallRight: word.optional.audiocallRight,
                                     audiocallTries: word.optional.audiocallTries,
+                                    mistakeAt: word.optional.sprintRight + word.optional.audiocallRight,
                                 },
                             },
                             answer.id
@@ -164,7 +232,13 @@ export class SprintController {
                         sendUserWord(
                             {
                                 difficulty: 'hard',
-                                optional: { sprintRight: 0, sprintTries: 1, audiocallRight: 0, audiocallTries: 0 },
+                                optional: {
+                                    sprintRight: 0,
+                                    sprintTries: 1,
+                                    audiocallRight: 0,
+                                    audiocallTries: 0,
+                                    mistakeAt: 0,
+                                },
                             },
                             answer.id
                         );

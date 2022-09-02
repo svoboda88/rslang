@@ -46,4 +46,5 @@ export interface Optional {
     sprintTries: number;
     audiocallRight: number;
     audiocallTries: number;
+    mistakeAt: number;
 }

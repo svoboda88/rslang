@@ -17,7 +17,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             sendUserWord(
                 {
                     difficulty: 'hard',
-                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0 },
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: -1 },
                 },
                 el.getAttribute('data-id') as string
             );
@@ -42,7 +42,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             updateUserWord(
                 {
                     difficulty: 'hard',
-                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0 },
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: -1 },
                 },
                 el.getAttribute('data-id') as string
             );
@@ -59,7 +59,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             sendUserWord(
                 {
                     difficulty: 'easy',
-                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0 },
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: -1 },
                 },
                 el.getAttribute('data-id') as string
             );
@@ -84,7 +84,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             updateUserWord(
                 {
                     difficulty: 'easy',
-                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0 },
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: -1 },
                 },
                 el.getAttribute('data-id') as string
             );

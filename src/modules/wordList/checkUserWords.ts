@@ -110,7 +110,7 @@ export const addGamesTries = function (
 
     const wrapperInner = `<h3>Ответы в играх:</h3>
     <p> Спринт: ${sprintRight} из ${sprintTries}</p>
-    <p> Аудиовызов:${audioCallRight} из ${audiocallTries} </p>
+    <p> Аудиовызов: ${audioCallRight} из ${audiocallTries} </p>
 `;
     (wrapper as HTMLElement).innerHTML = wrapperInner;
     wordCard?.classList.add('active');
@@ -121,7 +121,7 @@ export const nullGames = function (wordId: string) {
     const wrapper = wordCard?.querySelector('.word__games');
     const wrapperInner = `<h3>Ответы в играх:</h3>
     <p> Спринт: 0 из 0 </p>
-    <p> Аудиовызов:0 из 0 </p>
+    <p> Аудиовызов: 0 из 0 </p>
 `;
     (wrapper as HTMLElement).innerHTML = wrapperInner;
 };
