@@ -91,6 +91,7 @@ export class Textbook {
                     if (this.learnedWords && this.learnedWords.classList.contains('hidden')) {
                         this.gamesSection?.classList.remove('hidden');
                     }
+
                     if (Number(localStorage.getItem('pageCount')) !== 0) {
                         this.activatePrevBtns();
                     }
@@ -98,7 +99,7 @@ export class Textbook {
                         this.activatePrevBtns();
                         this.disableNextBtns();
                     }
-                    this.UI.showPage(this.textbookPage, this.textbookPageBtn);
+                    this.UI.showPage(this.textbookPage as HTMLElement, this.textbookPageBtn as HTMLElement);
                 }
             });
         }
@@ -119,12 +120,17 @@ export class Textbook {
 
         this.toGroup();
         this.listenPaginationBtns();
-        let localPageCount = Number(localStorage.getItem('pageCount')) + 1;
-        if (localPageCount < 2) {
-            localPageCount = 1;
-        } else if (localPageCount > 29) {
-            localPageCount = 30;
+        if (localStorage.getItem('CurrentPage') === 'textbook') {
+            if (Number(localStorage.getItem('pageCount')) !== 0) {
+                this.activatePrevBtns();
+            }
+            if (Number(localStorage.getItem('pageCount')) === 29) {
+                this.activatePrevBtns();
+                this.disableNextBtns();
+            }
+            this.UI.showPage(this.textbookPage as HTMLElement, this.textbookPageBtn as HTMLElement);
         }
+        const localPageCount = Number(localStorage.getItem('pageCount')) + 1;
         (this.textbookPageCount as Element).innerHTML = ` ${localPageCount} / 30 `;
     }
 
@@ -261,6 +267,7 @@ export class Textbook {
                                 <h2>Ни одно слово не отмечено сложным. Пока что...</h2>`;
                             }
                             (this.textbookHardWords as HTMLDivElement).append(...this.getHardEasyCards(result));
+                            this.playWordAudio(this.textbookHardWords as HTMLDivElement);
                             if (this.loadScreen) {
                                 this.loadScreen.classList.add('hidden');
                                 window.localStorage.setItem('hard', 'hardWords');
