@@ -1,3 +1,5 @@
+import { createUserStatistics, getUserStatistics } from '../statistics/statistics-request';
+import { Statistics } from '../types/types';
 import { UI } from '../ui/ui';
 import { checkUserWords } from '../wordList/checkUserWords';
 
@@ -40,7 +42,17 @@ export class Authorize {
                         ).name;
                     })
                     .then(this.UI.showAuthorizedSections)
-                    .then(checkUserWords);
+                    .then(checkUserWords)
+                    .then(async () => {
+                        const userStat: Statistics | undefined = await getUserStatistics();
+
+                        if (!userStat) {
+                            console.log('создаем статистику');
+                            createUserStatistics();
+                        } else {
+                            console.log('статистика уже есть');
+                        }
+                    });
                 window.localStorage.removeItem('modal');
             }
         };
