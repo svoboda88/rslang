@@ -31,6 +31,7 @@ export class Audiocall {
     wrongContainer: HTMLElement | null;
     correctContainer: HTMLElement | null;
     argumentsForAudiocall: number[];
+    allWords: GetWords[];
     wordVariants: GetWords[];
     wordIndex: number;
     correctAnswers: Answers[];
@@ -62,6 +63,7 @@ export class Audiocall {
         this.wrongContainer = document.querySelector('.audiocall__wrong');
         this.correctContainer = document.querySelector('.audiocall__correct');
         this.argumentsForAudiocall = [];
+        this.allWords = [];
         this.wordVariants = [];
         this.wordIndex = 0;
         this.correctAnswers = [];
@@ -150,6 +152,7 @@ export class Audiocall {
                 this.correctAnswers = [];
                 this.wrongAnswers = [];
                 this.isFromTextbook = false;
+                localStorage.removeItem('allWords');
                 window.localStorage.removeItem('game');
             }
         });
@@ -193,7 +196,6 @@ export class Audiocall {
                     //         temp = result;
                     //     });
                     // }, 500);
-                    // console.log(temp);
                     this.renderWords(result);
                 });
             } else if (this.isFromTextbook) {
@@ -214,10 +216,13 @@ export class Audiocall {
     }
 
     renderWords(result: GetWords[]) {
-        const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
-        const sliced: GetWords[] = shuffled.slice(0, 5);
+        this.allWords = [...result].sort(() => 0.5 - Math.random());
+        if (localStorage.getItem('allWords')) {
+            this.wordVariants = JSON.parse(localStorage.getItem('allWords') as string).slice(0, 5);
+        } else {
+            this.wordVariants = this.allWords.slice(0, 5);
+        }
         const index = Math.floor(Math.random() * 5);
-        this.wordVariants = [...sliced];
         this.wordIndex = index;
         this.voiceBtn?.addEventListener('click', (event) => {
             event.stopImmediatePropagation();
@@ -387,20 +392,24 @@ export class Audiocall {
         });
         (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = '#a7ff84';
         if (choosenWord === this.wordIndex) {
-            this.correctAnswers.push({
-                id: this.wordVariants[this.wordIndex].id,
-                audio: this.wordVariants[this.wordIndex].audio,
-                word: this.wordVariants[this.wordIndex].word,
-                translate: this.wordVariants[this.wordIndex].wordTranslate,
-            });
+            if (this.correctAnswers.length <= 10) {
+                this.correctAnswers.push({
+                    id: this.wordVariants[this.wordIndex].id,
+                    audio: this.wordVariants[this.wordIndex].audio,
+                    word: this.wordVariants[this.wordIndex].word,
+                    translate: this.wordVariants[this.wordIndex].wordTranslate,
+                });
+            }
         } else {
             (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = '#ff6464';
-            this.wrongAnswers.push({
-                id: this.wordVariants[this.wordIndex].id,
-                audio: this.wordVariants[this.wordIndex].audio,
-                word: this.wordVariants[this.wordIndex].word,
-                translate: this.wordVariants[this.wordIndex].wordTranslate,
-            });
+            if (this.wrongAnswers.length <= 10) {
+                this.wrongAnswers.push({
+                    id: this.wordVariants[this.wordIndex].id,
+                    audio: this.wordVariants[this.wordIndex].audio,
+                    word: this.wordVariants[this.wordIndex].word,
+                    translate: this.wordVariants[this.wordIndex].wordTranslate,
+                });
+            }
         }
 
         this.showCorrectWord();
@@ -409,15 +418,33 @@ export class Audiocall {
     nextWords() {
         if ((this.nextBtn as HTMLDivElement).textContent === 'Не знаю') {
             this.showCorrectWord();
-            this.wrongAnswers.push({
-                id: this.wordVariants[this.wordIndex].id,
-                audio: this.wordVariants[this.wordIndex].audio,
-                word: this.wordVariants[this.wordIndex].word,
-                translate: this.wordVariants[this.wordIndex].wordTranslate,
-            });
+            if (this.wrongAnswers.length <= 10) {
+                this.wrongAnswers.push({
+                    id: this.wordVariants[this.wordIndex].id,
+                    audio: this.wordVariants[this.wordIndex].audio,
+                    word: this.wordVariants[this.wordIndex].word,
+                    translate: this.wordVariants[this.wordIndex].wordTranslate,
+                });
+            }
         } else {
             this.hideCorrectWord();
             if (this.correctAnswers.length + this.wrongAnswers.length <= 9) {
+                if (localStorage.getItem('allWords')) {
+                    const words: GetWords[] = JSON.parse(localStorage.getItem('allWords') as string);
+                    words.forEach((item, i) => {
+                        if (item.word === this.wordVariants[this.wordIndex].word) {
+                            words.splice(i, 1);
+                            localStorage.setItem('allWords', JSON.stringify(words));
+                        }
+                    });
+                } else {
+                    this.allWords.forEach((item, i) => {
+                        if (item.word === this.wordVariants[this.wordIndex].word) {
+                            this.allWords.splice(i, 1);
+                            localStorage.setItem('allWords', JSON.stringify(this.allWords));
+                        }
+                    });
+                }
                 this.startGame();
             }
             this.showResult();
@@ -426,7 +453,6 @@ export class Audiocall {
 
     showResult() {
         const answersSum = this.correctAnswers.length + this.wrongAnswers.length;
-        console.log(this.correctAnswers, this.wrongAnswers);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
@@ -441,6 +467,7 @@ export class Audiocall {
                     this.correctAnswers = [];
                     this.wrongAnswers = [];
                     this.hideCorrectWord();
+                    localStorage.removeItem('allWords');
                 }
 
                 return;
