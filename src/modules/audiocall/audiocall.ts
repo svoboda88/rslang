@@ -2,6 +2,7 @@ import { GetWords, Answers, GetUserCards } from '../types/types';
 import { getWordsResult } from '../textbook/request';
 import { getCards } from '../wordList/userCards';
 import { updateUserWord, sendUserWord } from '../wordList/UserWordsRequest';
+import { checkUserWords } from '../wordList/checkUserWords';
 // import { UI } from '../ui/ui';
 // import { Textbook } from '../textbook/textbook';
 
@@ -30,6 +31,7 @@ export class Audiocall {
     wrongContainer: HTMLElement | null;
     correctContainer: HTMLElement | null;
     argumentsForAudiocall: number[];
+    allWords: GetWords[];
     wordVariants: GetWords[];
     wordIndex: number;
     correctAnswers: Answers[];
@@ -61,6 +63,7 @@ export class Audiocall {
         this.wrongContainer = document.querySelector('.audiocall__wrong');
         this.correctContainer = document.querySelector('.audiocall__correct');
         this.argumentsForAudiocall = [];
+        this.allWords = [];
         this.wordVariants = [];
         this.wordIndex = 0;
         this.correctAnswers = [];
@@ -83,6 +86,7 @@ export class Audiocall {
                 this.audiocallLvlsWrapper?.classList.remove('hidden');
                 (this.description as HTMLDivElement).innerHTML = 'Выберите уровень сложности:';
                 (this.startBtn as HTMLButtonElement).style.pointerEvents = 'none';
+                window.localStorage.setItem('game', 'audiocallFromGames');
             }
         });
 
@@ -95,6 +99,35 @@ export class Audiocall {
                 (this.description as HTMLDivElement).innerHTML = 'Слова для игры берутся с текущей страницы учебника';
                 (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
                 this.isFromTextbook = true;
+                window.localStorage.setItem('game', 'audiocallFromTextBook');
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (window.localStorage.getItem('game') === 'audiocallFromGames') {
+                if (this.modal && this.audiocallLvls) {
+                    document.body.style.overflow = 'hidden';
+                    this.modal.classList.remove('hidden');
+                    this.audiocallLvls.classList.remove('hidden');
+                    this.audiocallLvlsWrapper?.classList.remove('hidden');
+                    (this.description as HTMLDivElement).innerHTML = 'Выберите уровень сложности:';
+                    (this.startBtn as HTMLButtonElement).style.pointerEvents = 'none';
+                }
+            }
+        });
+
+        window.addEventListener('load', () => {
+            if (window.localStorage.getItem('game') === 'audiocallFromTextBook') {
+                if (this.modal && this.audiocallLvls) {
+                    document.body.style.overflow = 'hidden';
+                    this.modal.classList.remove('hidden');
+                    this.audiocallLvls.classList.remove('hidden');
+                    this.audiocallLvlsWrapper?.classList.add('hidden');
+                    (this.description as HTMLDivElement).innerHTML =
+                        'Слова для игры берутся с текущей страницы учебника';
+                    (this.startBtn as HTMLButtonElement).style.pointerEvents = 'auto';
+                    this.isFromTextbook = true;
+                }
             }
         });
     }
@@ -119,6 +152,8 @@ export class Audiocall {
                 this.correctAnswers = [];
                 this.wrongAnswers = [];
                 this.isFromTextbook = false;
+                localStorage.removeItem('allWords');
+                window.localStorage.removeItem('game');
             }
         });
     }
@@ -161,7 +196,6 @@ export class Audiocall {
                     //         temp = result;
                     //     });
                     // }, 500);
-                    // console.log(temp);
                     this.renderWords(result);
                 });
             } else if (this.isFromTextbook) {
@@ -182,10 +216,13 @@ export class Audiocall {
     }
 
     renderWords(result: GetWords[]) {
-        const shuffled: GetWords[] = [...result].sort(() => 0.5 - Math.random());
-        const sliced: GetWords[] = shuffled.slice(0, 5);
+        this.allWords = [...result].sort(() => 0.5 - Math.random());
+        if (localStorage.getItem('allWords')) {
+            this.wordVariants = JSON.parse(localStorage.getItem('allWords') as string).slice(0, 5);
+        } else {
+            this.wordVariants = this.allWords.slice(0, 5);
+        }
         const index = Math.floor(Math.random() * 5);
-        this.wordVariants = [...sliced];
         this.wordIndex = index;
         this.voiceBtn?.addEventListener('click', (event) => {
             event.stopImmediatePropagation();
@@ -355,20 +392,24 @@ export class Audiocall {
         });
         (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = '#a7ff84';
         if (choosenWord === this.wordIndex) {
-            this.correctAnswers.push({
-                id: this.wordVariants[this.wordIndex].id,
-                audio: this.wordVariants[this.wordIndex].audio,
-                word: this.wordVariants[this.wordIndex].word,
-                translate: this.wordVariants[this.wordIndex].wordTranslate,
-            });
+            if (this.correctAnswers.length <= 10) {
+                this.correctAnswers.push({
+                    id: this.wordVariants[this.wordIndex].id,
+                    audio: this.wordVariants[this.wordIndex].audio,
+                    word: this.wordVariants[this.wordIndex].word,
+                    translate: this.wordVariants[this.wordIndex].wordTranslate,
+                });
+            }
         } else {
             (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = '#ff6464';
-            this.wrongAnswers.push({
-                id: this.wordVariants[this.wordIndex].id,
-                audio: this.wordVariants[this.wordIndex].audio,
-                word: this.wordVariants[this.wordIndex].word,
-                translate: this.wordVariants[this.wordIndex].wordTranslate,
-            });
+            if (this.wrongAnswers.length <= 10) {
+                this.wrongAnswers.push({
+                    id: this.wordVariants[this.wordIndex].id,
+                    audio: this.wordVariants[this.wordIndex].audio,
+                    word: this.wordVariants[this.wordIndex].word,
+                    translate: this.wordVariants[this.wordIndex].wordTranslate,
+                });
+            }
         }
 
         this.showCorrectWord();
@@ -377,15 +418,33 @@ export class Audiocall {
     nextWords() {
         if ((this.nextBtn as HTMLDivElement).textContent === 'Не знаю') {
             this.showCorrectWord();
-            this.wrongAnswers.push({
-                id: this.wordVariants[this.wordIndex].id,
-                audio: this.wordVariants[this.wordIndex].audio,
-                word: this.wordVariants[this.wordIndex].word,
-                translate: this.wordVariants[this.wordIndex].wordTranslate,
-            });
+            if (this.wrongAnswers.length <= 10) {
+                this.wrongAnswers.push({
+                    id: this.wordVariants[this.wordIndex].id,
+                    audio: this.wordVariants[this.wordIndex].audio,
+                    word: this.wordVariants[this.wordIndex].word,
+                    translate: this.wordVariants[this.wordIndex].wordTranslate,
+                });
+            }
         } else {
             this.hideCorrectWord();
             if (this.correctAnswers.length + this.wrongAnswers.length <= 9) {
+                if (localStorage.getItem('allWords')) {
+                    const words: GetWords[] = JSON.parse(localStorage.getItem('allWords') as string);
+                    words.forEach((item, i) => {
+                        if (item.word === this.wordVariants[this.wordIndex].word) {
+                            words.splice(i, 1);
+                            localStorage.setItem('allWords', JSON.stringify(words));
+                        }
+                    });
+                } else {
+                    this.allWords.forEach((item, i) => {
+                        if (item.word === this.wordVariants[this.wordIndex].word) {
+                            this.allWords.splice(i, 1);
+                            localStorage.setItem('allWords', JSON.stringify(this.allWords));
+                        }
+                    });
+                }
                 this.startGame();
             }
             this.showResult();
@@ -394,7 +453,6 @@ export class Audiocall {
 
     showResult() {
         const answersSum = this.correctAnswers.length + this.wrongAnswers.length;
-        console.log(this.correctAnswers, this.wrongAnswers);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
@@ -409,6 +467,7 @@ export class Audiocall {
                     this.correctAnswers = [];
                     this.wrongAnswers = [];
                     this.hideCorrectWord();
+                    localStorage.removeItem('allWords');
                 }
 
                 return;
@@ -522,45 +581,70 @@ export class Audiocall {
     }
 
     sendResults() {
-        getCards.getUserCards().then((res: GetUserCards[]) => {
-            this.correctAnswers.forEach((answer: Answers) => {
-                if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
-                    const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                    if (word.optional.audiocallTries && word.optional.audiocallRight) {
+        getCards
+            .getUserCards()
+            .then((res: GetUserCards[]) => {
+                this.correctAnswers.forEach((answer: Answers) => {
+                    if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
+                        const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
                         updateUserWord(
                             {
                                 difficulty: 'easy',
                                 optional: {
-                                    audiocallTries: word.optional.audiocallTries + 1,
+                                    sprintTries: word.optional.sprintTries,
+                                    sprintRight: word.optional.sprintRight,
                                     audiocallRight: word.optional.audiocallRight + 1,
+                                    audiocallTries: word.optional.audiocallTries + 1,
+                                },
+                            },
+                            answer.id
+                        );
+                    } else {
+                        sendUserWord(
+                            {
+                                difficulty: 'easy',
+                                optional: {
+                                    sprintTries: 0,
+                                    sprintRight: 0,
+                                    audiocallRight: 1,
+                                    audiocallTries: 1,
                                 },
                             },
                             answer.id
                         );
                     }
-                } else {
-                    sendUserWord({ difficulty: 'easy', optional: { audiocallTries: 1, audiocallRight: 1 } }, answer.id);
-                }
-            });
-            this.wrongAnswers.forEach((answer: Answers) => {
-                if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
-                    const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                    if (word.optional.audiocallTries) {
+                });
+                this.wrongAnswers.forEach((answer: Answers) => {
+                    if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
+                        const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
                         updateUserWord(
                             {
                                 difficulty: 'hard',
                                 optional: {
+                                    sprintRight: word.optional.sprintRight,
+                                    sprintTries: word.optional.sprintTries,
                                     audiocallRight: word.optional.audiocallRight,
                                     audiocallTries: word.optional.audiocallTries + 1,
                                 },
                             },
                             answer.id
                         );
+                    } else {
+                        sendUserWord(
+                            {
+                                difficulty: 'hard',
+                                optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 1 },
+                            },
+                            answer.id
+                        );
                     }
-                } else {
-                    sendUserWord({ difficulty: 'hard', optional: { audiocallTries: 1 } }, answer.id);
+                });
+            })
+            .then(() => {
+                const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', checkUserWords);
                 }
             });
-        });
     }
 }
