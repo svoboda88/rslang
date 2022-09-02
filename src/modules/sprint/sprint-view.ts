@@ -283,13 +283,13 @@ export class SprintView {
         const thatView = view;
         const thatResults = document.querySelector<HTMLElement>('.sprint__results');
         thatView.updateTimer(0);
-        let count = 10;
+        let count = 60;
         let percent = 0;
         this.interval = setInterval(
             () => {
                 if (thatResults?.classList.contains('hidden')) {
                     count--;
-                    percent += 100 / 10;
+                    percent += 100 / 60;
                     thatView.updateTimer(percent);
                     if (count === 0) {
                         percent = 100;
