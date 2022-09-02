@@ -1,6 +1,6 @@
 import { getWordsResult, getWordResult } from './request';
 import { getCards } from '../wordList/userCards';
-import { checkUserWords } from '../wordList/checkUserWords';
+import { checkEasyWords, checkHardWords, checkUserWords } from '../wordList/checkUserWords';
 import { GetWords, GetUserCards } from '../types/types';
 import { removeCardsFromEasyHard } from './removeEasyHardButtons';
 import { sendWordsListener } from '../wordList/userWordsListeners';
@@ -160,6 +160,7 @@ export class Textbook {
                     (this.learnedWords as HTMLDivElement).append(...this.getHardEasyCards(result as GetWords[]));
                     this.loadScreen?.classList.add('hidden');
                 })
+                .then(() => checkEasyWords())
                 .then(removeCardsFromEasyHard);
 
             const scrollBtn = document.querySelector('.scroll-btn') as HTMLButtonElement;
@@ -265,6 +266,7 @@ export class Textbook {
                                 window.localStorage.setItem('hard', 'hardWords');
                             }
                         })
+                        .then(() => checkHardWords('hard'))
                         .then(removeCardsFromEasyHard);
                 } else if (this.paginationList && this.textbookWords && this.gamesSection && this.textbookHardWords) {
                     this.paginationList.classList.remove('hidden');
@@ -317,9 +319,6 @@ export class Textbook {
                         <br>
                         <div class=
                         "${localStorage.getItem('Logged') === 'logged' ? 'word__games' : 'word__games hidden'}">
-                            <h3>Ответы в играх:</h3>
-                            <p>Спринт - 0 из 0</p>
-                            <p>Аудиовызов - 0 из 0</p>
                         </div>
 
                         <br>
@@ -340,6 +339,7 @@ export class Textbook {
         return result.map((item) => {
             const card = document.createElement('div');
             card.classList.add('words__card');
+            card.setAttribute('data-id', `${item.id}`);
             card.id = item.id;
 
             card.innerHTML = `
@@ -372,9 +372,6 @@ export class Textbook {
                         <br>
                         <div class=
                         "${localStorage.getItem('Logged') === 'logged' ? 'word__games' : 'word__games hidden'}">
-                            <h3>Ответы в играх:</h3>
-                            <p>Спринт - 0 из 0</p>
-                            <p>Аудиовызов - 0 из 0</p>
                         </div>
 
                         <br>

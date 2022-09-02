@@ -41,6 +41,7 @@ export class Authorize {
                     })
                     .then(this.UI.showAuthorizedSections)
                     .then(checkUserWords);
+                window.localStorage.removeItem('modal');
             }
         };
         window.addEventListener('click', listener);

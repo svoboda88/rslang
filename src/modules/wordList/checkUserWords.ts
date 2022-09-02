@@ -1,3 +1,4 @@
+import { GetUserCards } from '../types/types';
 import { getCards } from './userCards';
 
 export const checkUserWords = async function () {
@@ -65,6 +66,26 @@ export const checkUserWords = async function () {
             ) {
                 gameSection?.classList.remove('hidden');
             }
+            return res;
+        })
+        .then((res) => {
+            res.forEach((el: GetUserCards) => {
+                if (el.optional) {
+                    addGamesTries(
+                        el.wordId,
+                        el.optional.sprintRight as number,
+                        el.optional.sprintTries as number,
+                        el.optional.audiocallRight as number,
+                        el.optional.audiocallTries as number
+                    );
+                } else addGamesTries(el.wordId, 0, 0, 0, 0);
+            });
+            const cardsOnPage = document.querySelectorAll('.words__card');
+            cardsOnPage.forEach((el) => {
+                if (!el.classList.contains('active')) {
+                    nullGames(el.id);
+                }
+            });
         });
 };
 
@@ -75,4 +96,98 @@ export const TextbookSwitchListener = function () {
             checkUserWords();
         }
     });
+};
+
+export const addGamesTries = function (
+    wordId: string,
+    sprintRight: number,
+    sprintTries: number,
+    audioCallRight: number,
+    audiocallTries: number
+) {
+    const wordCard = document.getElementById(`${wordId}`);
+    const wrapper = wordCard?.querySelector('.word__games');
+
+    const wrapperInner = `<h3>Ответы в играх:</h3>
+    <p> Спринт: ${sprintRight} из ${sprintTries}</p>
+    <p> Аудиовызов:${audioCallRight} из ${audiocallTries} </p>
+`;
+    (wrapper as HTMLElement).innerHTML = wrapperInner;
+    wordCard?.classList.add('active');
+};
+
+export const nullGames = function (wordId: string) {
+    const wordCard = document.getElementById(`${wordId}`);
+    const wrapper = wordCard?.querySelector('.word__games');
+    const wrapperInner = `<h3>Ответы в играх:</h3>
+    <p> Спринт: 0 из 0 </p>
+    <p> Аудиовызов:0 из 0 </p>
+`;
+    (wrapper as HTMLElement).innerHTML = wrapperInner;
+};
+
+export const checkHardWords = async function (difficulty: string) {
+    await getCards
+        .getUserCards()
+        .then((res) => {
+            return res.filter((el: GetUserCards) => el.difficulty === difficulty);
+        })
+        .then((res) => {
+            const cardsOnPage = document.querySelectorAll('.easy');
+            cardsOnPage.forEach((el) => {
+                if (!el.classList.contains('active')) {
+                    el.classList.add('active');
+                }
+            });
+            res.forEach((el: GetUserCards) => {
+                if (el.optional) {
+                    addGamesTries(
+                        el.wordId,
+                        el.optional.sprintRight,
+                        el.optional.sprintTries,
+                        el.optional.audiocallRight,
+                        el.optional.audiocallTries
+                    );
+                } else addGamesTries(el.wordId, 0, 0, 0, 0);
+            });
+        });
+};
+
+export const addGamesTriesEasy = function (
+    wordId: string,
+    sprintRight: number,
+    sprintTries: number,
+    audioCallRight: number,
+    audiocallTries: number
+) {
+    const wordCard = document.querySelector(`div[data-id="${wordId}"]`);
+    wordCard?.classList.remove('active');
+    const wrapper = wordCard?.querySelector('.word__games');
+
+    const wrapperInner = `<h3>Ответы в играх:</h3>
+    <p> Спринт: ${sprintRight} из ${sprintTries}</p>
+    <p> Аудиовызов:${audioCallRight} из ${audiocallTries} </p>
+`;
+    (wrapper as HTMLElement).innerHTML = wrapperInner;
+};
+
+export const checkEasyWords = async function () {
+    await getCards
+        .getUserCards()
+        .then((res) => {
+            return res.filter((el: GetUserCards) => el.difficulty === 'easy');
+        })
+        .then((res) => {
+            res.forEach((el: GetUserCards) => {
+                if (el.optional) {
+                    addGamesTriesEasy(
+                        el.wordId,
+                        el.optional.sprintRight,
+                        el.optional.sprintTries,
+                        el.optional.audiocallRight,
+                        el.optional.audiocallTries
+                    );
+                } else addGamesTriesEasy(el.wordId, 0, 0, 0, 0);
+            });
+        });
 };
