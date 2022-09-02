@@ -196,7 +196,6 @@ export class Audiocall {
                     //         temp = result;
                     //     });
                     // }, 500);
-                    // console.log(temp);
                     this.renderWords(result);
                 });
             } else if (this.isFromTextbook) {
@@ -219,15 +218,12 @@ export class Audiocall {
     renderWords(result: GetWords[]) {
         this.allWords = [...result].sort(() => 0.5 - Math.random());
         if (localStorage.getItem('allWords')) {
-            console.log(JSON.parse(localStorage.getItem('allWords') as string));
             this.wordVariants = JSON.parse(localStorage.getItem('allWords') as string).slice(0, 5);
         } else {
             this.wordVariants = this.allWords.slice(0, 5);
-            // console.log('game');
         }
         const index = Math.floor(Math.random() * 5);
         this.wordIndex = index;
-        console.log(this.wordVariants, this.wordIndex);
         this.voiceBtn?.addEventListener('click', (event) => {
             event.stopImmediatePropagation();
             this.wordVoice();
@@ -434,9 +430,7 @@ export class Audiocall {
             this.hideCorrectWord();
             if (this.correctAnswers.length + this.wrongAnswers.length <= 9) {
                 if (localStorage.getItem('allWords')) {
-                    console.log('local');
                     const words: GetWords[] = JSON.parse(localStorage.getItem('allWords') as string);
-                    console.log(words);
                     words.forEach((item, i) => {
                         if (item.word === this.wordVariants[this.wordIndex].word) {
                             words.splice(i, 1);
@@ -444,7 +438,6 @@ export class Audiocall {
                         }
                     });
                 } else {
-                    console.log('all');
                     this.allWords.forEach((item, i) => {
                         if (item.word === this.wordVariants[this.wordIndex].word) {
                             this.allWords.splice(i, 1);
@@ -452,7 +445,6 @@ export class Audiocall {
                         }
                     });
                 }
-                console.log(JSON.parse(localStorage.getItem('allWords') as string));
                 this.startGame();
             }
             this.showResult();
@@ -461,7 +453,6 @@ export class Audiocall {
 
     showResult() {
         const answersSum = this.correctAnswers.length + this.wrongAnswers.length;
-        console.log(this.correctAnswers, this.wrongAnswers);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
