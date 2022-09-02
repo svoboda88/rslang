@@ -26,18 +26,18 @@ export class SprintController {
 
     async startGame(lvl: number) {
         this.view.showCountdown();
-        setTimeout(this.view.renderGame, 3000, this.view);
-        setTimeout(this.view.startTimer, 3000, this, this.view);
-        setTimeout(this.view.listenKeyboard, 3000, this);
+        setTimeout(this.view.renderGame, 5000, this.view);
+        setTimeout(this.view.startTimer, 5000, this, this.view);
+        setTimeout(this.view.listenKeyboard, 5000, this);
         await this.model.getWordsForLvl(lvl);
         this.view.renderWord(this.model.getWord(0));
     }
 
     async startGameTextbook() {
         this.view.showCountdown();
-        setTimeout(this.view.renderGame, 3000, this.view);
-        setTimeout(this.view.startTimer, 3000, this, this.view);
-        setTimeout(this.view.listenKeyboard, 3000, this);
+        setTimeout(this.view.renderGame, 5000, this.view);
+        setTimeout(this.view.startTimer, 5000, this, this.view);
+        setTimeout(this.view.listenKeyboard, 5000, this);
         await this.model.getWordsForTextbook();
         this.view.renderWord(this.model.getWord(0));
     }
@@ -45,21 +45,29 @@ export class SprintController {
     checkIfRight() {
         if (this.model.game.isWordCorrect) {
             this.model.game.resultCount += this.model.game.wordPrice;
-            this.view.updateResultContainer(this.model.game.resultCount);
             this.model.updateWordPrice(this.view.dotsCount);
+            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
+            this.model.game.series += 1;
+
+            this.view.updateResultContainer(this.model.game.resultCount);
             this.view.updateWordPriceContainer(this.model.game.wordPrice);
             this.view.updateDotsCount('correct');
-            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
             this.view.playAudio('correct');
         } else {
             this.model.writeAnswer(this.model.game.wordIndex, 'error');
-            this.view.updateDotsCount('error');
             this.model.game.wordPrice = 10;
+            if (this.model.game.series !== 0) {
+                this.model.game.correctAnswersSeries.push(this.model.game.series);
+            }
+            this.model.game.series = 0;
+
+            this.view.updateDotsCount('error');
             this.view.updateWordPriceContainer(10);
             this.view.playAudio('wrong');
         }
+
         this.model.game.wordIndex++;
-        if (this.model.game.wordIndex === 40) {
+        if (this.model.game.wordIndex === this.model.game.wordsToPlay.length) {
             this.showResult();
         } else {
             this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
@@ -69,21 +77,29 @@ export class SprintController {
     checkIfWrong() {
         if (!this.model.game.isWordCorrect) {
             this.model.game.resultCount += this.model.game.wordPrice;
-            this.view.updateResultContainer(this.model.game.resultCount);
             this.model.updateWordPrice(this.view.dotsCount);
+            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
+            this.model.game.series += 1;
+
+            this.view.updateResultContainer(this.model.game.resultCount);
             this.view.updateWordPriceContainer(this.model.game.wordPrice);
             this.view.updateDotsCount('correct');
-            this.model.writeAnswer(this.model.game.wordIndex, 'correct');
             this.view.playAudio('correct');
         } else {
             this.model.writeAnswer(this.model.game.wordIndex, 'error');
-            this.view.updateDotsCount('error');
             this.model.game.wordPrice = 10;
+            if (this.model.game.series !== 0) {
+                this.model.game.correctAnswersSeries.push(this.model.game.series);
+            }
+            this.model.game.series = 0;
+
+            this.view.updateDotsCount('error');
             this.view.updateWordPriceContainer(10);
             this.view.playAudio('wrong');
         }
+
         this.model.game.wordIndex++;
-        if (this.model.game.wordIndex === 40) {
+        if (this.model.game.wordIndex === this.model.game.wordsToPlay.length) {
             this.showResult();
         } else {
             this.view.renderWord(this.model.getWord(this.model.game.wordIndex));
@@ -102,39 +118,56 @@ export class SprintController {
                 this.model.game.correctAnswers.forEach((answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                        if (word.optional.sprintTries && word.optional.sprintRight) {
-                            updateUserWord(
-                                {
-                                    difficulty: 'easy',
-                                    optional: {
-                                        sprintTries: word.optional.sprintTries + 1,
-                                        sprintRight: word.optional.sprintRight + 1,
-                                    },
+                        updateUserWord(
+                            {
+                                difficulty: 'easy',
+                                optional: {
+                                    sprintTries: word.optional.sprintTries + 1,
+                                    sprintRight: word.optional.sprintRight + 1,
+                                    audiocallRight: word.optional.audiocallRight,
+                                    audiocallTries: word.optional.audiocallTries,
                                 },
-                                answer.id
-                            );
-                        }
+                            },
+                            answer.id
+                        );
                     } else {
-                        sendUserWord({ difficulty: 'easy', optional: { sprintTries: 1, sprintRight: 1 } }, answer.id);
+                        sendUserWord(
+                            {
+                                difficulty: 'easy',
+                                optional: {
+                                    sprintTries: 1,
+                                    sprintRight: 1,
+                                    audiocallRight: 0,
+                                    audiocallTries: 0,
+                                },
+                            },
+                            answer.id
+                        );
                     }
                 });
                 this.model.game.wrongAnswers.forEach((answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
-                        if (word.optional.sprintTries) {
-                            updateUserWord(
-                                {
-                                    difficulty: 'hard',
-                                    optional: {
-                                        sprintRight: word.optional.sprintRight,
-                                        sprintTries: word.optional.sprintTries + 1,
-                                    },
+                        updateUserWord(
+                            {
+                                difficulty: 'hard',
+                                optional: {
+                                    sprintRight: word.optional.sprintRight,
+                                    sprintTries: word.optional.sprintTries + 1,
+                                    audiocallRight: word.optional.audiocallRight,
+                                    audiocallTries: word.optional.audiocallTries,
                                 },
-                                answer.id
-                            );
-                        }
+                            },
+                            answer.id
+                        );
                     } else {
-                        sendUserWord({ difficulty: 'hard', optional: { sprintTries: 1 } }, answer.id);
+                        sendUserWord(
+                            {
+                                difficulty: 'hard',
+                                optional: { sprintRight: 0, sprintTries: 1, audiocallRight: 0, audiocallTries: 0 },
+                            },
+                            answer.id
+                        );
                     }
                 });
             })
@@ -147,7 +180,6 @@ export class SprintController {
     }
 
     endGame() {
-        this.view.stopTimer();
         this.model.toInitState();
         this.view.closeGame();
     }

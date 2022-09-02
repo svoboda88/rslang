@@ -12,6 +12,9 @@ export const checkUserWords = async function () {
                 .flat();
         })
         .then((res) => {
+            const activeBtnsOnPage = document.querySelectorAll<HTMLElement>('.word__btns--checked');
+            activeBtnsOnPage.forEach((btn) => btn.classList.remove('word__btns--checked'));
+
             const hardBtns = Array.from(document.querySelectorAll('.word__btns--hard'));
             const learnedBtns = Array.from(document.querySelectorAll('.word__btns--learned'));
             const textbook = document.querySelector('.textbook__words');
@@ -43,6 +46,24 @@ export const checkUserWords = async function () {
                 textbook?.classList.add('textbook-learned');
             } else {
                 textbook?.classList.remove('textbook-learned');
+            }
+
+            const gameSection = document.querySelector<HTMLElement>('.textbook__games');
+            const activeEasyBtnsArray = [];
+            activeBtns.forEach((el) => {
+                if (el.classList.contains('word__btns--learned')) {
+                    activeEasyBtnsArray.push(el);
+                }
+            });
+            if (activeEasyBtnsArray.length === 20) {
+                gameSection?.classList.add('hidden');
+            } else if (
+                activeEasyBtnsArray.length < 20 &&
+                localStorage.getItem('Logged') === 'logged' &&
+                Number(localStorage.getItem('groupCount')) !== 6 &&
+                !localStorage.getItem('easy')
+            ) {
+                gameSection?.classList.remove('hidden');
             }
         });
 };
