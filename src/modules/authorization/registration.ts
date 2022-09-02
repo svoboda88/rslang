@@ -61,6 +61,7 @@ export class Register {
             }
         };
         window.addEventListener('click', listener);
+        window.localStorage.removeItem('modal');
     }
 
     async sendData(data: { email: string | null; password: string | null } | null) {

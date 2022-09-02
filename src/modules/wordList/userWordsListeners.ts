@@ -1,3 +1,4 @@
+import { nullGames } from './checkUserWords';
 import { removeUserWord, sendUserWord, updateUserWord } from './UserWordsRequest';
 
 export const sendWordsListener = (e: MouseEvent) => {
@@ -21,6 +22,7 @@ export const sendWordsListener = (e: MouseEvent) => {
                 el.getAttribute('data-id') as string
             );
             el.classList.add('word__btns--checked');
+            el.parentElement?.parentElement?.parentElement?.classList.add('active');
         } else if (
             e.target === el &&
             el.classList.contains('word__btns--checked') &&
@@ -29,6 +31,8 @@ export const sendWordsListener = (e: MouseEvent) => {
         ) {
             removeUserWord(el.getAttribute('data-id') as string);
             el.classList.remove('word__btns--checked');
+            el.parentElement?.parentElement?.parentElement?.classList.remove('active');
+            nullGames(el.getAttribute('data-id') as string);
         } else if (
             e.target === el &&
             !el.classList.contains('word__btns--checked') &&
@@ -60,6 +64,7 @@ export const sendWordsListener = (e: MouseEvent) => {
                 el.getAttribute('data-id') as string
             );
             el.classList.add('word__btns--checked');
+            el.parentElement?.parentElement?.parentElement?.classList.add('active');
         } else if (
             e.target === el &&
             el.classList.contains('word__btns--checked') &&
@@ -68,6 +73,8 @@ export const sendWordsListener = (e: MouseEvent) => {
         ) {
             removeUserWord(el.getAttribute('data-id') as string);
             el.classList.remove('word__btns--checked');
+            el.parentElement?.parentElement?.parentElement?.classList.remove('active');
+            nullGames(el.getAttribute('data-id') as string);
         } else if (
             e.target === el &&
             !el.classList.contains('word__btns--checked') &&
