@@ -210,8 +210,10 @@ export class Audiocall {
                     this.renderWords(result);
                 });
             } else {
+                console.log('games');
                 this.argumentsForAudiocall[1] = Math.floor(Math.random() * 20);
                 getWordsResult(this.argumentsForAudiocall[0], this.argumentsForAudiocall[1]).then((result) => {
+                    localStorage.removeItem('unUsedWords');
                     this.renderWords(result);
                 });
             }
@@ -222,18 +224,26 @@ export class Audiocall {
         this.allWords = [...result];
         if (localStorage.getItem('unUsedWords')) {
             this.unUsedWords = JSON.parse(localStorage.getItem('unUsedWords') as string);
+            console.log('here');
         } else {
             this.unUsedWords = [...result].sort(() => 0.5 - Math.random());
             localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
         }
 
         const lastWord = this.unUsedWords[this.unUsedWords.length - 1];
+        console.log(lastWord);
         this.wordVariants.push(lastWord);
+        const indexes: number[] = [];
 
         for (let i = 0; i < this.allWords.length; i++) {
-            if (lastWord.word !== this.allWords[i].word) {
-                if (this.wordVariants.length >= 5) break;
-                this.wordVariants.push(this.allWords[i]);
+            const index = Math.floor(Math.random() * 20);
+            if (!indexes.includes(index)) {
+                indexes.push(index);
+
+                if (lastWord.word !== this.allWords[index].word) {
+                    if (this.wordVariants.length >= 5) break;
+                    this.wordVariants.push(this.allWords[index]);
+                }
             }
         }
 
@@ -508,9 +518,14 @@ export class Audiocall {
                     this.correctAnswers = [];
                     this.wrongAnswers = [];
                     this.hideCorrectWord();
-                    const words: GetWords[] = JSON.parse(localStorage.getItem('unUsedWords') as string);
-                    words.pop();
-                    localStorage.setItem('unUsedWords', JSON.stringify(words));
+
+                    if (!this.isFromTextbook) {
+                        localStorage.removeItem('unUsedWords');
+                    } else {
+                        const words: GetWords[] = JSON.parse(localStorage.getItem('unUsedWords') as string);
+                        words.pop();
+                        localStorage.setItem('unUsedWords', JSON.stringify(words));
+                    }
                 }
 
                 return;
@@ -759,9 +774,8 @@ export class Audiocall {
                 });
             })
             .then(() => {
-                const closeBtn = document.querySelector<HTMLElement>('.audiocall__close-btn');
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', checkUserWords);
+                if (this.modalCloseBtn) {
+                    this.modalCloseBtn.addEventListener('click', checkUserWords);
                 }
             });
     }
