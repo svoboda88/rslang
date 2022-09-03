@@ -230,8 +230,10 @@ export class Audiocall {
                     if (page !== 0) {
                         page--;
                         getWordsResult(group, page).then((result) => {
-                            this.unUsedWords = wordsArray.concat(result);
-                            localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
+                            this.filterEasyWords(result).then((response) => {
+                                this.unUsedWords = wordsArray.concat(response);
+                                localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
+                            });
                         });
                     }
                 }
@@ -541,6 +543,8 @@ export class Audiocall {
                 this.correctAnswers = [];
                 this.wrongAnswers = [];
                 this.hideCorrectWord();
+                words.pop();
+                localStorage.setItem('unUsedWords', JSON.stringify(words));
             }
 
             if (target.textContent === 'Выйты на страницу учебника') {
