@@ -21,32 +21,39 @@ export class SprintModel {
     }
 
     async getWordsForLvl(lvl: number) {
-        const randomPageNumber = Math.floor(Math.random() * 30);
-        const randomPageNumberExtra = randomPageNumber === 0 ? 1 : randomPageNumber - 1;
+        const randomPage = Math.floor(Math.random() * 30);
+        const wordsArray = await getWordsResult(lvl, randomPage);
+        let prevPageWordsArray: GetWords[] = [];
 
-        const wordsArray = await getWordsResult(lvl, randomPageNumber);
-        const wordsArrayExtraPage = await getWordsResult(lvl, randomPageNumberExtra);
-        this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...wordsArrayExtraPage]);
-        this.game.wordsToPlay = this.game.wordsToPlay.concat(await this.checkIfEnoughWords(lvl, randomPageNumber));
+        if (randomPage > 1) {
+            prevPageWordsArray = [
+                ...(await getWordsResult(lvl, randomPage - 1)),
+                ...(await getWordsResult(lvl, randomPage - 2)),
+            ];
+            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPageWordsArray]);
+        } else if (randomPage === 1) {
+            prevPageWordsArray = await getWordsResult(lvl, randomPage - 1);
+            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPageWordsArray]);
+        } else if (randomPage === 0) {
+            this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
+        }
     }
 
     async getWordsForTextbook() {
-        const wordsArray = await getWordsResult(
-            Number(localStorage.getItem('groupCount')),
-            Number(localStorage.getItem('pageCount'))
-        );
-        const pageHarder = await getWordsResult(
-            Number(localStorage.getItem('groupCount')),
-            Number(localStorage.getItem('pageCount')) + 1
-        );
-
-        this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...pageHarder]);
-        this.game.wordsToPlay = this.game.wordsToPlay.concat(
-            await this.checkIfEnoughWords(
-                Number(localStorage.getItem('groupCount')),
-                Number(localStorage.getItem('pageCount'))
-            )
-        );
+        const lvl = Number(localStorage.getItem('groupCount'));
+        const page = Number(localStorage.getItem('pageCount'));
+        const wordsArray = await getWordsResult(lvl, page);
+        let prevPages: GetWords[] = [];
+        if (page > 1) {
+            prevPages = [...(await getWordsResult(lvl, page - 1)), ...(await getWordsResult(lvl, page - 1))];
+            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+        } else if (page === 1) {
+            prevPages = await getWordsResult(lvl, page - 1);
+            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+        } else if (page === 0) {
+            this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
+        }
+        console.log(this.game.wordsToPlay);
     }
 
     async filterEasyWords(wordsToPlay: GetWords[]): Promise<GetWords[]> {
@@ -65,15 +72,6 @@ export class SprintModel {
                 return filteredArray;
             });
         return filteredArrayPromise;
-    }
-
-    async checkIfEnoughWords(lvl: number, page: number): Promise<GetWords[]> {
-        let extraWordsToConcat: GetWords[] = [];
-        if (this.game.wordsToPlay.length < 40) {
-            const extraWords = await getWordsResult(lvl === 5 ? lvl - 1 : lvl + 1, page);
-            extraWordsToConcat = await this.filterEasyWords(extraWords);
-        }
-        return extraWordsToConcat;
     }
 
     getWord(index: number): string[] {
