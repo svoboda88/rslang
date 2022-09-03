@@ -3,12 +3,8 @@ import { getWordsResult } from '../textbook/request';
 import { getCards } from '../wordList/userCards';
 import { updateUserWord, sendUserWord } from '../wordList/UserWordsRequest';
 import { checkUserWords } from '../wordList/checkUserWords';
-// import { UI } from '../ui/ui';
-// import { Textbook } from '../textbook/textbook';
 
 export class Audiocall {
-    // ui: UI;
-    // textbook: Textbook;
     mainPage: HTMLElement | null;
     textbookPage: HTMLElement | null;
     modal: HTMLElement | null;
@@ -30,6 +26,7 @@ export class Audiocall {
     resultsCorrect: HTMLElement | null;
     wrongContainer: HTMLElement | null;
     correctContainer: HTMLElement | null;
+    resultsPlayBtn: Element | null;
     argumentsForAudiocall: number[];
     allWords: GetWords[];
     unUsedWords: GetWords[];
@@ -41,8 +38,6 @@ export class Audiocall {
     isLocked: boolean;
 
     constructor() {
-        // this.ui = new UI();
-        // this.textbook = new Textbook(this.ui);
         this.mainPage = document.getElementById('audiocall-from-games');
         this.textbookPage = document.getElementById('audiocall-from-textbook');
         this.modal = document.querySelector('.audiocall__modal');
@@ -64,6 +59,7 @@ export class Audiocall {
         this.resultsCorrect = document.querySelector('.audiocall__results-correct');
         this.wrongContainer = document.querySelector('.audiocall__wrong');
         this.correctContainer = document.querySelector('.audiocall__correct');
+        this.resultsPlayBtn = document.querySelectorAll('.results__play-btn')[1];
         this.argumentsForAudiocall = [];
         this.allWords = [];
         this.unUsedWords = [];
@@ -76,12 +72,11 @@ export class Audiocall {
     }
 
     init() {
-        this.openModal();
-        this.closeModal();
+        this.modalWindndowListeners();
         this.levelSelection();
     }
 
-    openModal() {
+    modalWindndowListeners() {
         this.mainPage?.addEventListener('click', () => {
             if (this.modal && this.audiocallLvls) {
                 document.body.style.overflow = 'hidden';
@@ -105,6 +100,10 @@ export class Audiocall {
                 this.isFromTextbook = true;
                 window.localStorage.setItem('game', 'audiocallFromTextBook');
             }
+        });
+
+        this.modalCloseBtn?.addEventListener('click', () => {
+            this.closeModal();
         });
 
         window.addEventListener('load', () => {
@@ -137,28 +136,25 @@ export class Audiocall {
     }
 
     closeModal() {
-        this.modalCloseBtn?.addEventListener('click', () => {
-            if (this.modal) {
-                document.body.style.overflow = 'visible';
-                this.modal.classList.add('hidden');
-                Array.from(this.audiocallLvlsWrapper?.children as HTMLCollection).forEach((item) => {
-                    item.classList.remove('audiocall__lvls--btn-active');
-                });
-
-                if (!this.gameWindow?.classList.contains('hidden')) {
-                    this.gameWindow?.classList.add('hidden');
-                }
-
-                if (!this.gameResults?.classList.contains('hidden')) {
-                    this.gameResults?.classList.add('hidden');
-                }
-
-                this.correctAnswers = [];
-                this.wrongAnswers = [];
-                this.isFromTextbook = false;
-                window.localStorage.removeItem('game');
-            }
+        document.body.style.overflow = 'visible';
+        this.modal?.classList.add('hidden');
+        Array.from(this.audiocallLvlsWrapper?.children as HTMLCollection).forEach((item) => {
+            item.classList.remove('audiocall__lvls--btn-active');
         });
+
+        if (!this.gameWindow?.classList.contains('hidden')) {
+            this.gameWindow?.classList.add('hidden');
+        }
+
+        if (!this.gameResults?.classList.contains('hidden')) {
+            this.gameResults?.classList.add('hidden');
+        }
+
+        this.correctAnswers = [];
+        this.wrongAnswers = [];
+        this.isFromTextbook = false;
+        localStorage.removeItem('unUsedWords');
+        window.localStorage.removeItem('game');
     }
 
     levelSelection() {
@@ -193,13 +189,9 @@ export class Audiocall {
                     Number(localStorage.getItem('pageCount')),
                 ];
                 getWordsResult(this.argumentsForAudiocall[0], this.argumentsForAudiocall[1]).then((result) => {
-                    // let temp: GetWords[] = [];
-                    // setTimeout(() => {
-                    //     this.textbook.sortByEasy().then((result) => {
-                    //         temp = result;
-                    //     });
-                    // }, 500);
-                    this.renderWords(result);
+                    this.filterEasyWords(result).then((response) => {
+                        this.renderWords(response);
+                    });
                 });
             } else if (this.isFromTextbook) {
                 this.argumentsForAudiocall = [
@@ -221,8 +213,29 @@ export class Audiocall {
 
     renderWords(result: GetWords[]) {
         this.allWords = [...result];
+        this.wordVariants = [];
         if (localStorage.getItem('unUsedWords')) {
             this.unUsedWords = JSON.parse(localStorage.getItem('unUsedWords') as string);
+
+            if (this.isFromTextbook) {
+                const wordsArray = JSON.parse(localStorage.getItem('unUsedWords') as string);
+                if (wordsArray.length > 10) {
+                    this.unUsedWords = wordsArray;
+                }
+
+                if (wordsArray.length < 10) {
+                    const group = Number(localStorage.getItem('groupCount'));
+                    let page = Number(localStorage.getItem('pageCount'));
+
+                    if (page !== 0) {
+                        page--;
+                        getWordsResult(group, page).then((result) => {
+                            this.unUsedWords = wordsArray.concat(result);
+                            localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
+                        });
+                    }
+                }
+            }
         } else {
             this.unUsedWords = [...result].sort(() => 0.5 - Math.random());
             localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
@@ -233,7 +246,7 @@ export class Audiocall {
         const indexes: number[] = [];
 
         for (let i = 0; i < this.allWords.length; i++) {
-            const index = Math.floor(Math.random() * 20);
+            const index = Math.floor(Math.random() * this.allWords.length);
             if (!indexes.includes(index)) {
                 indexes.push(index);
 
@@ -401,7 +414,7 @@ export class Audiocall {
                     this.nextWords();
                     setTimeout(() => {
                         this.isLocked = false;
-                    }, 300);
+                    }, 400);
                 }
 
                 this.isLocked = true;
@@ -419,7 +432,7 @@ export class Audiocall {
                     this.nextWords();
                     setTimeout(() => {
                         this.isLocked = false;
-                    }, 300);
+                    }, 400);
                 }
 
                 this.isLocked = true;
@@ -437,7 +450,7 @@ export class Audiocall {
                     this.nextWords();
                     setTimeout(() => {
                         this.isLocked = false;
-                    }, 300);
+                    }, 400);
                 }
 
                 this.isLocked = true;
@@ -501,33 +514,39 @@ export class Audiocall {
 
     showResult() {
         const answersSum = this.correctAnswers.length + this.wrongAnswers.length;
+        const words: GetWords[] = JSON.parse(localStorage.getItem('unUsedWords') as string);
         if (answersSum === 10) {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
             this.resultTable();
             this.sendResults();
-            this.gameResults?.addEventListener('click', (event) => {
-                event.stopImmediatePropagation();
-                const target = event.target as HTMLElement;
-                if (target.classList.contains('results__play-btn')) {
-                    this.gameResults?.classList.add('hidden');
-                    this.audiocallLvls?.classList.remove('hidden');
-                    this.correctAnswers = [];
-                    this.wrongAnswers = [];
-                    this.hideCorrectWord();
-
-                    if (!this.isFromTextbook) {
-                        localStorage.removeItem('unUsedWords');
-                    } else {
-                        const words: GetWords[] = JSON.parse(localStorage.getItem('unUsedWords') as string);
-                        words.pop();
-                        localStorage.setItem('unUsedWords', JSON.stringify(words));
-                    }
-                }
-
-                return;
-            });
+            (this.resultsPlayBtn as HTMLDivElement).textContent = 'Играть ещё!';
         }
+
+        if (!words.length) {
+            this.gameWindow?.classList.add('hidden');
+            this.gameResults?.classList.remove('hidden');
+            this.resultTable();
+            this.sendResults();
+            this.hideCorrectWord();
+            (this.resultsPlayBtn as HTMLDivElement).textContent = 'Выйты на страницу учебника';
+        }
+
+        this.resultsPlayBtn?.addEventListener('click', (event) => {
+            event.stopImmediatePropagation();
+            const target = event.target as HTMLElement;
+            if (target.textContent === 'Играть ещё!') {
+                this.gameResults?.classList.add('hidden');
+                this.audiocallLvls?.classList.remove('hidden');
+                this.correctAnswers = [];
+                this.wrongAnswers = [];
+                this.hideCorrectWord();
+            }
+
+            if (target.textContent === 'Выйты на страницу учебника') {
+                this.closeModal();
+            }
+        });
     }
 
     resultTable() {
@@ -582,36 +601,39 @@ export class Audiocall {
             Ошибки в словах <span class="wrong__count">${wrongLength}</span>
         `;
         (this.wrongContainer as HTMLHeadElement).innerHTML = wrongList;
-        this.gameResults?.addEventListener('click', (event) => {
-            const target = event.target as HTMLElement;
-            const current = target.dataset;
-            this.wrongAnswers.forEach((item, i) => {
-                if (Number(current.audiocallWrong) === i) {
-                    const audioSrc = `
-                        https://react-learnwords-english.herokuapp.com/${item.audio}
-                    `;
-                    const wordAudio = new Audio(audioSrc);
-                    wordAudio.play();
-                }
-            });
-        });
-
         (this.resultsCorrect as HTMLHeadElement).innerHTML = `
             Изученные слова <span class="correct__count">${correctLength}</span>
         `;
         (this.correctContainer as HTMLHeadElement).innerHTML = correctlist;
+
         this.gameResults?.addEventListener('click', (event) => {
+            event.stopImmediatePropagation();
             const target = event.target as HTMLElement;
             const current = target.dataset;
-            this.correctAnswers.forEach((item, i) => {
-                if (Number(current.audiocallCorrect) === i) {
-                    const audioSrc = `
-                        https://react-learnwords-english.herokuapp.com/${item.audio}
-                    `;
-                    const wordAudio = new Audio(audioSrc);
-                    wordAudio.play();
-                }
-            });
+            let audioSrc = '';
+
+            if (current.audiocallWrong) {
+                this.wrongAnswers.forEach((item, i) => {
+                    if (Number(current.audiocallWrong) === i) {
+                        audioSrc = `
+                            https://react-learnwords-english.herokuapp.com/${item.audio}
+                        `;
+                    }
+                });
+            }
+
+            if (current.audiocallCorrect) {
+                this.correctAnswers.forEach((item, i) => {
+                    if (Number(current.audiocallCorrect) === i) {
+                        audioSrc = `
+                            https://react-learnwords-english.herokuapp.com/${item.audio}
+                        `;
+                    }
+                });
+            }
+
+            const wordAudio = new Audio(audioSrc);
+            wordAudio.play();
         });
     }
 
@@ -775,5 +797,24 @@ export class Audiocall {
                     this.modalCloseBtn.addEventListener('click', checkUserWords);
                 }
             });
+    }
+
+    async filterEasyWords(wordsToPlay: GetWords[]): Promise<GetWords[]> {
+        let easyUserWordsSet: Set<string>;
+        const filteredArrayPromise: Promise<GetWords[]> = getCards
+            .getUserCards()
+            .then((res: GetUserCards[]) => {
+                easyUserWordsSet = new Set(
+                    res.filter((word: GetUserCards) => word.difficulty === 'easy').map((word) => word.wordId)
+                );
+            })
+            .then(() => {
+                const filteredArray = wordsToPlay.filter((word) => {
+                    return !easyUserWordsSet.has(word.id);
+                });
+                return filteredArray;
+            });
+
+        return filteredArrayPromise;
     }
 }
