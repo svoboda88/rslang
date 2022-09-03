@@ -7,7 +7,8 @@ export const createUserStatistics = async function () {
         learnedWords: 0,
         optional: {
             today: {
-                date: new Date('Fri Sep 01 2022 21:03:15 GMT+0300 (Moscow Standard Time)'),
+                // date: new Date('Fri Sep 02 2022 21:03:15 GMT+0300 (Moscow Standard Time)'),
+                date: new Date(),
                 newWords: 0,
                 sprintWords: 0,
                 sprintPercent: 0,
@@ -16,10 +17,13 @@ export const createUserStatistics = async function () {
                 audiocallPercent: 0,
                 audiocallSeries: 0,
             },
-            longterm: {
-                newWords: [],
-                learnedWords: [],
-            },
+            longterm: JSON.stringify([
+                {
+                    // date: new Date('Thu Sep 01 2022 21:03:15 GMT+0300 (Moscow Standard Time)'),
+                    // newWords: 4,
+                    // learnedWords: 1,
+                },
+            ]),
         },
     };
     const response = await fetch(`https://react-learnwords-english.herokuapp.com/users/${userId}/statistics`, {
@@ -32,6 +36,7 @@ export const createUserStatistics = async function () {
         body: JSON.stringify(data),
     });
     const content = await response.json();
+    console.log(content);
     return content;
 };
 
@@ -54,18 +59,64 @@ export const updateUserStatistics = async function (data: { learnedWords: number
 export const getUserStatistics = async function () {
     const token = JSON.parse(window.localStorage.getItem('UserToken') as string).token;
     const userId = JSON.parse(window.localStorage.getItem('UserToken') as string).userId;
-    const response = await fetch(`https://react-learnwords-english.herokuapp.com/users/${userId}/statistics`, {
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-        },
-    });
-    if (response.ok) {
-        const content = await response.json();
-        console.log(content);
-        return content;
-    } else {
-        return undefined;
+    if (token && userId) {
+        const response = await fetch(`https://react-learnwords-english.herokuapp.com/users/${userId}/statistics`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+            },
+        });
+        if (response.ok) {
+            const content = await response.json();
+            console.log(content);
+            return content;
+        } else {
+            return undefined;
+        }
+    }
+};
+
+export const updateStatisticsField = async function (field: 'addLearned' | 'removeLearned') {
+    const userStats: Statistics = await getUserStatistics();
+    switch (field) {
+        case 'addLearned':
+            updateUserStatistics({
+                learnedWords: userStats.learnedWords + 1,
+                optional: {
+                    today: {
+                        date: userStats.optional.today.date,
+                        newWords: userStats.optional.today.newWords,
+                        sprintWords: userStats.optional.today.sprintWords,
+                        sprintPercent: userStats.optional.today.sprintPercent,
+                        sprintSeries: userStats.optional.today.sprintSeries,
+                        audiocallWords: userStats.optional.today.audiocallWords,
+                        audiocallPercent: userStats.optional.today.audiocallPercent,
+                        audiocallSeries: userStats.optional.today.audiocallSeries,
+                    },
+                    longterm: userStats.optional.longterm,
+                },
+            });
+            break;
+        case 'removeLearned':
+            if (userStats.learnedWords !== 0) {
+                updateUserStatistics({
+                    learnedWords: userStats.learnedWords - 1,
+                    optional: {
+                        today: {
+                            date: userStats.optional.today.date,
+                            newWords: userStats.optional.today.newWords,
+                            sprintWords: userStats.optional.today.sprintWords,
+                            sprintPercent: userStats.optional.today.sprintPercent,
+                            sprintSeries: userStats.optional.today.sprintSeries,
+                            audiocallWords: userStats.optional.today.audiocallWords,
+                            audiocallPercent: userStats.optional.today.audiocallPercent,
+                            audiocallSeries: userStats.optional.today.audiocallSeries,
+                        },
+                        longterm: userStats.optional.longterm,
+                    },
+                });
+            }
+            break;
     }
 };

@@ -39,6 +39,9 @@ export interface Game {
     correctAnswersSeries: number[];
     correctAnswers: GetWords[];
     wrongAnswers: GetWords[];
+    extraWords: GetWords[];
+    newWords: number;
+    learnedWords: number;
 }
 
 export interface Optional {
@@ -56,7 +59,7 @@ export interface Statistics {
 
 export interface StatisticsOptional {
     today: TodayStatistics;
-    longterm: LongtermStatistics;
+    longterm: string;
 }
 
 export interface TodayStatistics {
@@ -71,6 +74,7 @@ export interface TodayStatistics {
 }
 
 export interface LongtermStatistics {
-    newWords: number[];
-    learnedWords: number[];
+    date: Date;
+    newWords: number;
+    learnedWords: number;
 }

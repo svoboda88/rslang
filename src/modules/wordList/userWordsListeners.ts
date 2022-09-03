@@ -1,3 +1,4 @@
+import { updateStatisticsField } from '../statistics/statistics-request';
 import { nullGames } from './checkUserWords';
 import { removeUserWord, sendUserWord, updateUserWord } from './UserWordsRequest';
 
@@ -7,7 +8,7 @@ export const sendWordsListener = (e: MouseEvent) => {
     const buttons = [...hardBtns, ...learnedBtns];
     const textbook = document.querySelector('.textbook__words');
 
-    buttons.forEach((el) => {
+    buttons.forEach(async (el) => {
         if (
             e.target === el &&
             !el.classList.contains('word__btns--checked') &&
@@ -48,6 +49,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             );
             el.classList.add('word__btns--checked');
             el.parentNode?.children[0].classList.remove('word__btns--checked');
+            await updateStatisticsField('removeLearned');
         }
 
         if (
@@ -65,6 +67,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             );
             el.classList.add('word__btns--checked');
             el.parentElement?.parentElement?.parentElement?.classList.add('active');
+            await updateStatisticsField('addLearned');
         } else if (
             e.target === el &&
             el.classList.contains('word__btns--checked') &&
@@ -75,6 +78,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.remove('word__btns--checked');
             el.parentElement?.parentElement?.parentElement?.classList.remove('active');
             nullGames(el.getAttribute('data-id') as string);
+            await updateStatisticsField('removeLearned');
         } else if (
             e.target === el &&
             !el.classList.contains('word__btns--checked') &&
@@ -90,6 +94,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             );
             el.classList.add('word__btns--checked');
             el.parentNode?.children[1].classList.remove('word__btns--checked');
+            await updateStatisticsField('addLearned');
         }
 
         const hardButtonsChecked = hardBtns.filter((el) => el.classList.contains('word__btns--checked'));

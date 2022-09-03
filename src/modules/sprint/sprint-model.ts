@@ -17,12 +17,16 @@ export class SprintModel {
             correctAnswersSeries: [],
             correctAnswers: [],
             wrongAnswers: [],
+            extraWords: [],
+            newWords: 0,
+            learnedWords: 0,
         };
     }
 
     async getWordsForLvl(lvl: number) {
         const randomPage = Math.floor(Math.random() * 30);
         const wordsArray = await getWordsResult(lvl, randomPage);
+        this.game.extraWords = await getWordsResult(5, randomPage);
         let prevPageWordsArray: GetWords[] = [];
 
         if (randomPage > 1) {
@@ -43,6 +47,7 @@ export class SprintModel {
         const lvl = Number(localStorage.getItem('groupCount'));
         const page = Number(localStorage.getItem('pageCount'));
         const wordsArray = await getWordsResult(lvl, page);
+        this.game.extraWords = await getWordsResult(5, page);
         let prevPages: GetWords[] = [];
         if (page > 1) {
             prevPages = [...(await getWordsResult(lvl, page - 1)), ...(await getWordsResult(lvl, page - 1))];
@@ -82,11 +87,12 @@ export class SprintModel {
         if (this.game.isWordCorrect) {
             translate = this.game.wordsToPlay[index].wordTranslate;
         } else {
-            let randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
+            const randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
             if (index === randomIndex) {
-                randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
+                translate = this.game.extraWords[randomIndex === 0 ? randomIndex + 1 : randomIndex - 1].wordTranslate;
+            } else {
+                translate = this.game.wordsToPlay[randomIndex].wordTranslate;
             }
-            translate = this.game.wordsToPlay[randomIndex].wordTranslate;
         }
 
         return [word, translate];
@@ -115,7 +121,12 @@ export class SprintModel {
         this.game.wordIndex = 0;
         this.game.wordPrice = 10;
         this.game.resultCount = 0;
+        this.game.series = 0;
+        this.game.correctAnswersSeries = [];
         this.game.correctAnswers = [];
         this.game.wrongAnswers = [];
+        this.game.extraWords = [];
+        this.game.newWords = 0;
+        this.game.learnedWords = 0;
     }
 }

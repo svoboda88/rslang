@@ -1,8 +1,9 @@
-import { GetUserCards, Statistics } from '../types/types';
-import { getCards } from '../wordList/userCards';
+import { LongtermStatistics, Statistics } from '../types/types';
 import { getUserStatistics, updateUserStatistics } from './statistics-request';
 
 export class StatisticsRender {
+    statisticsNavBtn: HTMLElement | null;
+
     newWords: HTMLElement | null;
     learnedWords: HTMLElement | null;
     answersPercent: HTMLElement | null;
@@ -16,6 +17,8 @@ export class StatisticsRender {
     audiocallSeries: HTMLElement | null;
 
     constructor() {
+        this.statisticsNavBtn = document.getElementById('stats-btn');
+
         this.newWords = document.getElementById('new-words');
         this.learnedWords = document.getElementById('learned-words');
         this.answersPercent = document.getElementById('answers-percent');
@@ -30,52 +33,59 @@ export class StatisticsRender {
     }
 
     init() {
-        console.log('init');
+        if (this.statisticsNavBtn) {
+            this.statisticsNavBtn.addEventListener('click', () => this.updatePage());
+        }
     }
 
     checkIfToday(statisticsObject: Statistics) {
         const statisticsDate = new Date(Date.parse(String(statisticsObject.optional.today.date)));
         const now = new Date();
-        let userLearnedWords: GetUserCards[] = [];
-        if (statisticsDate.setHours(0, 0, 0, 0) === now.setHours(0, 0, 0, 0)) {
-            console.log('статистика актуальна на сегодняшний день');
-        } else {
-            console.log('нужно обнулить статистику');
-            getCards
-                .getUserCards()
-                .then((res) => {
-                    userLearnedWords = res.filter((word: GetUserCards) => word.difficulty === 'easy');
-                })
-                .then(() => {
-                    updateUserStatistics({
-                        learnedWords: userLearnedWords.length,
-                        optional: {
-                            today: {
-                                date: new Date(),
-                                newWords: 0,
-                                sprintWords: 0,
-                                sprintPercent: 0,
-                                sprintSeries: 0,
-                                audiocallWords: 0,
-                                audiocallPercent: 0,
-                                audiocallSeries: 0,
-                            },
-                            // need to push today.newWords & today.learnedWords
-                            longterm: {
-                                newWords: [],
-                                learnedWords: [],
-                            },
-                        },
-                    });
-                });
+        if (statisticsDate.setHours(0, 0, 0, 0) !== now.setHours(0, 0, 0, 0)) {
+            console.log('обновляем статстику');
+            this.updateLongtermStatistics(statisticsObject);
         }
+    }
+
+    updateLongtermStatistics(statisticsObject: Statistics) {
+        const lastDay: LongtermStatistics = {
+            date: statisticsObject.optional.today.date,
+            newWords: statisticsObject.optional.today.newWords,
+            learnedWords: statisticsObject.learnedWords,
+        }
+        const longtermStatistics = JSON.parse(statisticsObject.optional.longterm);
+        longtermStatistics.push(lastDay);
+        const updatedStatObject: Statistics = {
+            learnedWords: 0,
+            optional: {
+                today: {
+                    date: new Date(),
+                    newWords: 0,
+                    sprintWords: 0,
+                    sprintPercent: 0,
+                    sprintSeries: 0,
+                    audiocallWords: 0,
+                    audiocallPercent: 0,
+                    audiocallSeries: 0,
+                },
+                longterm: JSON.stringify(longtermStatistics),
+            }
+        };
+        updateUserStatistics(updatedStatObject);
     }
 
     async updatePage() {
         const statisticsObject: Statistics = await getUserStatistics();
-        const percent = Math.round(
-            (statisticsObject.optional.today.audiocallPercent + statisticsObject.optional.today.sprintPercent) / 2
-        );
+        let percent: number;
+        if (statisticsObject.optional.today.audiocallPercent === 0) {
+            percent = statisticsObject.optional.today.sprintPercent;
+        } else if (statisticsObject.optional.today.sprintPercent === 0) {
+            percent = statisticsObject.optional.today.audiocallPercent;
+        } else {
+            percent = Math.round(
+                (statisticsObject.optional.today.audiocallPercent + statisticsObject.optional.today.sprintPercent) / 2
+            );
+        }
         this.checkIfToday(statisticsObject);
         if (
             this.newWords &&
@@ -93,7 +103,7 @@ export class StatisticsRender {
             this.answersPercent.innerHTML = String(percent);
             this.sprintWords.innerHTML = String(statisticsObject.optional.today.sprintWords);
             this.sprintPercent.innerHTML = String(statisticsObject.optional.today.sprintPercent);
-            this.sprintSeries.innerHTML = String(statisticsObject.optional.today.sprintPercent);
+            this.sprintSeries.innerHTML = String(statisticsObject.optional.today.sprintSeries);
 
             this.audiocallWords.innerHTML = String(statisticsObject.optional.today.audiocallWords);
             this.audiocallPercent.innerHTML = String(statisticsObject.optional.today.audiocallPercent);

@@ -18,8 +18,11 @@ const textbook = new Textbook(ui);
 const audiocall = new Audiocall();
 const statistics = new StatisticsRender();
 
+statistics.init();
 ui.init();
-statistics.updatePage();
+if (localStorage.getItem('Logged') === 'logged') {
+    statistics.updatePage();
+}
 textbook.init().then(getCards.getWordCards).then(checkUserWords);
 audiocall.init();
 
