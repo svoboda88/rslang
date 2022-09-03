@@ -210,7 +210,6 @@ export class Audiocall {
                     this.renderWords(result);
                 });
             } else {
-                console.log('games');
                 this.argumentsForAudiocall[1] = Math.floor(Math.random() * 20);
                 getWordsResult(this.argumentsForAudiocall[0], this.argumentsForAudiocall[1]).then((result) => {
                     localStorage.removeItem('unUsedWords');
@@ -224,14 +223,12 @@ export class Audiocall {
         this.allWords = [...result];
         if (localStorage.getItem('unUsedWords')) {
             this.unUsedWords = JSON.parse(localStorage.getItem('unUsedWords') as string);
-            console.log('here');
         } else {
             this.unUsedWords = [...result].sort(() => 0.5 - Math.random());
             localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
         }
 
         const lastWord = this.unUsedWords[this.unUsedWords.length - 1];
-        console.log(lastWord);
         this.wordVariants.push(lastWord);
         const indexes: number[] = [];
 
