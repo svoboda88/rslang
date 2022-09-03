@@ -156,6 +156,7 @@ export class Audiocall {
                 this.correctAnswers = [];
                 this.wrongAnswers = [];
                 this.isFromTextbook = false;
+                // localStorage.removeItem('unUsedWords');
                 window.localStorage.removeItem('game');
             }
         });
@@ -223,6 +224,26 @@ export class Audiocall {
         this.allWords = [...result];
         if (localStorage.getItem('unUsedWords')) {
             this.unUsedWords = JSON.parse(localStorage.getItem('unUsedWords') as string);
+
+            if (this.isFromTextbook) {
+                const wordsArray = JSON.parse(localStorage.getItem('unUsedWords') as string);
+                if (wordsArray.length > 10) {
+                    this.unUsedWords = wordsArray;
+                }
+
+                if (wordsArray.length < 10) {
+                    const group = Number(localStorage.getItem('groupCount'));
+                    let page = Number(localStorage.getItem('pageCount'));
+
+                    if (page !== 0) {
+                        page--;
+                        getWordsResult(group, page).then((result) => {
+                            this.unUsedWords = wordsArray.concat(result);
+                            localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
+                        });
+                    }
+                }
+            }
         } else {
             this.unUsedWords = [...result].sort(() => 0.5 - Math.random());
             localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
