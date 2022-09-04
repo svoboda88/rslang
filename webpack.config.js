@@ -3,7 +3,6 @@ const { merge } = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const webpack = require('webpack');
 
 const baseConfig = {
     experiments: {
@@ -25,6 +24,10 @@ const baseConfig = {
                 test: /\.(png|svg|jpg|jpeg|gif|jp2|webp)$/,
                 type: 'asset/resource',
             },
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+            },
         ],
     },
     resolve: {
@@ -39,12 +42,10 @@ const baseConfig = {
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'src/index.html'),
             filename: 'index.html',
+            inject: 'body',
         }),
         new CleanWebpackPlugin(),
         new CopyWebpackPlugin({ patterns: [{ from: 'src/assets', to: 'assets' }] }),
-        new webpack.ProvidePlugin({
-            noUiSlider: 'nouislider',
-        }),
     ],
 };
 
