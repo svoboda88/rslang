@@ -36,6 +36,8 @@ export class Audiocall {
     wrongAnswers: Answers[];
     isFromTextbook: boolean;
     isLocked: boolean;
+    series: 0;
+    correctAnswersSeries: number[];
 
     constructor() {
         this.mainPage = document.getElementById('audiocall-from-games');
@@ -69,6 +71,8 @@ export class Audiocall {
         this.wrongAnswers = [];
         this.isFromTextbook = false;
         this.isLocked = false;
+        this.series = 0;
+        this.correctAnswersSeries = [];
     }
 
     init() {
@@ -152,6 +156,8 @@ export class Audiocall {
 
         this.correctAnswers = [];
         this.wrongAnswers = [];
+        this.series = 0;
+        this.correctAnswersSeries = [];
         this.isFromTextbook = false;
         localStorage.removeItem('unUsedWords');
         window.localStorage.removeItem('game');
@@ -467,6 +473,7 @@ export class Audiocall {
         });
         (this.audiocallWords?.children[this.wordIndex] as HTMLDivElement).style.backgroundColor = '#a7ff84';
         if (choosenWord === this.wordIndex) {
+            this.series += 1;
             if (this.correctAnswers.length <= 10) {
                 this.correctAnswers.push({
                     id: this.wordVariants[this.wordIndex].id,
@@ -476,6 +483,8 @@ export class Audiocall {
                 });
             }
         } else {
+            this.correctAnswersSeries.push(this.series);
+            this.series = 0;
             (this.audiocallWords?.children[choosenWord] as HTMLDivElement).style.backgroundColor = '#ff6464';
             if (this.wrongAnswers.length <= 10) {
                 this.wrongAnswers.push({
@@ -493,6 +502,8 @@ export class Audiocall {
     nextWords() {
         if ((this.nextBtn as HTMLDivElement).textContent === 'Не знаю') {
             this.showCorrectWord();
+            this.correctAnswersSeries.push(this.series);
+            this.series = 0;
             if (this.wrongAnswers.length <= 10) {
                 this.wrongAnswers.push({
                     id: this.wordVariants[this.wordIndex].id,
@@ -511,6 +522,7 @@ export class Audiocall {
                 this.startGame();
             }
             this.showResult();
+            console.log(this.series, this.correctAnswersSeries);
         }
     }
 
@@ -542,9 +554,10 @@ export class Audiocall {
                 this.audiocallLvls?.classList.remove('hidden');
                 this.correctAnswers = [];
                 this.wrongAnswers = [];
+                this.series = 0;
+                this.correctAnswersSeries = [];
                 this.hideCorrectWord();
-                words.pop();
-                localStorage.setItem('unUsedWords', JSON.stringify(words));
+                localStorage.removeItem('unUsedWords');
             }
 
             if (target.textContent === 'Выйты на страницу учебника') {
