@@ -610,11 +610,11 @@ export class Audiocall {
         }
 
         (this.resultsWrong as HTMLHeadElement).innerHTML = `
-            Ошибки в словах <span class="wrong__count">${wrongLength}</span>
+            Ошибки в словах: <span class="wrong__count">${wrongLength}</span>
         `;
         (this.wrongContainer as HTMLHeadElement).innerHTML = wrongList;
         (this.resultsCorrect as HTMLHeadElement).innerHTML = `
-            Изученные слова <span class="correct__count">${correctLength}</span>
+        Правильные ответы: <span class="correct__count">${correctLength}</span>
         `;
         (this.correctContainer as HTMLHeadElement).innerHTML = correctlist;
 

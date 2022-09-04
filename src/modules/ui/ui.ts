@@ -83,7 +83,6 @@ export class UI {
             wordBtns.forEach((card) => card.classList.remove('hidden'));
             wordGames.forEach((card) => card.classList.remove('hidden'));
             hardLvlBtn.classList.remove('hidden');
-            gamesBtns.classList.remove('hidden');
             statisticsBtn.classList.remove('hidden');
         }
     }
@@ -102,7 +101,6 @@ export class UI {
             wordBtns.forEach((card) => card.classList.add('hidden'));
             wordGames.forEach((card) => card.classList.add('hidden'));
             hardLvlBtn.classList.add('hidden');
-            gamesBtns.classList.add('hidden');
             textbookWords.classList.remove('textbook-learned');
             statisticsBtn.classList.add('hidden');
         }

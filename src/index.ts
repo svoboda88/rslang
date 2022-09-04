@@ -11,13 +11,18 @@ import { SprintController } from './modules/sprint/sprint-controller';
 import { SprintView } from './modules/sprint/sprint-view';
 import { SprintModel } from './modules/sprint/sprint-model';
 import { listenPages } from './modules/pagelistener/pageListener';
+import { StatisticsRender } from './modules/statistics/statistics-render';
 
 const ui = new UI();
 const textbook = new Textbook(ui);
 const audiocall = new Audiocall();
+const statistics = new StatisticsRender();
 
+statistics.init();
 ui.init();
-
+if (localStorage.getItem('Logged') === 'logged') {
+    statistics.updatePage();
+}
 textbook.init().then(getCards.getWordCards).then(checkUserWords);
 audiocall.init();
 

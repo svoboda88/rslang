@@ -359,15 +359,15 @@
       <h2>Статистика за сегодняшний день:</h2>
       <div class="stats__wrapper">
         <div class="stats__block">
-          <h1 class="block__number"><span id="new-words">10</span></h1>
+          <h1 class="block__number"><span id="new-words">0</span></h1>
           <p>новых слов</p>
         </div>
         <div class="stats__block">
-          <h1 class="block__number"><span id="learned-words">8</span></h1>
+          <h1 class="block__number"><span id="learned-words">0</span></h1>
           <p>изученных слов</p>
         </div>
         <div class="stats__block">
-          <h1 class="block__number"><span id="answers-percent">80</span>%</h1>
+          <h1 class="block__number"><span id="answers-percent">0</span>%</h1>
           <p>правильных ответов</p>
         </div>
       </div>
@@ -376,18 +376,18 @@
           <h2>Спринт</h2>
           <img src="./assets/sprintgame.png" alt="sprint game icon">
           <div class="block__text">
-            <li><span id="sprint-new-words">10</span> новых слов</li>
-            <li><span id="sprint-answers-percent">80</span>% правильных ответов</li>
-            <li>самая длинная серия правильных ответов: <span id="sprint-correct-answers">8</span></li>
+            <li><b><span id="sprint-new-words">0</span></b> новых слов</li>
+            <li><b><span id="sprint-answers-percent">0</span></b>% правильных ответов</li>
+            <li>самая длинная серия правильных ответов: <b><span id="sprint-series">0</span></b></li>
           </div>
         </div>
         <div class="stats-games__block stats-games__audiocall">
           <h2>Аудиовызов</h2>
           <img src="./assets/audiogame.png" alt="sprint game icon">
           <div class="block__text">
-            <li><span id="audiocall-new-words">10</span> новых слов</li>
-            <li><span id="audiocall-answers-percent">80</span>% правильных ответов</li>
-            <li>самая длинная серия правильных ответов: <span id="audiocall-correct-answers">8</span></li>
+            <li><b><span id="audiocall-new-words">0</span></b> новых слов</li>
+            <li><b><span id="audiocall-answers-percent">0</span></b>% правильных ответов</li>
+            <li>самая длинная серия правильных ответов: <b><span id="audiocall-series">0</span></b></li>
           </div>
         </div>
       </div>
@@ -421,7 +421,8 @@
           <button class="lvls__btn" type="button" data-lvl="4">5</button>
           <button class="lvls__btn" type="button" data-lvl="5">6</button>
         </div>
-        <button class="sprint__start">Начать</button>
+        <button class="sprint__start-main">Начать</button>
+        <button class="sprint__start-textbook">Начать</button>
       </div>
 
       <div class="sprint__game">
@@ -477,7 +478,7 @@
             </circle>
           </svg>
           <h2 class="result__percent"></h2>
-          <p>слов изучено</p>
+          <p class="result__bar-text">правильных ответов</p>
         </div>
         <div class="results__words">
           <div class="results__words--wrong">
@@ -486,7 +487,7 @@
             <div class="results__wrong"></div>
           </div>
           <div class="results__words--correct">
-            <h3>Изученные слова <span class="correct__count">0</span></h3>
+            <h3>Правильные ответы: <span class="correct__count">0</span></h3>
             <br>
             <div class="results__correct"></div>
           </div>
@@ -495,7 +496,6 @@
         <button class="results__try-again-btn">Играть ещё!</button>
 
       </div>
-    </div>
     </div>
 
     <div class="audiocall__modal hidden">
@@ -557,7 +557,7 @@
             </circle>
           </svg>
           <h2 class="audiocall-result__percent"></h2>
-          <p>слов изучено</p>
+          <p class="result__bar-text">правильных ответов</p>
         </div>
         <div class="audiocall__results-wrapper">
           <div class="audiocall__results-inner">

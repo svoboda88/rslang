@@ -4,6 +4,7 @@ import { getCards } from '../wordList/userCards';
 import { GetUserCards, GetWords } from '../types/types';
 import { sendUserWord, updateUserWord } from '../wordList/UserWordsRequest';
 import { checkUserWords } from '../wordList/checkUserWords';
+import { getUserStatistics, updateUserStatistics } from '../statistics/statistics-request';
 
 export class SprintController {
     model: SprintModel;
@@ -16,7 +17,7 @@ export class SprintController {
 
     init() {
         this.view.listenStartFromMain();
-        this.view.listenStartFromTextbook(this);
+        this.view.listenStartFromTextbook();
         this.view.listenCloseGame(this);
         this.view.listenLvlBtns(this);
         this.view.listenAnswerBtns(this);
@@ -115,7 +116,7 @@ export class SprintController {
         getCards
             .getUserCards()
             .then((res: GetUserCards[]) => {
-                this.model.game.correctAnswers.forEach((answer: GetWords) => {
+                this.model.game.correctAnswers.forEach(async (answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
                         if (word.difficulty === 'none') {
@@ -128,11 +129,12 @@ export class SprintController {
                                             sprintRight: word.optional.sprintRight + 1,
                                             audiocallRight: word.optional.audiocallRight,
                                             audiocallTries: word.optional.audiocallTries,
-                                            mistakeAt: -1,
+                                            mistakeAt: 0,
                                         },
                                     },
                                     answer.id
                                 );
+                                this.model.game.learnedWords = this.model.game.learnedWords + 1;
                             } else {
                                 updateUserWord(
                                     {
@@ -142,7 +144,7 @@ export class SprintController {
                                             sprintRight: word.optional.sprintRight + 1,
                                             audiocallRight: word.optional.audiocallRight,
                                             audiocallTries: word.optional.audiocallTries,
-                                            mistakeAt: -1,
+                                            mistakeAt: 0,
                                         },
                                     },
                                     answer.id
@@ -151,7 +153,7 @@ export class SprintController {
                         } else if (word.difficulty === 'hard') {
                             if (
                                 (word.optional.mistakeAt || word.optional.mistakeAt === 0) &&
-                                word.optional.sprintRight + word.optional.audiocallRight - word.optional.mistakeAt === 5
+                                word.optional.sprintRight + word.optional.audiocallRight - word.optional.mistakeAt === 3
                             ) {
                                 updateUserWord(
                                     {
@@ -161,11 +163,12 @@ export class SprintController {
                                             sprintRight: word.optional.sprintRight + 1,
                                             audiocallRight: word.optional.audiocallRight,
                                             audiocallTries: word.optional.audiocallTries,
-                                            mistakeAt: -1,
+                                            mistakeAt: 0,
                                         },
                                     },
                                     answer.id
                                 );
+                                this.model.game.learnedWords = this.model.game.learnedWords + 1;
                             } else if (word.optional.mistakeAt || word.optional.mistakeAt === 0) {
                                 updateUserWord(
                                     {
@@ -180,21 +183,21 @@ export class SprintController {
                                     },
                                     answer.id
                                 );
-                            } else {
-                                updateUserWord(
-                                    {
-                                        difficulty: 'hard',
-                                        optional: {
-                                            sprintTries: word.optional.sprintTries + 1,
-                                            sprintRight: word.optional.sprintRight + 1,
-                                            audiocallRight: word.optional.audiocallRight,
-                                            audiocallTries: word.optional.audiocallTries,
-                                            mistakeAt: -1,
-                                        },
-                                    },
-                                    answer.id
-                                );
                             }
+                        } else if (word.difficulty === 'easy') {
+                            updateUserWord(
+                                {
+                                    difficulty: 'easy',
+                                    optional: {
+                                        sprintTries: word.optional.sprintTries + 1,
+                                        sprintRight: word.optional.sprintRight + 1,
+                                        audiocallRight: word.optional.audiocallRight,
+                                        audiocallTries: word.optional.audiocallTries,
+                                        mistakeAt: 0,
+                                    },
+                                },
+                                answer.id
+                            );
                         }
                     } else {
                         sendUserWord(
@@ -205,14 +208,15 @@ export class SprintController {
                                     sprintRight: 1,
                                     audiocallRight: 0,
                                     audiocallTries: 0,
-                                    mistakeAt: -1,
+                                    mistakeAt: 0,
                                 },
                             },
                             answer.id
                         );
+                        this.model.game.newWords = this.model.game.newWords + 1;
                     }
                 });
-                this.model.game.wrongAnswers.forEach((answer: GetWords) => {
+                this.model.game.wrongAnswers.forEach(async (answer: GetWords) => {
                     if (res.filter((word: GetUserCards) => word.wordId === answer.id).length) {
                         const word = res.filter((word: GetUserCards) => word.wordId === answer.id)[0];
                         updateUserWord(
@@ -223,7 +227,7 @@ export class SprintController {
                                     sprintTries: word.optional.sprintTries + 1,
                                     audiocallRight: word.optional.audiocallRight,
                                     audiocallTries: word.optional.audiocallTries,
-                                    mistakeAt: word.optional.sprintRight + word.optional.audiocallRight,
+                                    mistakeAt: word.optional.sprintTries + word.optional.audiocallTries + 1,
                                 },
                             },
                             answer.id
@@ -237,13 +241,15 @@ export class SprintController {
                                     sprintTries: 1,
                                     audiocallRight: 0,
                                     audiocallTries: 0,
-                                    mistakeAt: 0,
+                                    mistakeAt: 1,
                                 },
                             },
                             answer.id
                         );
+                        this.model.game.newWords = this.model.game.newWords + 1;
                     }
                 });
+                this.sendStatisctics();
             })
             .then(() => {
                 const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
@@ -251,6 +257,43 @@ export class SprintController {
                     closeBtn.addEventListener('click', checkUserWords);
                 }
             });
+    }
+
+    async sendStatisctics() {
+        const userStats = await getUserStatistics();
+        const percent = Math.round(
+            (this.model.game.correctAnswers.length /
+                (this.model.game.correctAnswers.length + this.model.game.wrongAnswers.length)) *
+            100
+        );
+        let maxSeries: number;
+        if (!this.model.game.correctAnswersSeries.length && this.model.game.series) {
+            maxSeries = this.model.game.series;
+        } else if (!this.model.game.correctAnswersSeries.length && !this.model.game.series) {
+            maxSeries = 0;
+        } else {
+            maxSeries = Math.max(...this.model.game.correctAnswersSeries);
+        }
+
+        updateUserStatistics({
+            learnedWords: userStats.learnedWords + this.model.game.learnedWords,
+            optional: {
+                today: {
+                    date: userStats.optional.today.date,
+                    newWords: userStats.optional.today.newWords + this.model.game.newWords,
+                    sprintWords: userStats.optional.today.sprintWords + this.model.game.newWords,
+                    sprintPercent: percent,
+                    sprintSeries:
+                        userStats.optional.today.sprintSeries < maxSeries
+                            ? maxSeries
+                            : userStats.optional.today.sprintSeries,
+                    audiocallWords: userStats.optional.today.audiocallWords,
+                    audiocallPercent: userStats.optional.today.audiocallPercent,
+                    audiocallSeries: userStats.optional.today.audiocallSeries,
+                },
+                longterm: userStats.optional.longterm,
+            },
+        });
     }
 
     endGame() {

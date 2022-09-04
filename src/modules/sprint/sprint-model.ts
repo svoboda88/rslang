@@ -17,12 +17,16 @@ export class SprintModel {
             correctAnswersSeries: [],
             correctAnswers: [],
             wrongAnswers: [],
+            extraWords: [],
+            newWords: 0,
+            learnedWords: 0,
         };
     }
 
     async getWordsForLvl(lvl: number) {
         const randomPage = Math.floor(Math.random() * 30);
         const wordsArray = await getWordsResult(lvl, randomPage);
+        this.game.extraWords = await getWordsResult(5, randomPage);
         let prevPageWordsArray: GetWords[] = [];
 
         if (randomPage > 1) {
@@ -30,12 +34,12 @@ export class SprintModel {
                 ...(await getWordsResult(lvl, randomPage - 1)),
                 ...(await getWordsResult(lvl, randomPage - 2)),
             ];
-            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPageWordsArray]);
+            this.game.wordsToPlay = [...wordsArray, ...prevPageWordsArray];
         } else if (randomPage === 1) {
             prevPageWordsArray = await getWordsResult(lvl, randomPage - 1);
-            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPageWordsArray]);
+            this.game.wordsToPlay = [...wordsArray, ...prevPageWordsArray];
         } else if (randomPage === 0) {
-            this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
+            this.game.wordsToPlay = wordsArray;
         }
     }
 
@@ -43,17 +47,29 @@ export class SprintModel {
         const lvl = Number(localStorage.getItem('groupCount'));
         const page = Number(localStorage.getItem('pageCount'));
         const wordsArray = await getWordsResult(lvl, page);
+        this.game.extraWords = await getWordsResult(lvl === 5 ? lvl - 1 : lvl + 1, page);
         let prevPages: GetWords[] = [];
         if (page > 1) {
             prevPages = [...(await getWordsResult(lvl, page - 1)), ...(await getWordsResult(lvl, page - 1))];
-            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+            if (localStorage.getItem('Logged') === 'logged') {
+                this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+            } else {
+                this.game.wordsToPlay = [...wordsArray, ...prevPages];
+            }
         } else if (page === 1) {
             prevPages = await getWordsResult(lvl, page - 1);
-            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+            if (localStorage.getItem('Logged') === 'logged') {
+                this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+            } else {
+                this.game.wordsToPlay = [...wordsArray, ...prevPages];
+            }
         } else if (page === 0) {
-            this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
+            if (localStorage.getItem('Logged') === 'logged') {
+                this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
+            } else {
+                this.game.wordsToPlay = wordsArray;
+            }
         }
-        console.log(this.game.wordsToPlay);
     }
 
     async filterEasyWords(wordsToPlay: GetWords[]): Promise<GetWords[]> {
@@ -82,11 +98,13 @@ export class SprintModel {
         if (this.game.isWordCorrect) {
             translate = this.game.wordsToPlay[index].wordTranslate;
         } else {
-            let randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
-            if (index === randomIndex) {
-                randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
+            const randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
+            if (index === randomIndex || this.game.wordsToPlay.length < 5) {
+                const random = Math.floor(Math.random() * 20);
+                translate = this.game.extraWords[random].wordTranslate;
+            } else {
+                translate = this.game.wordsToPlay[randomIndex].wordTranslate;
             }
-            translate = this.game.wordsToPlay[randomIndex].wordTranslate;
         }
 
         return [word, translate];
@@ -115,7 +133,12 @@ export class SprintModel {
         this.game.wordIndex = 0;
         this.game.wordPrice = 10;
         this.game.resultCount = 0;
+        this.game.series = 0;
+        this.game.correctAnswersSeries = [];
         this.game.correctAnswers = [];
         this.game.wrongAnswers = [];
+        this.game.extraWords = [];
+        this.game.newWords = 0;
+        this.game.learnedWords = 0;
     }
 }
