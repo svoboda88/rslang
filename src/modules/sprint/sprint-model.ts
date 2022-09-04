@@ -51,12 +51,24 @@ export class SprintModel {
         let prevPages: GetWords[] = [];
         if (page > 1) {
             prevPages = [...(await getWordsResult(lvl, page - 1)), ...(await getWordsResult(lvl, page - 1))];
-            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+            if (localStorage.getItem('Logged') === 'logged') {
+                this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+            } else {
+                this.game.wordsToPlay = [...wordsArray, ...prevPages];
+            }
         } else if (page === 1) {
             prevPages = await getWordsResult(lvl, page - 1);
-            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+            if (localStorage.getItem('Logged') === 'logged') {
+                this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
+            } else {
+                this.game.wordsToPlay = [...wordsArray, ...prevPages];
+            }
         } else if (page === 0) {
-            this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
+            if (localStorage.getItem('Logged') === 'logged') {
+                this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
+            } else {
+                this.game.wordsToPlay = wordsArray;
+            }
         }
     }
 
