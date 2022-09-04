@@ -189,17 +189,8 @@ export class Audiocall {
         if (this.audiocallLvls && this.gameWindow) {
             this.audiocallLvls.classList.add('hidden');
             this.gameWindow.classList.remove('hidden');
-            if (this.isFromTextbook && localStorage.getItem('Logged')) {
-                this.argumentsForAudiocall = [
-                    Number(localStorage.getItem('groupCount')),
-                    Number(localStorage.getItem('pageCount')),
-                ];
-                getWordsResult(this.argumentsForAudiocall[0], this.argumentsForAudiocall[1]).then((result) => {
-                    this.filterEasyWords(result).then((response) => {
-                        this.renderWords(response);
-                    });
-                });
-            } else if (this.isFromTextbook) {
+
+            if (this.isFromTextbook) {
                 this.argumentsForAudiocall = [
                     Number(localStorage.getItem('groupCount')),
                     Number(localStorage.getItem('pageCount')),
@@ -223,7 +214,7 @@ export class Audiocall {
         if (localStorage.getItem('unUsedWords')) {
             this.unUsedWords = JSON.parse(localStorage.getItem('unUsedWords') as string);
 
-            if (this.isFromTextbook) {
+            if (this.isFromTextbook && localStorage.getItem('Logged')) {
                 const wordsArray = JSON.parse(localStorage.getItem('unUsedWords') as string);
                 if (wordsArray.length > 10) {
                     this.unUsedWords = wordsArray;
@@ -231,11 +222,10 @@ export class Audiocall {
 
                 if (wordsArray.length < 10) {
                     const group = Number(localStorage.getItem('groupCount'));
-                    let page = Number(localStorage.getItem('pageCount'));
+                    const page = Number(localStorage.getItem('pageCount'));
 
                     if (page !== 0) {
-                        page--;
-                        getWordsResult(group, page).then((result) => {
+                        getWordsResult(group, page - 1).then((result) => {
                             this.filterEasyWords(result).then((response) => {
                                 this.unUsedWords = wordsArray.concat(response);
                                 localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
@@ -245,6 +235,12 @@ export class Audiocall {
                 }
             }
         } else {
+            if (this.isFromTextbook && localStorage.getItem('Logged')) {
+                this.filterEasyWords(result).then((response) => {
+                    this.unUsedWords = [...response].sort(() => 0.5 - Math.random());
+                    localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
+                });
+            }
             this.unUsedWords = [...result].sort(() => 0.5 - Math.random());
             localStorage.setItem('unUsedWords', JSON.stringify(this.unUsedWords));
         }
@@ -522,7 +518,6 @@ export class Audiocall {
                 this.startGame();
             }
             this.showResult();
-            console.log(this.series, this.correctAnswersSeries);
         }
     }
 
