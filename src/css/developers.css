@@ -16,22 +16,40 @@
 }
 
 .developers__card {
-  height: 120px;
+  height: auto;
   width: 50%;
   background-color: var(--light-gray);
   border-radius: 10px;
   display: flex;
   flex-direction: row;
   gap: 20px;
+  padding: 10px;
 }
 
-.developers__card img {
-  aspect-ratio: 1 / 1;
-  width: 100px;
+.card__photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 120px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
 
+.developers__card a {
+  text-decoration: none;
+  color: var(--black);
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  height: 24px;
+}
+
 .card__text {
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+
+.github-s {
+  width: 20px;
 }
