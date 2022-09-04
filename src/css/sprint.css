@@ -47,7 +47,7 @@
   background-color: var(--dark-magenta);
 }
 
-.sprint__start {
+.sprint__start-main, .sprint__start-textbook {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
@@ -63,7 +63,7 @@
   margin-top: 10px;
 }
 
-.sprint__start:hover {
+.sprint__start-main:hover, .sprint__start-textbook:hover {
   background-color: var(--dark-magenta);
 }
 
@@ -275,4 +275,8 @@
   transform-origin: center;
   transform: rotate(-90deg);
   transition: all 1s;
+}
+
+.result__bar-text {
+  font-size: 0.7rem;
 }

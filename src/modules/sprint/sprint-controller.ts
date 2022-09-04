@@ -17,7 +17,7 @@ export class SprintController {
 
     init() {
         this.view.listenStartFromMain();
-        this.view.listenStartFromTextbook(this);
+        this.view.listenStartFromTextbook();
         this.view.listenCloseGame(this);
         this.view.listenLvlBtns(this);
         this.view.listenAnswerBtns(this);
@@ -184,6 +184,20 @@ export class SprintController {
                                     answer.id
                                 );
                             }
+                        } else if (word.difficulty === 'easy') {
+                            updateUserWord(
+                                {
+                                    difficulty: 'easy',
+                                    optional: {
+                                        sprintTries: word.optional.sprintTries + 1,
+                                        sprintRight: word.optional.sprintRight + 1,
+                                        audiocallRight: word.optional.audiocallRight,
+                                        audiocallTries: word.optional.audiocallTries,
+                                        mistakeAt: 0,
+                                    },
+                                },
+                                answer.id
+                            );
                         }
                     } else {
                         sendUserWord(

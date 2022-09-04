@@ -5,8 +5,11 @@ export class SprintView {
     modal: HTMLElement | null;
     loadingScreen: HTMLElement | null;
     gameContainer: HTMLElement | null;
+    lvlsContainer: HTMLElement | null;
     lvls: HTMLElement | null;
     lvlsDescription: HTMLElement | null;
+    startBtnMain: HTMLElement | null;
+    startBtnTextbook: HTMLElement | null;
     timerContainer: HTMLElement | null;
     ringFilled: SVGCircleElement | null;
     resultsText: HTMLElement | null;
@@ -29,8 +32,11 @@ export class SprintView {
         this.modal = document.querySelector<HTMLElement>('.sprint__modal');
         this.loadingScreen = document.querySelector<HTMLElement>('.sprint__load-screen');
         this.gameContainer = document.querySelector<HTMLElement>('.sprint__game');
+        this.lvlsContainer = document.querySelector<HTMLElement>('.lvls__wrapper');
         this.lvls = document.querySelector<HTMLElement>('.sprint__lvl');
         this.lvlsDescription = document.querySelector<HTMLElement>('.lvls__description');
+        this.startBtnMain = document.querySelector<HTMLElement>('.sprint__start-main');
+        this.startBtnTextbook = document.querySelector<HTMLElement>('.sprint__start-textbook');
         this.timerContainer = document.querySelector<HTMLElement>('.sprint__timer');
         this.ringFilled = document.querySelector('.ring__circle--filled');
         this.resultsText = document.querySelector<HTMLElement>('.results__text');
@@ -59,7 +65,19 @@ export class SprintView {
         if (sprintCardGames) {
             sprintCardGames.addEventListener('click', () => {
                 this.start();
-                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
+                if (
+                    this.startBtnMain &&
+                    this.startBtnTextbook &&
+                    this.lvls &&
+                    this.playAgainBtn &&
+                    this.tryAgainBtn &&
+                    this.lvlsDescription &&
+                    this.lvlsContainer
+                ) {
+                    this.lvlsDescription.innerHTML = 'Выберите уровень сложности:';
+                    this.startBtnTextbook.classList.add('hidden');
+                    this.startBtnMain.classList.remove('hidden');
+                    this.lvlsContainer.classList.remove('hidden');
                     this.lvls.classList.remove('hidden');
                     this.playAgainBtn.classList.remove('hidden');
                     this.tryAgainBtn.classList.add('hidden');
@@ -70,7 +88,19 @@ export class SprintView {
         window.addEventListener('load', () => {
             if (window.localStorage.getItem('game') === 'sprintFromGames') {
                 this.start();
-                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
+                if (
+                    this.lvlsContainer &&
+                    this.startBtnMain &&
+                    this.startBtnTextbook &&
+                    this.lvls &&
+                    this.playAgainBtn &&
+                    this.tryAgainBtn &&
+                    this.lvlsDescription
+                ) {
+                    this.lvlsDescription.innerHTML = 'Выберите уровень сложности:';
+                    this.startBtnMain.classList.remove('hidden');
+                    this.startBtnTextbook.classList.add('hidden');
+                    this.lvlsContainer.classList.remove('hidden');
                     this.lvls.classList.remove('hidden');
                     this.playAgainBtn.classList.remove('hidden');
                     this.tryAgainBtn.classList.add('hidden');
@@ -79,30 +109,52 @@ export class SprintView {
         });
     }
 
-    listenStartFromTextbook(controller: SprintController) {
+    listenStartFromTextbook() {
         const sprintCardTextbook = document.getElementById('sprint-from-textbook');
 
         if (sprintCardTextbook) {
             sprintCardTextbook.addEventListener('click', () => {
                 this.start();
-                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
-                    this.lvls.classList.add('hidden');
+                if (
+                    this.lvlsContainer &&
+                    this.lvlsDescription &&
+                    this.startBtnMain &&
+                    this.startBtnTextbook &&
+                    this.lvls &&
+                    this.playAgainBtn &&
+                    this.tryAgainBtn
+                ) {
+                    this.lvlsDescription.innerHTML = 'Слова для игры берутся с текущей страницы учебника';
+                    this.startBtnMain.classList.add('hidden');
+                    this.startBtnTextbook.classList.remove('hidden');
+                    this.lvlsContainer.classList.add('hidden');
+                    this.lvls.classList.remove('hidden');
                     this.playAgainBtn.classList.add('hidden');
                     this.tryAgainBtn.classList.remove('hidden');
                 }
-                controller.startGameTextbook();
                 window.localStorage.setItem('game', 'sprintFromTextBook');
             });
         }
         window.addEventListener('load', () => {
             if (window.localStorage.getItem('game') === 'sprintFromTextBook') {
                 this.start();
-                if (this.lvls && this.playAgainBtn && this.tryAgainBtn) {
-                    this.lvls.classList.add('hidden');
+                if (
+                    this.lvlsContainer &&
+                    this.lvlsDescription &&
+                    this.startBtnMain &&
+                    this.startBtnTextbook &&
+                    this.lvls &&
+                    this.playAgainBtn &&
+                    this.tryAgainBtn
+                ) {
+                    this.lvlsDescription.innerHTML = 'Слова для игры берутся с текущей страницы учебника';
+                    this.startBtnMain.classList.add('hidden');
+                    this.startBtnTextbook.classList.remove('hidden');
+                    this.lvlsContainer.classList.add('hidden');
+                    this.lvls.classList.remove('hidden');
                     this.playAgainBtn.classList.add('hidden');
                     this.tryAgainBtn.classList.remove('hidden');
                 }
-                controller.startGameTextbook();
             }
         });
     }
@@ -152,9 +204,8 @@ export class SprintView {
                 btn.addEventListener('click', () => {
                     lvlBtnsArray.forEach((btn) => btn.classList.remove('lvls__btn--active'));
                     btn.classList.add('lvls__btn--active');
-                    const sprintStart = document.querySelector<HTMLElement>('.sprint__start');
-                    if (sprintStart) {
-                        sprintStart.onclick = () => {
+                    if (this.startBtnMain) {
+                        this.startBtnMain.onclick = () => {
                             if (btn instanceof HTMLElement && this.lvls && this.resultCountContainer) {
                                 btn.classList.remove('lvls__btn--active');
                                 this.lvls.classList.add('hidden');
@@ -164,6 +215,15 @@ export class SprintView {
                         };
                     }
                 });
+            });
+        }
+        if (this.startBtnTextbook) {
+            this.startBtnTextbook.addEventListener('click', () => {
+                if (this.lvls && this.resultCountContainer) {
+                    this.lvls.classList.add('hidden');
+                    this.resultCountContainer.classList.remove('hidden');
+                }
+                controller.startGameTextbook();
             });
         }
     }
@@ -330,18 +390,7 @@ export class SprintView {
     }
 
     showResult(correctAnswers: GetWords[], wrongAnswers: GetWords[]) {
-        const correctAnswersSet = [...new Set(correctAnswers)];
-        const wrongAnswersSet = [...new Set(wrongAnswers)];
-
-        wrongAnswersSet.forEach((wrongAnswer) => {
-            correctAnswersSet.forEach((correctAnswer, index) => {
-                if (correctAnswer.word === wrongAnswer.word) {
-                    correctAnswersSet.splice(index, 1);
-                }
-            });
-        });
-
-        const percent = correctAnswersSet.length / (correctAnswersSet.length + wrongAnswersSet.length);
+        const percent = correctAnswers.length / (correctAnswers.length + wrongAnswers.length);
         this.renderResultBar(Math.round(percent * 100));
 
         if (
@@ -355,7 +404,7 @@ export class SprintView {
             this.timerContainer.classList.add('hidden');
             this.gameContainer.classList.add('hidden');
             this.gameResultsContainer.classList.remove('hidden');
-            correctAnswersSet.forEach((word) => {
+            correctAnswers.forEach((word) => {
                 if (this.gameResultsCorrect) {
                     this.gameResultsCorrect.innerHTML += `
                     <div class="results__word">
@@ -371,7 +420,7 @@ export class SprintView {
                     </div>`;
                 }
             });
-            wrongAnswersSet.forEach((word) => {
+            wrongAnswers.forEach((word) => {
                 if (this.gameResultsWrong) {
                     this.gameResultsWrong.innerHTML += `
                     <div class="results__word">
@@ -388,8 +437,8 @@ export class SprintView {
                 }
             });
 
-            this.correctCount.innerHTML = String(correctAnswersSet.length);
-            this.wrongCount.innerHTML = String(wrongAnswersSet.length);
+            this.correctCount.innerHTML = String(correctAnswers.length);
+            this.wrongCount.innerHTML = String(wrongAnswers.length);
 
             if (percent < 0.3) {
                 this.resultsText.innerHTML = 'Ты можешь лучше! Мы верим в тебя!';

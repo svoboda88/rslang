@@ -34,12 +34,12 @@ export class SprintModel {
                 ...(await getWordsResult(lvl, randomPage - 1)),
                 ...(await getWordsResult(lvl, randomPage - 2)),
             ];
-            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPageWordsArray]);
+            this.game.wordsToPlay = [...wordsArray, ...prevPageWordsArray];
         } else if (randomPage === 1) {
             prevPageWordsArray = await getWordsResult(lvl, randomPage - 1);
-            this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPageWordsArray]);
+            this.game.wordsToPlay = [...wordsArray, ...prevPageWordsArray];
         } else if (randomPage === 0) {
-            this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
+            this.game.wordsToPlay = wordsArray;
         }
     }
 
@@ -47,7 +47,7 @@ export class SprintModel {
         const lvl = Number(localStorage.getItem('groupCount'));
         const page = Number(localStorage.getItem('pageCount'));
         const wordsArray = await getWordsResult(lvl, page);
-        this.game.extraWords = await getWordsResult(5, page);
+        this.game.extraWords = await getWordsResult(lvl === 5 ? lvl - 1 : lvl + 1, page);
         let prevPages: GetWords[] = [];
         if (page > 1) {
             prevPages = [...(await getWordsResult(lvl, page - 1)), ...(await getWordsResult(lvl, page - 1))];
@@ -58,7 +58,6 @@ export class SprintModel {
         } else if (page === 0) {
             this.game.wordsToPlay = await this.filterEasyWords(wordsArray);
         }
-        console.log(this.game.wordsToPlay);
     }
 
     async filterEasyWords(wordsToPlay: GetWords[]): Promise<GetWords[]> {
@@ -88,8 +87,9 @@ export class SprintModel {
             translate = this.game.wordsToPlay[index].wordTranslate;
         } else {
             const randomIndex = Math.floor(Math.random() * this.game.wordsToPlay.length);
-            if (index === randomIndex) {
-                translate = this.game.extraWords[randomIndex === 0 ? randomIndex + 1 : randomIndex - 1].wordTranslate;
+            if (index === randomIndex || this.game.wordsToPlay.length < 5) {
+                const random = Math.floor(Math.random() * 20);
+                translate = this.game.extraWords[random].wordTranslate;
             } else {
                 translate = this.game.wordsToPlay[randomIndex].wordTranslate;
             }
