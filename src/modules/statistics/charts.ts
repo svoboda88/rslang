@@ -24,6 +24,7 @@ export const drawBarChart = function (canvas: ChartItem, labelsForData: string[]
             },
             scales: {
                 y: {
+                    beginAtZero: true,
                     title: {
                         display: true,
                         text: 'Кол-во слов',
@@ -63,6 +64,7 @@ export const drawLineChart = function (canvas: ChartItem, labelsForData: string[
             },
             scales: {
                 y: {
+                    beginAtZero: true,
                     title: {
                         display: true,
                         text: 'Кол-во слов',

@@ -7,7 +7,6 @@ export const createUserStatistics = async function () {
         learnedWords: 0,
         optional: {
             today: {
-                // date: new Date('Fri Sep 02 2022 21:03:15 GMT+0300 (Moscow Standard Time)'),
                 date: new Date(),
                 newWords: 0,
                 sprintWords: 0,
@@ -17,13 +16,7 @@ export const createUserStatistics = async function () {
                 audiocallPercent: 0,
                 audiocallSeries: 0,
             },
-            longterm: JSON.stringify([
-                {
-                    // date: new Date('Thu Sep 01 2022 21:03:15 GMT+0300 (Moscow Standard Time)'),
-                    // newWords: 4,
-                    // learnedWords: 1,
-                },
-            ]),
+            longterm: JSON.stringify([{}]),
         },
     };
     const response = await fetch(`https://react-learnwords-english.herokuapp.com/users/${userId}/statistics`, {
