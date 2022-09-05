@@ -85,40 +85,44 @@ export class StatisticsRender {
     }
 
     async updatePage() {
-        const statisticsObject: Statistics = await getUserStatistics();
+        let statisticsObject: Statistics;
         let percent: number;
-        if (statisticsObject.optional.today.audiocallPercent === 0) {
-            percent = statisticsObject.optional.today.sprintPercent;
-        } else if (statisticsObject.optional.today.sprintPercent === 0) {
-            percent = statisticsObject.optional.today.audiocallPercent;
-        } else {
-            percent = Math.round(
-                (statisticsObject.optional.today.audiocallPercent + statisticsObject.optional.today.sprintPercent) / 2
-            );
-        }
-        this.checkIfToday(statisticsObject);
-        if (
-            this.newWords &&
-            this.learnedWords &&
-            this.answersPercent &&
-            this.sprintWords &&
-            this.sprintPercent &&
-            this.sprintSeries &&
-            this.audiocallWords &&
-            this.audiocallPercent &&
-            this.audiocallSeries
-        ) {
-            this.newWords.innerHTML = String(statisticsObject.optional.today.newWords);
-            this.learnedWords.innerHTML = String(statisticsObject.learnedWords);
-            this.answersPercent.innerHTML = String(percent);
-            this.sprintWords.innerHTML = String(statisticsObject.optional.today.sprintWords);
-            this.sprintPercent.innerHTML = String(statisticsObject.optional.today.sprintPercent);
-            this.sprintSeries.innerHTML = String(statisticsObject.optional.today.sprintSeries);
+        getUserStatistics().then((res) => {
+            statisticsObject = res;
+            if (statisticsObject.optional.today.audiocallPercent === 0) {
+                percent = statisticsObject.optional.today.sprintPercent;
+            } else if (statisticsObject.optional.today.sprintPercent === 0) {
+                percent = statisticsObject.optional.today.audiocallPercent;
+            } else {
+                percent = Math.round(
+                    (statisticsObject.optional.today.audiocallPercent + statisticsObject.optional.today.sprintPercent) / 2
+                );
+            }
+            this.checkIfToday(statisticsObject);
+            if (
+                this.newWords &&
+                this.learnedWords &&
+                this.answersPercent &&
+                this.sprintWords &&
+                this.sprintPercent &&
+                this.sprintSeries &&
+                this.audiocallWords &&
+                this.audiocallPercent &&
+                this.audiocallSeries
+            ) {
+                this.newWords.innerHTML = String(statisticsObject.optional.today.newWords);
+                this.learnedWords.innerHTML = String(statisticsObject.learnedWords);
+                this.answersPercent.innerHTML = String(percent);
+                this.sprintWords.innerHTML = String(statisticsObject.optional.today.sprintWords);
+                this.sprintPercent.innerHTML = String(statisticsObject.optional.today.sprintPercent);
+                this.sprintSeries.innerHTML = String(statisticsObject.optional.today.sprintSeries);
 
-            this.audiocallWords.innerHTML = String(statisticsObject.optional.today.audiocallWords);
-            this.audiocallPercent.innerHTML = String(statisticsObject.optional.today.audiocallPercent);
-            this.audiocallSeries.innerHTML = String(statisticsObject.optional.today.audiocallSeries);
-        }
+                this.audiocallWords.innerHTML = String(statisticsObject.optional.today.audiocallWords);
+                this.audiocallPercent.innerHTML = String(statisticsObject.optional.today.audiocallPercent);
+                this.audiocallSeries.innerHTML = String(statisticsObject.optional.today.audiocallSeries);
+            }
+        });
+
     }
 
     formDataForLongtermStats(statisticsObject: Statistics) {
