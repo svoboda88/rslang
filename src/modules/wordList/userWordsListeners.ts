@@ -2,6 +2,7 @@ import { updateStatisticsField } from '../statistics/statistics-request';
 import { nullGames } from './checkUserWords';
 import { getUserWord, removeUserWord, sendUserWord, updateUserWord } from './UserWordsRequest';
 import { GetUserCards } from '../types/types';
+import { getCards } from './userCards';
 
 export const sendWordsListener = (e: MouseEvent) => {
     const hardBtns = Array.from(document.querySelectorAll('.word__btns--hard'));
@@ -16,8 +17,8 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.contains('word__btns--hard') &&
             !el.parentNode?.children[0].classList.contains('word__btns--checked')
         ) {
-            const word: GetUserCards | 'error' = await getUserWord(el.getAttribute('data-id') as string);
-            if (word === 'error') {
+            const userWords: GetUserCards[] = await getCards.getUserCards();
+            if (!userWords.filter((word) => word.wordId === (el.getAttribute('data-id') as string)).length) {
                 sendUserWord(
                     {
                         difficulty: 'hard',
@@ -32,6 +33,7 @@ export const sendWordsListener = (e: MouseEvent) => {
                     el.getAttribute('data-id') as string
                 );
             } else {
+                const word: GetUserCards = await getUserWord(el.getAttribute('data-id') as string);
                 updateUserWord(
                     {
                         difficulty: 'hard',
@@ -82,11 +84,11 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.contains('word__btns--learned') &&
             !el.parentNode?.children[1].classList.contains('word__btns--checked')
         ) {
-            const word: GetUserCards | 'error' = await getUserWord(el.getAttribute('data-id') as string);
-            if (word === 'error') {
+            const userWords: GetUserCards[] = await getCards.getUserCards();
+            if (!userWords.filter((word) => word.wordId === (el.getAttribute('data-id') as string)).length) {
                 sendUserWord(
                     {
-                        difficulty: 'easy',
+                        difficulty: 'hard',
                         optional: {
                             sprintRight: 0,
                             sprintTries: 0,
@@ -98,15 +100,16 @@ export const sendWordsListener = (e: MouseEvent) => {
                     el.getAttribute('data-id') as string
                 );
             } else {
+                const word: GetUserCards = await getUserWord(el.getAttribute('data-id') as string);
                 updateUserWord(
                     {
-                        difficulty: 'easy',
+                        difficulty: 'hard',
                         optional: {
                             sprintRight: word.optional.sprintRight,
                             sprintTries: word.optional.sprintTries,
                             audiocallRight: word.optional.audiocallRight,
                             audiocallTries: word.optional.audiocallTries,
-                            mistakeAt: 0,
+                            mistakeAt: word.optional.sprintTries + word.optional.audiocallTries - 1,
                         },
                     },
                     el.getAttribute('data-id') as string

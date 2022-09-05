@@ -60,9 +60,9 @@ export const getUserWord = async function (wordId: string) {
         },
     });
     const content = await response.json();
-    if (content) {
+    if (response.ok) {
         return content;
-    } else {
+    } else if (response.status === 404) {
         return 'error';
     }
 };
