@@ -41,6 +41,8 @@ export const checkUserWords = async function () {
                 activeEasyBtns.forEach((el: Element) => el.classList.add('word__btns--checked'));
                 const activeBtns = document.querySelectorAll('.word__btns--checked');
                 const activeHardBtnsArray = [];
+                const gameSection = document.querySelector<HTMLElement>('.textbook__games');
+
                 activeBtns.forEach((el) => {
                     if (el.classList.contains('word__btns--hard')) {
                         activeHardBtnsArray.push(el);
@@ -48,27 +50,18 @@ export const checkUserWords = async function () {
                 });
                 if (activeBtns.length === 20 && activeHardBtnsArray.length !== 20) {
                     textbook?.classList.add('textbook-learned');
+                    gameSection?.classList.add('hidden');
                 } else {
+                    gameSection?.classList.remove('hidden');
                     textbook?.classList.remove('textbook-learned');
                 }
 
-                const gameSection = document.querySelector<HTMLElement>('.textbook__games');
                 const activeEasyBtnsArray = [];
                 activeBtns.forEach((el) => {
                     if (el.classList.contains('word__btns--learned')) {
                         activeEasyBtnsArray.push(el);
                     }
                 });
-                if (activeEasyBtnsArray.length === 20) {
-                    gameSection?.classList.add('hidden');
-                } else if (
-                    activeEasyBtnsArray.length < 20 &&
-                    localStorage.getItem('Logged') === 'logged' &&
-                    Number(localStorage.getItem('groupCount')) !== 6 &&
-                    !localStorage.getItem('easy')
-                ) {
-                    gameSection?.classList.remove('hidden');
-                }
                 return res;
             })
             .then((res) => {
