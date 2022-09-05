@@ -36,7 +36,7 @@ const baseConfig = {
     output: {
         assetModuleFilename: 'assets/[hash][ext]',
         filename: 'index.js',
-        path: path.resolve(__dirname, 'bundle'),
+        path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
         new HtmlWebpackPlugin({
