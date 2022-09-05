@@ -18,7 +18,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             sendUserWord(
                 {
                     difficulty: 'hard',
-                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: -1 },
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: 0 },
                 },
                 el.getAttribute('data-id') as string
             );
@@ -43,7 +43,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             updateUserWord(
                 {
                     difficulty: 'hard',
-                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: -1 },
+                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: 0 },
                 },
                 el.getAttribute('data-id') as string
             );
@@ -103,10 +103,10 @@ export const sendWordsListener = (e: MouseEvent) => {
 
         if (hardButtonsChecked.length + LearnedButtonsChecked.length === 20 && LearnedButtonsChecked.length > 0) {
             textbook?.classList.add('textbook-learned');
-        } else textbook?.classList.remove('textbook-learned');
-
-        if (LearnedButtonsChecked.length === 20) {
             gameSection?.classList.add('hidden');
-        } else gameSection?.classList.remove('hidden');
+        } else {
+            textbook?.classList.remove('textbook-learned');
+            gameSection?.classList.remove('hidden');
+        }
     });
 };
