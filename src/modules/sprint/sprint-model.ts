@@ -50,7 +50,7 @@ export class SprintModel {
         this.game.extraWords = await getWordsResult(lvl === 5 ? lvl - 1 : lvl + 1, page);
         let prevPages: GetWords[] = [];
         if (page > 1) {
-            prevPages = [...(await getWordsResult(lvl, page - 1)), ...(await getWordsResult(lvl, page - 1))];
+            prevPages = [...(await getWordsResult(lvl, page - 1)), ...(await getWordsResult(lvl, page - 2))];
             if (localStorage.getItem('Logged') === 'logged') {
                 this.game.wordsToPlay = await this.filterEasyWords([...wordsArray, ...prevPages]);
             } else {
