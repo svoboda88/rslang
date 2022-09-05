@@ -47,10 +47,8 @@ export class Authorize {
                         const userStat: Statistics | undefined = await getUserStatistics();
 
                         if (!userStat) {
-                            console.log('создаем статистику');
                             createUserStatistics();
                         } else {
-                            console.log('статистика уже есть');
                         }
                     });
                 window.localStorage.removeItem('modal');

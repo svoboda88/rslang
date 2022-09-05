@@ -122,11 +122,9 @@ export class StatisticsRender {
     }
 
     formDataForLongtermStats(statisticsObject: Statistics) {
-        console.log(statisticsObject);
         const data: LongtermStatistics[] = JSON.parse(statisticsObject.optional.longterm);
         const dataForBar: BarData[] = [];
         const dataForLine: LineData[] = [];
-        console.log(data.length);
         if (data.length !== 1 && Object.keys(data[0]).length !== 0) {
             data.forEach((day) => {
                 const dayDataBar: BarData = {
@@ -183,7 +181,6 @@ export class StatisticsRender {
             dataValues.push(day.learnedWords);
         })
 
-        console.log(dataForBar);
         const text = document.createElement('p');
         text.innerHTML = 'Количество изученных слов за весь период обучения';
         this.longtermContainer?.appendChild(text);

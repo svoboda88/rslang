@@ -456,7 +456,6 @@ export class SprintView {
                     const target = event.target;
                     if (target instanceof HTMLElement) {
                         const currentWord = String(target.dataset.sprintaudio);
-                        console.log(currentWord);
                         const wordAudio = new Audio(`https://react-learnwords-english.herokuapp.com/${currentWord}`);
                         wordAudio.play();
                     }
