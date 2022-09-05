@@ -1,6 +1,7 @@
 import { updateStatisticsField } from '../statistics/statistics-request';
 import { nullGames } from './checkUserWords';
-import { removeUserWord, sendUserWord, updateUserWord } from './UserWordsRequest';
+import { getUserWord, removeUserWord, sendUserWord, updateUserWord } from './UserWordsRequest';
+import { GetUserCards } from '../types/types';
 
 export const sendWordsListener = (e: MouseEvent) => {
     const hardBtns = Array.from(document.querySelectorAll('.word__btns--hard'));
@@ -15,13 +16,36 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.contains('word__btns--hard') &&
             !el.parentNode?.children[0].classList.contains('word__btns--checked')
         ) {
-            sendUserWord(
-                {
-                    difficulty: 'hard',
-                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: 0 },
-                },
-                el.getAttribute('data-id') as string
-            );
+            const word: GetUserCards | 'error' = await getUserWord(el.getAttribute('data-id') as string);
+            if (word === 'error') {
+                sendUserWord(
+                    {
+                        difficulty: 'hard',
+                        optional: {
+                            sprintRight: 0,
+                            sprintTries: 0,
+                            audiocallRight: 0,
+                            audiocallTries: 0,
+                            mistakeAt: 0,
+                        },
+                    },
+                    el.getAttribute('data-id') as string
+                );
+            } else {
+                updateUserWord(
+                    {
+                        difficulty: 'hard',
+                        optional: {
+                            sprintRight: word.optional.sprintRight,
+                            sprintTries: word.optional.sprintTries,
+                            audiocallRight: word.optional.audiocallRight,
+                            audiocallTries: word.optional.audiocallTries,
+                            mistakeAt: word.optional.sprintTries + word.optional.audiocallTries - 1,
+                        },
+                    },
+                    el.getAttribute('data-id') as string
+                );
+            }
             el.classList.add('word__btns--checked');
             el.parentElement?.parentElement?.parentElement?.classList.add('active');
         } else if (
@@ -58,13 +82,37 @@ export const sendWordsListener = (e: MouseEvent) => {
             el.classList.contains('word__btns--learned') &&
             !el.parentNode?.children[1].classList.contains('word__btns--checked')
         ) {
-            sendUserWord(
-                {
-                    difficulty: 'easy',
-                    optional: { sprintRight: 0, sprintTries: 0, audiocallRight: 0, audiocallTries: 0, mistakeAt: -1 },
-                },
-                el.getAttribute('data-id') as string
-            );
+            const word: GetUserCards | 'error' = await getUserWord(el.getAttribute('data-id') as string);
+            if (word === 'error') {
+                sendUserWord(
+                    {
+                        difficulty: 'easy',
+                        optional: {
+                            sprintRight: 0,
+                            sprintTries: 0,
+                            audiocallRight: 0,
+                            audiocallTries: 0,
+                            mistakeAt: 0,
+                        },
+                    },
+                    el.getAttribute('data-id') as string
+                );
+            } else {
+                updateUserWord(
+                    {
+                        difficulty: 'easy',
+                        optional: {
+                            sprintRight: word.optional.sprintRight,
+                            sprintTries: word.optional.sprintTries,
+                            audiocallRight: word.optional.audiocallRight,
+                            audiocallTries: word.optional.audiocallTries,
+                            mistakeAt: 0,
+                        },
+                    },
+                    el.getAttribute('data-id') as string
+                );
+            }
+
             el.classList.add('word__btns--checked');
             el.parentElement?.parentElement?.parentElement?.classList.add('active');
             await updateStatisticsField('addLearned');
