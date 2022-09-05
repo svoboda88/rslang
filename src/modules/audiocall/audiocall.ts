@@ -1,4 +1,4 @@
-import { GetWords, Answers, GetUserCards } from '../types/types';
+import { GetWords, Answers, GetUserCards, Statistics } from '../types/types';
 import { getWordsResult } from '../textbook/request';
 import { getCards } from '../wordList/userCards';
 import { updateUserWord, sendUserWord } from '../wordList/UserWordsRequest';
@@ -787,10 +787,11 @@ export class Audiocall {
     }
 
     async sendStatistics() {
-        const userStats = await getUserStatistics();
-        const percent = Math.round(
-            (this.correctAnswers.length / (this.correctAnswers.length + this.wrongAnswers.length)) * 100
-        );
+        let userStats: Statistics;
+        const correctAnswersLength = this.correctAnswers.length;
+        const wrontgAnswersLength = this.wrongAnswers.length;
+
+        const percent = Math.round((correctAnswersLength / (correctAnswersLength + wrontgAnswersLength)) * 100);
         let maxSeries: number;
         if (!this.correctAnswersSeries.length && this.series) {
             maxSeries = this.series;
@@ -800,27 +801,30 @@ export class Audiocall {
             maxSeries = Math.max(...this.correctAnswersSeries);
         }
 
-        updateUserStatistics({
-            learnedWords: userStats.learnedWords + this.learnedWords,
-            optional: {
-                today: {
-                    date: userStats.optional.today.date,
-                    newWords: userStats.optional.today.newWords + this.newWords,
-                    sprintWords: userStats.optional.today.sprintWords,
-                    sprintPercent: userStats.optional.today.sprintPercent,
-                    sprintSeries: userStats.optional.today.sprintSeries,
-                    audiocallWords: userStats.optional.today.audiocallWords + this.newWords,
-                    audiocallPercent:
-                        userStats.optional.today.audiocallPercent === 0
-                            ? percent
-                            : Math.round((userStats.optional.today.audiocallPercent + percent) / 2),
-                    audiocallSeries:
-                        userStats.optional.today.audiocallSeries < maxSeries
-                            ? maxSeries
-                            : userStats.optional.today.audiocallSeries,
+        getUserStatistics().then((res) => {
+            userStats = res;
+            updateUserStatistics({
+                learnedWords: userStats.learnedWords + this.learnedWords,
+                optional: {
+                    today: {
+                        date: userStats.optional.today.date,
+                        newWords: userStats.optional.today.newWords + this.newWords,
+                        sprintWords: userStats.optional.today.sprintWords,
+                        sprintPercent: userStats.optional.today.sprintPercent,
+                        sprintSeries: userStats.optional.today.sprintSeries,
+                        audiocallWords: userStats.optional.today.audiocallWords + this.newWords,
+                        audiocallPercent:
+                            userStats.optional.today.audiocallPercent === 0
+                                ? percent
+                                : Math.round((userStats.optional.today.audiocallPercent + percent) / 2),
+                        audiocallSeries:
+                            userStats.optional.today.audiocallSeries < maxSeries
+                                ? maxSeries
+                                : userStats.optional.today.audiocallSeries,
+                    },
+                    longterm: userStats.optional.longterm,
                 },
-                longterm: userStats.optional.longterm,
-            },
+            });
         });
     }
 

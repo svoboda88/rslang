@@ -1,7 +1,7 @@
 import { SprintModel } from './sprint-model';
 import { SprintView } from './sprint-view';
 import { getCards } from '../wordList/userCards';
-import { GetUserCards, GetWords } from '../types/types';
+import { GetUserCards, GetWords, Statistics } from '../types/types';
 import { sendUserWord, updateUserWord } from '../wordList/UserWordsRequest';
 import { checkUserWords } from '../wordList/checkUserWords';
 import { getUserStatistics, updateUserStatistics } from '../statistics/statistics-request';
@@ -260,14 +260,11 @@ export class SprintController {
     }
 
     async sendStatisctics() {
-        const userStats = await getUserStatistics();
+        let userStats: Statistics;
         const correctAnswersLength = this.model.game.correctAnswers.length;
         const wrontgAnswersLength = this.model.game.wrongAnswers.length;
 
         const percent = Math.round((correctAnswersLength / (correctAnswersLength + wrontgAnswersLength)) * 100);
-        console.log(correctAnswersLength);
-        console.log(wrontgAnswersLength);
-        console.log(percent);
         let maxSeries: number;
         if (!this.model.game.correctAnswersSeries.length && this.model.game.series) {
             maxSeries = this.model.game.series;
@@ -277,27 +274,30 @@ export class SprintController {
             maxSeries = Math.max(...this.model.game.correctAnswersSeries);
         }
 
-        updateUserStatistics({
-            learnedWords: userStats.learnedWords + this.model.game.learnedWords,
-            optional: {
-                today: {
-                    date: userStats.optional.today.date,
-                    newWords: userStats.optional.today.newWords + this.model.game.newWords,
-                    sprintWords: userStats.optional.today.sprintWords + this.model.game.newWords,
-                    sprintPercent:
-                        userStats.optional.today.sprintPercent === 0
-                            ? percent
-                            : Math.round((userStats.optional.today.sprintPercent + percent) / 2),
-                    sprintSeries:
-                        userStats.optional.today.sprintSeries < maxSeries
-                            ? maxSeries
-                            : userStats.optional.today.sprintSeries,
-                    audiocallWords: userStats.optional.today.audiocallWords,
-                    audiocallPercent: userStats.optional.today.audiocallPercent,
-                    audiocallSeries: userStats.optional.today.audiocallSeries,
+        getUserStatistics().then((res) => {
+            userStats = res;
+            updateUserStatistics({
+                learnedWords: userStats.learnedWords + this.model.game.learnedWords,
+                optional: {
+                    today: {
+                        date: userStats.optional.today.date,
+                        newWords: userStats.optional.today.newWords + this.model.game.newWords,
+                        sprintWords: userStats.optional.today.sprintWords + this.model.game.newWords,
+                        sprintPercent:
+                            userStats.optional.today.sprintPercent === 0
+                                ? percent
+                                : Math.round((userStats.optional.today.sprintPercent + percent) / 2),
+                        sprintSeries:
+                            userStats.optional.today.sprintSeries < maxSeries
+                                ? maxSeries
+                                : userStats.optional.today.sprintSeries,
+                        audiocallWords: userStats.optional.today.audiocallWords,
+                        audiocallPercent: userStats.optional.today.audiocallPercent,
+                        audiocallSeries: userStats.optional.today.audiocallSeries,
+                    },
+                    longterm: userStats.optional.longterm,
                 },
-                longterm: userStats.optional.longterm,
-            },
+            });
         });
     }
 
