@@ -1,12 +1,25 @@
 .stats {
   background-color: var(--white);
-  min-height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.today {
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 40px;
   justify-content: space-between;
+}
 
+.longterm {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  padding: 40px;
 }
 
 .stats__wrapper {

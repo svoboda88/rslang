@@ -11,6 +11,7 @@
 @import './css/sprint.css';
 @import './css/audiocall.css';
 @import './css/statistics.css';
+@import './css/longterm.css';
 
 :root {
   --white: #ffffff;

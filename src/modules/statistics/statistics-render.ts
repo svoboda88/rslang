@@ -1,5 +1,8 @@
-import { LongtermStatistics, Statistics } from '../types/types';
+/* eslint-disable prettier/prettier */
+import { BarData, LineData, LongtermStatistics, Statistics } from '../types/types';
 import { getUserStatistics, updateUserStatistics } from './statistics-request';
+import { Chart, ChartItem, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 export class StatisticsRender {
     statisticsNavBtn: HTMLElement | null;
@@ -16,6 +19,8 @@ export class StatisticsRender {
     audiocallPercent: HTMLElement | null;
     audiocallSeries: HTMLElement | null;
 
+    longtermContainer: HTMLElement | null;
+
     constructor() {
         this.statisticsNavBtn = document.getElementById('stats-btn');
 
@@ -30,6 +35,8 @@ export class StatisticsRender {
         this.audiocallWords = document.getElementById('audiocall-new-words');
         this.audiocallPercent = document.getElementById('audiocall-answers-percent');
         this.audiocallSeries = document.getElementById('audiocall-series');
+
+        this.longtermContainer = document.querySelector('.longterm');
     }
 
     init() {
@@ -42,8 +49,9 @@ export class StatisticsRender {
         const statisticsDate = new Date(Date.parse(String(statisticsObject.optional.today.date)));
         const now = new Date();
         if (statisticsDate.setHours(0, 0, 0, 0) !== now.setHours(0, 0, 0, 0)) {
-            console.log('обновляем статстику');
             this.updateLongtermStatistics(statisticsObject);
+        } else {
+            this.formDataForLongtermStats(statisticsObject);
         }
     }
 
@@ -52,7 +60,7 @@ export class StatisticsRender {
             date: statisticsObject.optional.today.date,
             newWords: statisticsObject.optional.today.newWords,
             learnedWords: statisticsObject.learnedWords,
-        }
+        };
         const longtermStatistics = JSON.parse(statisticsObject.optional.longterm);
         longtermStatistics.push(lastDay);
         const updatedStatObject: Statistics = {
@@ -69,9 +77,10 @@ export class StatisticsRender {
                     audiocallSeries: 0,
                 },
                 longterm: JSON.stringify(longtermStatistics),
-            }
+            },
         };
         updateUserStatistics(updatedStatObject);
+        this.formDataForLongtermStats(updatedStatObject);
     }
 
     async updatePage() {
@@ -109,5 +118,118 @@ export class StatisticsRender {
             this.audiocallPercent.innerHTML = String(statisticsObject.optional.today.audiocallPercent);
             this.audiocallSeries.innerHTML = String(statisticsObject.optional.today.audiocallSeries);
         }
+    }
+
+    formDataForLongtermStats(statisticsObject: Statistics) {
+        const data: LongtermStatistics[] = JSON.parse(statisticsObject.optional.longterm);
+        const dataForBar: BarData[] = [];
+        const dataForLine: LineData[] = [];
+
+        data.forEach((day) => {
+            const dayDataBar: BarData = {
+                date: this.dateFormater(new Date(Date.parse(String(day.date)))),
+                learnedWords: day.learnedWords,
+            };
+            const dayDataLine: LineData = {
+                date: this.dateFormater(new Date(Date.parse(String(day.date)))),
+                newWords: day.newWords,
+            };
+            dataForBar.push(dayDataBar);
+            dataForLine.push(dayDataLine);
+        });
+
+        const todayForBar: BarData = {
+            date: this.dateFormater(new Date(Date.parse(String(statisticsObject.optional.today.date)))),
+            learnedWords: statisticsObject.learnedWords,
+        };
+        const todayForLine: LineData = {
+            date: this.dateFormater(new Date(Date.parse(String(statisticsObject.optional.today.date)))),
+            newWords: statisticsObject.optional.today.newWords,
+        }
+        dataForBar.push(todayForBar);
+        dataForLine.push(todayForLine);
+
+        if (this.longtermContainer) {
+            this.longtermContainer.classList.remove('hidden');
+            this.drawBar(dataForBar);
+            this.drawLine(dataForLine);
+        }
+    }
+
+    dateFormater(date: Date): string {
+        const months = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+        let day = String(date.getDate());
+        if (Number(day) < 10) {
+            day = '0' + String(day);
+        }
+
+        const month = date.getMonth();
+        const monthString = months[month];
+
+        return day + ' ' + monthString;
+    }
+
+    drawBar(dataForBar: BarData[]) {
+        const labelsForData: string[] = [];
+        const dataValues: number[] = [];
+
+        dataForBar.forEach((day) => {
+            labelsForData.push(day.date);
+            dataValues.push(day.learnedWords);
+        })
+
+        const canvas = document.getElementById('myChart1') as ChartItem;
+
+        const barChart = new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: labelsForData,
+                datasets: [{
+                    label: 'Изученные слова',
+                    data: dataValues,
+                    backgroundColor: 'rgba(164, 18, 104, 1)',
+                    borderColor: ['rgba(164, 18, 104, 1)'],
+                    borderWidth: 1,
+                }],
+
+            },
+            options: {
+
+            }
+        })
+
+        console.log(barChart);
+    }
+
+    drawLine(dataForBar: LineData[]) {
+        const labelsForData: string[] = [];
+        const dataValues: number[] = [];
+
+        dataForBar.forEach((day) => {
+            labelsForData.push(day.date);
+            dataValues.push(day.newWords);
+        })
+
+        const canvas = document.getElementById('myChart2') as ChartItem;
+
+        const lineChart = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels: labelsForData,
+                datasets: [{
+                    label: 'Новые слова',
+                    data: dataValues,
+                    backgroundColor: 'rgba(164, 18, 104, 1)',
+                    borderColor: ['rgba(164, 18, 104, 1)'],
+                    borderWidth: 1,
+                }],
+
+            },
+            options: {
+
+            }
+        })
+
+        console.log(lineChart);
     }
 }

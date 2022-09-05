@@ -36,7 +36,6 @@ export const createUserStatistics = async function () {
         body: JSON.stringify(data),
     });
     const content = await response.json();
-    console.log(content);
     return content;
 };
 
@@ -69,7 +68,6 @@ export const getUserStatistics = async function () {
         });
         if (response.ok) {
             const content = await response.json();
-            console.log(content);
             return content;
         } else {
             return undefined;

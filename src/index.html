@@ -197,7 +197,7 @@
               </a>
               <p>Верстала, дизайнила, оживляла кнопки, пыталась сделать UI красивым и понятным. Занималась разработкой
                 страницы
-                Статистики, отправкой на сервер результатов игр и игрой Спринт.</p>
+                Статистики, Изученными словами и игрой Спринт.</p>
             </div>
           </div>
         </div>
@@ -362,41 +362,51 @@
       </div>
     </section>
     <section class="page stats hidden" id="stats-page">
-      <h2>Статистика за сегодняшний день:</h2>
-      <div class="stats__wrapper">
-        <div class="stats__block">
-          <h1 class="block__number"><span id="new-words">0</span></h1>
-          <p>новых слов</p>
-        </div>
-        <div class="stats__block">
-          <h1 class="block__number"><span id="learned-words">0</span></h1>
-          <p>изученных слов</p>
-        </div>
-        <div class="stats__block">
-          <h1 class="block__number"><span id="answers-percent">0</span>%</h1>
-          <p>правильных ответов</p>
-        </div>
-      </div>
-      <div class="stats-games__wrapper">
-        <div class="stats-games__block stats-games__sprint">
-          <h2>Спринт</h2>
-          <img src="./assets/sprintgame.png" alt="sprint game icon">
-          <div class="block__text">
-            <li><b><span id="sprint-new-words">0</span></b> новых слов</li>
-            <li><b><span id="sprint-answers-percent">0</span></b>% правильных ответов</li>
-            <li>самая длинная серия правильных ответов: <b><span id="sprint-series">0</span></b></li>
+      <div class="today">
+        <h2>Статистика за сегодняшний день:</h2>
+        <div class="stats__wrapper">
+          <div class="stats__block">
+            <h1 class="block__number"><span id="new-words">0</span></h1>
+            <p>новых слов</p>
+          </div>
+          <div class="stats__block">
+            <h1 class="block__number"><span id="learned-words">0</span></h1>
+            <p>изученных слов</p>
+          </div>
+          <div class="stats__block">
+            <h1 class="block__number"><span id="answers-percent">0</span>%</h1>
+            <p>правильных ответов</p>
           </div>
         </div>
-        <div class="stats-games__block stats-games__audiocall">
-          <h2>Аудиовызов</h2>
-          <img src="./assets/audiogame.png" alt="sprint game icon">
-          <div class="block__text">
-            <li><b><span id="audiocall-new-words">0</span></b> новых слов</li>
-            <li><b><span id="audiocall-answers-percent">0</span></b>% правильных ответов</li>
-            <li>самая длинная серия правильных ответов: <b><span id="audiocall-series">0</span></b></li>
+        <div class="stats-games__wrapper">
+          <div class="stats-games__block stats-games__sprint">
+            <h2>Спринт</h2>
+            <img src="./assets/sprintgame.png" alt="sprint game icon">
+            <div class="block__text">
+              <li><b><span id="sprint-new-words">0</span></b> новых слов</li>
+              <li><b><span id="sprint-answers-percent">0</span></b>% правильных ответов</li>
+              <li>самая длинная серия правильных ответов: <b><span id="sprint-series">0</span></b></li>
+            </div>
+          </div>
+          <div class="stats-games__block stats-games__audiocall">
+            <h2>Аудиовызов</h2>
+            <img src="./assets/audiogame.png" alt="sprint game icon">
+            <div class="block__text">
+              <li><b><span id="audiocall-new-words">0</span></b> новых слов</li>
+              <li><b><span id="audiocall-answers-percent">0</span></b>% правильных ответов</li>
+              <li>самая длинная серия правильных ответов: <b><span id="audiocall-series">0</span></b></li>
+            </div>
           </div>
         </div>
       </div>
+      <div class="longterm">
+        <h2>Статистика за всё время:</h2>
+        <div class="longterm__wrapper">
+          <canvas id="myChart1"></canvas>
+          <canvas id="myChart2"></canvas>
+        </div>
+      </div>
+
     </section>
 
     <div class="sprint__modal hidden">

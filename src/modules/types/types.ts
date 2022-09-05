@@ -78,3 +78,13 @@ export interface LongtermStatistics {
     newWords: number;
     learnedWords: number;
 }
+
+export interface BarData {
+    date: string;
+    learnedWords: number;
+}
+
+export interface LineData {
+    date: string;
+    newWords: number;
+}

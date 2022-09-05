@@ -1,0 +1,8 @@
+.longterm__wrapper {
+  width: 1000px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
