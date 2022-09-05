@@ -1,3 +1,4 @@
+import { updateStatisticsField } from '../statistics/statistics-request';
 import { removeUserWord } from '../wordList/UserWordsRequest';
 
 export const removeCardsFromEasyHard = function () {
@@ -9,6 +10,9 @@ export const removeCardsFromEasyHard = function () {
             buttons.forEach((elem) => {
                 if (e.target === elem) {
                     removeUserWord(el.id);
+                    if (localStorage.getItem('easy') === 'easyWords') {
+                        updateStatisticsField('removeLearned');
+                    }
                     el.classList.add('words__card--disabled');
                 }
             });

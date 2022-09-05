@@ -1,5 +1,9 @@
+.longterm {
+  width: 70vw;
+}
+
 .longterm__wrapper {
-  width: 1000px;
+  width: 80%;
   height: auto;
   display: flex;
   flex-direction: column;

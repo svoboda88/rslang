@@ -2,6 +2,7 @@
 import { BarData, LineData, LongtermStatistics, Statistics } from '../types/types';
 import { getUserStatistics, updateUserStatistics } from './statistics-request';
 import { Chart, ChartItem, registerables } from 'chart.js';
+import { drawBarChart, drawLineChart } from './charts';
 Chart.register(...registerables);
 
 export class StatisticsRender {
@@ -36,7 +37,7 @@ export class StatisticsRender {
         this.audiocallPercent = document.getElementById('audiocall-answers-percent');
         this.audiocallSeries = document.getElementById('audiocall-series');
 
-        this.longtermContainer = document.querySelector('.longterm');
+        this.longtermContainer = document.querySelector('.longterm__wrapper');
     }
 
     init() {
@@ -121,22 +122,25 @@ export class StatisticsRender {
     }
 
     formDataForLongtermStats(statisticsObject: Statistics) {
+        console.log(statisticsObject);
         const data: LongtermStatistics[] = JSON.parse(statisticsObject.optional.longterm);
         const dataForBar: BarData[] = [];
         const dataForLine: LineData[] = [];
-
-        data.forEach((day) => {
-            const dayDataBar: BarData = {
-                date: this.dateFormater(new Date(Date.parse(String(day.date)))),
-                learnedWords: day.learnedWords,
-            };
-            const dayDataLine: LineData = {
-                date: this.dateFormater(new Date(Date.parse(String(day.date)))),
-                newWords: day.newWords,
-            };
-            dataForBar.push(dayDataBar);
-            dataForLine.push(dayDataLine);
-        });
+        console.log(data.length);
+        if (data.length !== 1 && Object.keys(data[0]).length !== 0) {
+            data.forEach((day) => {
+                const dayDataBar: BarData = {
+                    date: this.dateFormater(new Date(Date.parse(String(day.date)))),
+                    learnedWords: day.learnedWords,
+                };
+                const dayDataLine: LineData = {
+                    date: this.dateFormater(new Date(Date.parse(String(day.date)))),
+                    newWords: day.newWords,
+                };
+                dataForBar.push(dayDataBar);
+                dataForLine.push(dayDataLine);
+            });
+        }
 
         const todayForBar: BarData = {
             date: this.dateFormater(new Date(Date.parse(String(statisticsObject.optional.today.date)))),
@@ -150,6 +154,7 @@ export class StatisticsRender {
         dataForLine.push(todayForLine);
 
         if (this.longtermContainer) {
+            this.longtermContainer.innerHTML = '';
             this.longtermContainer.classList.remove('hidden');
             this.drawBar(dataForBar);
             this.drawLine(dataForLine);
@@ -178,27 +183,16 @@ export class StatisticsRender {
             dataValues.push(day.learnedWords);
         })
 
-        const canvas = document.getElementById('myChart1') as ChartItem;
+        console.log(dataForBar);
+        const text = document.createElement('p');
+        text.innerHTML = 'Количество изученных слов за весь период обучения';
+        this.longtermContainer?.appendChild(text);
+        const canvas = document.createElement('canvas');
+        this.longtermContainer?.appendChild(canvas);
+        const canvasContex = canvas.getContext('2d');
 
-        const barChart = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: labelsForData,
-                datasets: [{
-                    label: 'Изученные слова',
-                    data: dataValues,
-                    backgroundColor: 'rgba(164, 18, 104, 1)',
-                    borderColor: ['rgba(164, 18, 104, 1)'],
-                    borderWidth: 1,
-                }],
 
-            },
-            options: {
-
-            }
-        })
-
-        console.log(barChart);
+        drawBarChart(canvasContex as ChartItem, labelsForData, dataValues);
     }
 
     drawLine(dataForBar: LineData[]) {
@@ -210,26 +204,13 @@ export class StatisticsRender {
             dataValues.push(day.newWords);
         })
 
-        const canvas = document.getElementById('myChart2') as ChartItem;
+        const text = document.createElement('p');
+        text.innerHTML = 'Количество новых слов за весь период обучения';
+        this.longtermContainer?.appendChild(text);
+        const canvas = document.createElement('canvas');
+        this.longtermContainer?.appendChild(canvas);
+        const canvasContex = canvas.getContext('2d');
 
-        const lineChart = new Chart(canvas, {
-            type: 'line',
-            data: {
-                labels: labelsForData,
-                datasets: [{
-                    label: 'Новые слова',
-                    data: dataValues,
-                    backgroundColor: 'rgba(164, 18, 104, 1)',
-                    borderColor: ['rgba(164, 18, 104, 1)'],
-                    borderWidth: 1,
-                }],
-
-            },
-            options: {
-
-            }
-        })
-
-        console.log(lineChart);
+        drawLineChart(canvasContex as ChartItem, labelsForData, dataValues);
     }
 }
