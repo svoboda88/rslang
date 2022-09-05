@@ -20,7 +20,7 @@
   background-color: var(--white);
   color: var(--black);
   border-radius: 15px;
-  width: 20%;
+  width: 250px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -29,4 +29,10 @@
 
 .benefits__card img {
   width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .benefits__cards {
+    flex-wrap: wrap;
+  }
 }

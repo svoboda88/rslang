@@ -167,7 +167,7 @@
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  width: 40vw;
+  width: 45vw;
   height: auto;
   border-radius: 15px;
   align-items: center;
@@ -279,3 +279,21 @@
   transform: rotate(-90deg);
   transition: all 1s;
 }
+
+
+@media (max-width: 1500px) {
+  .audiocall__results {
+    width: 50vw;
+  }
+ }
+
+
+ @media (max-width: 1000px) {
+  .audiocall__lvls {
+    width: 70vw;
+  }
+ 
+  .audiocall__results {
+    width: 80vw;
+  }
+ }

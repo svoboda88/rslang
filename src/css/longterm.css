@@ -10,3 +10,7 @@
   align-items: center;
   gap: 30px;
 }
+
+.longterm__wrapper p {
+  text-align: center;
+}

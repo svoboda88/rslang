@@ -53,3 +53,9 @@
 .github-s {
   width: 20px;
 }
+
+@media (max-width: 1200px) {
+  .developers__card {
+    width: 90%;
+  }
+}

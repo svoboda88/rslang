@@ -329,3 +329,19 @@
   0%, 100% {transform: scale(0.0);}
   50% {transform: scale(1.0);}
 }
+
+@media (max-width: 1310px) {
+  .textbook__lvls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .textbook__words, .learned__words, .textbook__hard-words {
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  .words__card {
+    width: 90vw;
+  }
+}

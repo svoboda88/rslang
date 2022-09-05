@@ -152,7 +152,7 @@
   align-items: center;
   flex-direction: column;
   background-color: var(--white);
-  width: 35vw;
+  width: 45vw;
   height: auto;
   border-radius: 15px;
   padding: 20px;
@@ -280,3 +280,20 @@
 .result__bar-text {
   font-size: 0.7rem;
 }
+
+@media (max-width: 1500px) {
+  .sprint__results {
+    width: 50vw;
+  }
+ }
+
+
+ @media (max-width: 1000px) {
+  .sprint__lvl {
+    width: 70vw;
+  }
+ 
+  .sprint__results {
+    width: 80vw;
+  }
+ }

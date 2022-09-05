@@ -20,3 +20,21 @@
   gap: 20px;
   min-width: 25%;
 }
+
+@media (max-width: 1200px) {
+  .hero {
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .hero__text {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .hero__img {
+    max-width: 70vw;
+  }
+
+}

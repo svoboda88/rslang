@@ -126,3 +126,15 @@
 .header__login-disabled {
   display: none;
 }
+
+@media (max-width: 1200px) {
+  .header__wrapper {
+    width: 100%;
+    gap: 5px;
+  }
+
+  .nav__list {
+    gap: 5px;
+  }
+
+}
