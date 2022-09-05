@@ -138,6 +138,10 @@
   cursor: default;
 }
 
+.check-count-btn--learned {
+  background-color: var(--magenta);
+  color: var(--white);
+}
 .disabled-btn {
   cursor: default;
   color: var(--white);

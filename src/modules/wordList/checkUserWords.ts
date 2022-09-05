@@ -42,6 +42,7 @@ export const checkUserWords = async function () {
                 const activeBtns = document.querySelectorAll('.word__btns--checked');
                 const activeHardBtnsArray = [];
                 const gameSection = document.querySelector<HTMLElement>('.textbook__games');
+                const paginationBtn = document.querySelector<HTMLElement>('.page-count-btn');
 
                 activeBtns.forEach((el) => {
                     if (el.classList.contains('word__btns--hard')) {
@@ -51,9 +52,11 @@ export const checkUserWords = async function () {
                 if (activeBtns.length === 20 && activeHardBtnsArray.length !== 20) {
                     textbook?.classList.add('textbook-learned');
                     gameSection?.classList.add('hidden');
+                    paginationBtn?.classList.add('check-count-btn--learned');
                 } else {
                     gameSection?.classList.remove('hidden');
                     textbook?.classList.remove('textbook-learned');
+                    paginationBtn?.classList.remove('check-count-btn--learned');
                 }
 
                 const activeEasyBtnsArray = [];
