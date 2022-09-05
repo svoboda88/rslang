@@ -88,7 +88,7 @@ export const sendWordsListener = (e: MouseEvent) => {
             if (!userWords.filter((word) => word.wordId === (el.getAttribute('data-id') as string)).length) {
                 sendUserWord(
                     {
-                        difficulty: 'hard',
+                        difficulty: 'easy',
                         optional: {
                             sprintRight: 0,
                             sprintTries: 0,
@@ -103,7 +103,7 @@ export const sendWordsListener = (e: MouseEvent) => {
                 const word: GetUserCards = await getUserWord(el.getAttribute('data-id') as string);
                 updateUserWord(
                     {
-                        difficulty: 'hard',
+                        difficulty: 'easy',
                         optional: {
                             sprintRight: word.optional.sprintRight,
                             sprintTries: word.optional.sprintTries,
