@@ -1,10 +1,17 @@
 .benefits {
-  color: var(--white);
-  margin: 30px auto;
-  width: 70%;
+  color: var(--black);
+  background-color: var(--white);
+  width: 100%;
   text-align: center;
 }
 
+.benefits__wrapper {
+  color: var(--black);
+  background-color: var(--white);
+  margin: 0 auto;
+  width: 70%;
+  text-align: center;
+}
 .benefits_title {
   margin-bottom: 20px;
 }
@@ -17,7 +24,7 @@
 }
 
 .benefits__card {
-  background-color: var(--white);
+  background-color: var(--light-gray);
   color: var(--black);
   border-radius: 15px;
   width: 250px;
