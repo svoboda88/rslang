@@ -249,9 +249,9 @@ export class SprintController {
                         this.model.game.newWords = this.model.game.newWords + 1;
                     }
                 });
-                this.sendStatisctics();
             })
             .then(() => {
+                this.sendStatisctics();
                 const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
                 if (closeBtn) {
                     closeBtn.addEventListener('click', checkUserWords);
@@ -261,11 +261,13 @@ export class SprintController {
 
     async sendStatisctics() {
         const userStats = await getUserStatistics();
-        const percent = Math.round(
-            (this.model.game.correctAnswers.length /
-                (this.model.game.correctAnswers.length + this.model.game.wrongAnswers.length)) *
-            100
-        );
+        const correctAnswersLength = this.model.game.correctAnswers.length;
+        const wrontgAnswersLength = this.model.game.wrongAnswers.length;
+
+        const percent = Math.round((correctAnswersLength / (correctAnswersLength + wrontgAnswersLength)) * 100);
+        console.log(correctAnswersLength);
+        console.log(wrontgAnswersLength);
+        console.log(percent);
         let maxSeries: number;
         if (!this.model.game.correctAnswersSeries.length && this.model.game.series) {
             maxSeries = this.model.game.series;
