@@ -1,0 +1,61 @@
+.developers {
+  background-color: var(--white);
+  padding: 20px;
+}
+
+.developers__title {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.developers__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.developers__card {
+  height: auto;
+  width: 50%;
+  background-color: var(--light-gray);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 10px;
+}
+
+.card__photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 120px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.developers__card a {
+  text-decoration: none;
+  color: var(--black);
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  height: 24px;
+}
+
+.card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+
+.github-s {
+  width: 20px;
+}
+
+@media (max-width: 1200px) {
+  .developers__card {
+    width: 90%;
+  }
+}

@@ -1,0 +1,38 @@
+.games__wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.games__card {
+  background-color: var(--light-gray);
+  color: var(--black);
+  border-radius: 15px;
+  width: 250px;
+  max-height: 380px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: center;
+}
+
+.games__card:hover{
+  transform: scale(1.05); 
+}
+
+.games {
+  background-color: var(--white);
+  height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.games h3 {
+  text-align: center;
+}

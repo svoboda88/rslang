@@ -1,0 +1,50 @@
+footer {
+  background: var(--gradient);
+  font-family: 'Roboto Mono', monospace;
+  color: var(--white);
+  text-align: center;
+}
+
+.footer__wrapper {
+  font-family: 'Roboto Mono', monospace;
+  height: 80px;
+  color: var(--white);
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rsschool img {
+  height: 50px;
+  filter: invert(100%);
+  margin-left: 20px;
+}
+
+.footer__wrapper-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-right: 20px;
+}
+
+.github img {
+  height: 20px;
+  filter: invert(100%);
+}
+
+.github {
+  text-decoration: none;
+  color: var(--magenta);
+}
+
+.github:hover {
+  color: var(--dark-magenta);
+}
+
+.source {
+  text-decoration: none;
+  font-family: 'Karla', sans-serif;
+  color: var(--white);
+}

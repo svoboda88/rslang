@@ -1,0 +1,16 @@
+.longterm {
+  width: 70vw;
+}
+
+.longterm__wrapper {
+  width: 80%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.longterm__wrapper p {
+  text-align: center;
+}

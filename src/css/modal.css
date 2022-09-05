@@ -1,0 +1,124 @@
+.modal {
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(41, 41, 41, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.modal__wrapper {
+  background-color: var(--white);
+  width: 60%;
+  height: auto;
+  padding: 20px;
+  border-radius: 15px;
+  position: absolute;
+  cursor: default;
+  z-index: 4;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.modal__img {
+  width: 50%;
+  margin: auto;
+}
+
+.modal__img img {
+  width: 100%;
+}
+
+.modal__text--login, .modal__text--signup {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+input[type=text], 
+input[type=password],
+input[type=email],
+input[type=username] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 10px 0;
+  display: inline-block;
+  border: none;
+  background: #f7f7f7;
+  border-radius: 10px;
+}
+
+.modal__btns {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal__signup-btn,
+.modal__login-btn {
+  border: none;
+  border-radius: 16px;
+  padding: 10px 10px;
+  font: inherit;
+  cursor: pointer;
+  color: var(--white);
+  background-color: var(--magenta);
+  outline: none;
+  transition: all 0.3s;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.modal__signup-btn:hover, .modal__login-btn:hover {
+  background-color: var(--dark-magenta);
+}
+
+.modal__login {
+  text-align: center;
+  font-size: 13px;
+}
+
+.login-span, .signup-span {
+  color: var(--magenta);
+  cursor: pointer;
+}
+
+.modal__close-btn {
+  height: 30px;
+  cursor: pointer;
+}
+
+.email_validation,
+.name_validation,
+.password_validation,
+.user-exist_validation,
+.correct-data_validation {
+  display: none;
+}
+
+.email_validation-active,
+.name_validation-active,
+.password_validation-active,
+.user-exist_validation-active,
+.correct-data_validation-active {
+  display: block;
+  position: absolute;
+  background-color: white;
+  border: 2px solid red;
+  font-size: 0.6rem;
+  border-radius: 0.6rem;
+  text-align: center;
+}
