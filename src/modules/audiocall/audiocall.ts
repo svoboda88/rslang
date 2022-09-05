@@ -431,42 +431,6 @@ export class Audiocall {
                 this.isLocked = true;
             }
         });
-        document.addEventListener('keyup', (event) => {
-            if (event.code === 'Enter') {
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                if (this.isLocked) {
-                    return;
-                }
-
-                if (!this.isLocked) {
-                    this.nextWords();
-                    setTimeout(() => {
-                        this.isLocked = false;
-                    }, 400);
-                }
-
-                this.isLocked = true;
-            }
-        });
-        document.addEventListener('keyup', (event) => {
-            if (event.code === 'NumpadEnter') {
-                event.preventDefault();
-                event.stopImmediatePropagation();
-                if (this.isLocked) {
-                    return;
-                }
-
-                if (!this.isLocked) {
-                    this.nextWords();
-                    setTimeout(() => {
-                        this.isLocked = false;
-                    }, 400);
-                }
-
-                this.isLocked = true;
-            }
-        });
     }
 
     checkWord(target: HTMLDivElement) {
