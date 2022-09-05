@@ -546,7 +546,7 @@ export class SprintView {
     }
 
     playAudio(sound: 'correct' | 'wrong') {
-        const url = `../../assets/${sound}.mp3`;
+        const url = `./assets/${sound}.mp3`;
         const audio = new Audio(url);
 
         audio.play();
