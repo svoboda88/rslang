@@ -777,9 +777,9 @@ export class Audiocall {
                         this.newWords = this.newWords + 1;
                     }
                 });
-                this.sendStatistics();
             })
             .then(() => {
+                this.sendStatistics();
                 if (this.modalCloseBtn) {
                     this.modalCloseBtn.addEventListener('click', checkUserWords);
                 }
