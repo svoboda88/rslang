@@ -109,7 +109,9 @@ export class SprintController {
 
     showResult() {
         this.view.showResult(this.model.game.correctAnswers, this.model.game.wrongAnswers);
-        this.sendResults();
+        if (localStorage.getItem('Logged')) {
+            this.sendResults();
+        }
     }
 
     sendResults() {
