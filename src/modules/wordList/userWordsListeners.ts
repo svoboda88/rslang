@@ -151,12 +151,19 @@ export const sendWordsListener = (e: MouseEvent) => {
         const hardButtonsChecked = hardBtns.filter((el) => el.classList.contains('word__btns--checked'));
         const LearnedButtonsChecked = learnedBtns.filter((el) => el.classList.contains('word__btns--checked'));
         const gameSection = document.querySelector<HTMLElement>('.textbook__games');
+        const paginationBtn = document.querySelector<HTMLElement>('.page-count-btn');
 
         if (hardButtonsChecked.length + LearnedButtonsChecked.length === 20 && LearnedButtonsChecked.length > 0) {
             textbook?.classList.add('textbook-learned');
-            gameSection?.classList.add('hidden');
+            paginationBtn?.classList.add('check-count-btn--learned');
         } else {
             textbook?.classList.remove('textbook-learned');
+            paginationBtn?.classList.remove('check-count-btn--learned');
+        }
+
+        if (LearnedButtonsChecked.length === 20) {
+            gameSection?.classList.add('hidden');
+        } else {
             gameSection?.classList.remove('hidden');
         }
     });

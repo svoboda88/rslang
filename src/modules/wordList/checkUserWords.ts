@@ -51,10 +51,8 @@ export const checkUserWords = async function () {
                 });
                 if (activeBtns.length === 20 && activeHardBtnsArray.length !== 20) {
                     textbook?.classList.add('textbook-learned');
-                    gameSection?.classList.add('hidden');
                     paginationBtn?.classList.add('check-count-btn--learned');
                 } else {
-                    gameSection?.classList.remove('hidden');
                     textbook?.classList.remove('textbook-learned');
                     paginationBtn?.classList.remove('check-count-btn--learned');
                 }
@@ -65,6 +63,17 @@ export const checkUserWords = async function () {
                         activeEasyBtnsArray.push(el);
                     }
                 });
+                if (activeEasyBtnsArray.length === 20) {
+                    gameSection?.classList.add('hidden');
+                } else if (
+                    activeEasyBtnsArray.length < 20 &&
+                    localStorage.getItem('Logged') === 'logged' &&
+                    Number(localStorage.getItem('groupCount')) !== 6 &&
+                    !localStorage.getItem('easy')
+                ) {
+                    gameSection?.classList.remove('hidden');
+                }
+
                 return res;
             })
             .then((res) => {
