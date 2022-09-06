@@ -193,6 +193,7 @@ export class Audiocall {
     }
 
     startGame() {
+        this.hideCorrectWord();
         if (this.audiocallLvls && this.gameWindow) {
             this.audiocallLvls.classList.add('hidden');
             this.gameWindow.classList.remove('hidden');
@@ -480,7 +481,6 @@ export class Audiocall {
                 });
             }
         } else {
-            this.hideCorrectWord();
             if (this.correctAnswers.length + this.wrongAnswers.length <= 9) {
                 const words: GetWords[] = JSON.parse(localStorage.getItem('unUsedWords') as string);
                 words.pop();
@@ -510,7 +510,6 @@ export class Audiocall {
             this.gameResults?.classList.remove('hidden');
             this.resultTable();
             this.sendResults();
-            this.hideCorrectWord();
             (this.resultsPlayBtn as HTMLDivElement).textContent = 'Выйты на страницу учебника';
         }
 
@@ -524,7 +523,6 @@ export class Audiocall {
                 this.wrongAnswers = [];
                 this.series = 0;
                 this.correctAnswersSeries = [];
-                this.hideCorrectWord();
                 localStorage.removeItem('unUsedWords');
             }
 
@@ -605,9 +603,7 @@ export class Audiocall {
                         `;
                     }
                 });
-            }
-
-            if (current.audiocallCorrect) {
+            } else if (current.audiocallCorrect) {
                 this.correctAnswers.forEach((item, i) => {
                     if (Number(current.audiocallCorrect) === i) {
                         audioSrc = `
@@ -615,6 +611,8 @@ export class Audiocall {
                         `;
                     }
                 });
+            } else {
+                return;
             }
 
             const wordAudio = new Audio(audioSrc);
