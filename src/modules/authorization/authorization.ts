@@ -1,5 +1,4 @@
 import { createUserStatistics, getUserStatistics } from '../statistics/statistics-request';
-import { Statistics } from '../types/types';
 import { UI } from '../ui/ui';
 import { checkUserWords } from '../wordList/checkUserWords';
 
@@ -42,13 +41,15 @@ export class Authorize {
                         ).name;
                     })
                     .then(this.UI.showAuthorizedSections)
-                    .then(checkUserWords)
-                    .then(async () => {
-                        const userStat: Statistics | undefined = await getUserStatistics();
-
-                        if (!userStat) {
+                    .then(getUserStatistics)
+                    .then((res) => {
+                        if (!res) {
+                            console.log('нет статистики для пользователя, создаю чистую');
                             createUserStatistics();
+                            checkUserWords();
                         } else {
+                            console.log('статистика есть');
+                            checkUserWords();
                         }
                     });
                 window.localStorage.removeItem('modal');

@@ -276,31 +276,36 @@ export class SprintController {
             maxSeries = Math.max(...this.model.game.correctAnswersSeries);
         }
 
-        getUserStatistics().then((res) => {
-            userStats = res;
-            updateUserStatistics({
-                learnedWords: userStats.learnedWords + this.model.game.learnedWords,
-                optional: {
-                    today: {
-                        date: userStats.optional.today.date,
-                        newWords: userStats.optional.today.newWords + this.model.game.newWords,
-                        sprintWords: userStats.optional.today.sprintWords + this.model.game.newWords,
-                        sprintPercent:
-                            userStats.optional.today.sprintPercent === 0
-                                ? percent
-                                : Math.round((userStats.optional.today.sprintPercent + percent) / 2),
-                        sprintSeries:
-                            userStats.optional.today.sprintSeries < maxSeries
-                                ? maxSeries
-                                : userStats.optional.today.sprintSeries,
-                        audiocallWords: userStats.optional.today.audiocallWords,
-                        audiocallPercent: userStats.optional.today.audiocallPercent,
-                        audiocallSeries: userStats.optional.today.audiocallSeries,
+        getUserStatistics()
+            .then((res) => {
+                userStats = res;
+                updateUserStatistics({
+                    learnedWords: userStats.learnedWords + this.model.game.learnedWords,
+                    optional: {
+                        today: {
+                            date: userStats.optional.today.date,
+                            newWords: userStats.optional.today.newWords + this.model.game.newWords,
+                            sprintWords: userStats.optional.today.sprintWords + this.model.game.newWords,
+                            sprintPercent:
+                                userStats.optional.today.sprintPercent === 0
+                                    ? percent
+                                    : Math.round((userStats.optional.today.sprintPercent + percent) / 2),
+                            sprintSeries:
+                                userStats.optional.today.sprintSeries < maxSeries
+                                    ? maxSeries
+                                    : userStats.optional.today.sprintSeries,
+                            audiocallWords: userStats.optional.today.audiocallWords,
+                            audiocallPercent: userStats.optional.today.audiocallPercent,
+                            audiocallSeries: userStats.optional.today.audiocallSeries,
+                        },
+                        longterm: userStats.optional.longterm,
                     },
-                    longterm: userStats.optional.longterm,
-                },
+                });
+            })
+            .then(() => {
+                console.log('статистика отправлена');
+                console.log(getUserStatistics());
             });
-        });
     }
 
     endGame() {
