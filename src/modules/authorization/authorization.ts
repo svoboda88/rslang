@@ -44,11 +44,9 @@ export class Authorize {
                     .then(getUserStatistics)
                     .then((res) => {
                         if (!res) {
-                            console.log('нет статистики для пользователя, создаю чистую');
                             createUserStatistics();
                             checkUserWords();
                         } else {
-                            console.log('статистика есть');
                             checkUserWords();
                         }
                     });

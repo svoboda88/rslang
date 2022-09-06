@@ -108,13 +108,20 @@ export class SprintController {
     }
 
     showResult() {
-        this.view.showResult(this.model.game.correctAnswers, this.model.game.wrongAnswers);
         if (localStorage.getItem('Logged')) {
             this.sendResults();
+        } else {
+            this.view.showResult(this.model.game.correctAnswers, this.model.game.wrongAnswers);
         }
     }
 
     sendResults() {
+        const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+        document.onkeyup = null;
+        this.view.gameContainer?.classList.add('hidden');
+        this.view.loadingScreen?.classList.remove('hidden');
+        this.view.timerContainer?.classList.add('hidden');
+        closeBtn?.classList.add('hidden');
         getCards
             .getUserCards()
             .then((res: GetUserCards[]) => {
@@ -254,7 +261,6 @@ export class SprintController {
             })
             .then(() => {
                 this.sendStatisctics();
-                const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
                 if (closeBtn) {
                     closeBtn.addEventListener('click', checkUserWords);
                 }
@@ -303,8 +309,10 @@ export class SprintController {
                 });
             })
             .then(() => {
-                console.log('статистика отправлена');
-                console.log(getUserStatistics());
+                this.view.loadingScreen?.classList.add('hidden');
+                this.view.showResult(this.model.game.correctAnswers, this.model.game.wrongAnswers);
+                const closeBtn = document.querySelector<HTMLElement>('.sprint__close-btn');
+                closeBtn?.classList.remove('hidden');
             });
     }
 

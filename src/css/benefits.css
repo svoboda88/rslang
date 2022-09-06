@@ -9,11 +9,12 @@
   color: var(--black);
   background-color: var(--white);
   margin: 0 auto;
+  padding: 10px;
   width: 70%;
   text-align: center;
 }
 .benefits_title {
-  margin-bottom: 20px;
+  margin: 20px;
 }
 
 .benefits__cards {
