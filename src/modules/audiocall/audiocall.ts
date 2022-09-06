@@ -499,7 +499,9 @@ export class Audiocall {
             this.gameWindow?.classList.add('hidden');
             this.gameResults?.classList.remove('hidden');
             this.resultTable();
-            this.sendResults();
+            if (localStorage.getItem('Logged')) {
+                this.sendResults();
+            }
             (this.resultsPlayBtn as HTMLDivElement).textContent = 'Играть ещё!';
         }
 
